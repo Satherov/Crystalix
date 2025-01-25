@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "c:obsidians"
+    },
+    "c": {
+      "tag": "c:dyes/cyan"
+    },
+    "g": {
+      "item": "crystalix:cyan_block"
+    }
+  },
+  "pattern": [
+    "gag",
+    "aca",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "id": "crystalix:cyan_reinforced_block"
+  }
+}

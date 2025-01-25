@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "c:gems/amethyst"
+    },
+    "c": {
+      "tag": "c:dyes/orange"
+    },
+    "g": {
+      "item": "crystalix:orange_block"
+    }
+  },
+  "pattern": [
+    "gag",
+    "aca",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "id": "crystalix:orange_dark_block"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "c:dusts/glowstone"
+    },
+    "g": {
+      "item": "crystalix:pink_ghost_block"
+    }
+  },
+  "pattern": [
+    "gag",
+    "a a",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "id": "crystalix:pink_light_ghost_block"
+  }
+}

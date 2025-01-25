@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "c:gems/amethyst"
+    },
+    "g": {
+      "item": "crystalix:pink_shaded_reinforced_block"
+    }
+  },
+  "pattern": [
+    "gag",
+    "a a",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "id": "crystalix:pink_shaded_reinforced_dark_block"
+  }
+}

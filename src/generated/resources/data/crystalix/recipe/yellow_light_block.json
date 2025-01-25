@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "c:dusts/glowstone"
+    },
+    "c": {
+      "tag": "c:dyes/yellow"
+    },
+    "g": {
+      "item": "crystalix:yellow_block"
+    }
+  },
+  "pattern": [
+    "gag",
+    "aca",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "id": "crystalix:yellow_light_block"
+  }
+}

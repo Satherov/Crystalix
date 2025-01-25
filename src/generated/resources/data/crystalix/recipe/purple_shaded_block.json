@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "minecraft:coals"
+    },
+    "c": {
+      "tag": "c:dyes/purple"
+    },
+    "g": {
+      "item": "crystalix:purple_block"
+    }
+  },
+  "pattern": [
+    "gag",
+    "aca",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "id": "crystalix:purple_shaded_block"
+  }
+}

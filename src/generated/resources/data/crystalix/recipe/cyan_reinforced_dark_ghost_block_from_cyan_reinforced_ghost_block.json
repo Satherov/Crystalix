@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "c:gems/amethyst"
+    },
+    "g": {
+      "item": "crystalix:cyan_reinforced_ghost_block"
+    }
+  },
+  "pattern": [
+    "gag",
+    "a a",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "id": "crystalix:cyan_reinforced_dark_ghost_block"
+  }
+}

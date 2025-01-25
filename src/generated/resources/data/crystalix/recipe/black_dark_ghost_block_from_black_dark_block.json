@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:phantom_membrane"
+    },
+    "g": {
+      "item": "crystalix:black_dark_block"
+    }
+  },
+  "pattern": [
+    "gag",
+    "a a",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "id": "crystalix:black_dark_ghost_block"
+  }
+}

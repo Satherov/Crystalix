@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "crystalix:shaded_light_ghost_block"
+    },
+    "b": {
+      "tag": "c:dyes/light_gray"
+    }
+  },
+  "pattern": [
+    "aaa",
+    "aba",
+    "aaa"
+  ],
+  "result": {
+    "count": 8,
+    "id": "crystalix:light_gray_shaded_light_ghost_block"
+  }
+}

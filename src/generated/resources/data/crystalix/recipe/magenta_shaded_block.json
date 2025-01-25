@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "minecraft:coals"
+    },
+    "c": {
+      "tag": "c:dyes/magenta"
+    },
+    "g": {
+      "item": "crystalix:magenta_block"
+    }
+  },
+  "pattern": [
+    "gag",
+    "aca",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "id": "crystalix:magenta_shaded_block"
+  }
+}

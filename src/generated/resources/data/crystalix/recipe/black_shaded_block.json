@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "minecraft:coals"
+    },
+    "c": {
+      "tag": "c:dyes/black"
+    },
+    "g": {
+      "item": "crystalix:black_block"
+    }
+  },
+  "pattern": [
+    "gag",
+    "aca",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "id": "crystalix:black_shaded_block"
+  }
+}

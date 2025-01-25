@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:phantom_membrane"
+    },
+    "c": {
+      "tag": "c:dyes/brown"
+    },
+    "g": {
+      "item": "crystalix:brown_block"
+    }
+  },
+  "pattern": [
+    "gag",
+    "aca",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "id": "crystalix:brown_ghost_block"
+  }
+}

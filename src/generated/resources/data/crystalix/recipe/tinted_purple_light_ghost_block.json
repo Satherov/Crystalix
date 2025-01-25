@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "crystalix:light_ghost_block"
+    },
+    "b": {
+      "tag": "c:dyes/purple"
+    }
+  },
+  "pattern": [
+    "aaa",
+    "aba",
+    "aaa"
+  ],
+  "result": {
+    "count": 8,
+    "id": "crystalix:purple_light_ghost_block"
+  }
+}
