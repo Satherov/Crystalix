@@ -8,7 +8,7 @@ issueTrackerURL = "https://github.com/Satherov/Crystalix"
 modId = "${mod_id}"
 version = "${mod_version}"
 displayName = "${mod_name}"
-logoFile = "examplemod.png"
+logoFile = "crystalix.png"
 authors = "${mod_authors}"
 description = '''${mod_description}'''
 
