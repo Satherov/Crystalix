@@ -30,6 +30,11 @@ public class CrystalixBlockTagProvider extends BlockTagsProvider {
         // General Tags
         tag(CrystalixTags.BLOCKTAG_BLOCKS)
                 .addTag(CrystalixTags.BLOCKTAG_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_REINFORCED_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_LIGHT_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_DARK_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_GHOST_BLOCK)
                 .addTag(CrystalixTags.BLOCKTAG_SHADED)
                 .addTag(CrystalixTags.BLOCKTAG_REINFORCED)
                 .addTag(CrystalixTags.BLOCKTAG_LIGHT)
