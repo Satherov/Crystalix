@@ -5,7 +5,6 @@ import org.jetbrains.annotations.Nullable;
 
 import com.satherov.crystalix.Crystalix;
 import com.satherov.crystalix.content.BlockSet;
-import com.satherov.crystalix.content.CrystalixRegistry;
 import com.satherov.crystalix.content.CrystalixTags;
 
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
@@ -24,93 +23,87 @@ public class CrystalixBlockTagProvider extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
 
-        CrystalixRegistry.BLOCKS.getEntries().forEach(block -> tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block.get()));
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).addTag(CrystalixTags.BLOCKTAG_BLOCKS);
+
+        tag(BlockTags.WITHER_IMMUNE).addTag(CrystalixTags.BLOCKTAG_REINFORCED);
+
+        // General Tags
+        tag(CrystalixTags.BLOCKTAG_BLOCKS)
+                .addTag(CrystalixTags.BLOCKTAG_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED)
+                .addTag(CrystalixTags.BLOCKTAG_REINFORCED)
+                .addTag(CrystalixTags.BLOCKTAG_LIGHT)
+                .addTag(CrystalixTags.BLOCKTAG_DARK)
+                .addTag(CrystalixTags.BLOCKTAG_GHOST);
+
+        // Shaded Tags
+        tag(CrystalixTags.BLOCKTAG_SHADED)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_LIGHT_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_DARK_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_LIGHT_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_DARK_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_LIGHT_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_DARK_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_LIGHT_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_DARK_GHOST_BLOCK);
+
+        // Reinforced Tags
+        tag(CrystalixTags.BLOCKTAG_REINFORCED)
+                .addTag(CrystalixTags.BLOCKTAG_REINFORCED_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_REINFORCED_LIGHT_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_REINFORCED_DARK_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_REINFORCED_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_REINFORCED_LIGHT_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_REINFORCED_DARK_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_LIGHT_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_DARK_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_LIGHT_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_DARK_GHOST_BLOCK);
+
+        // Light Tags
+        tag(CrystalixTags.BLOCKTAG_LIGHT)
+                .addTag(CrystalixTags.BLOCKTAG_LIGHT_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_LIGHT_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_REINFORCED_LIGHT_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_REINFORCED_LIGHT_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_LIGHT_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_LIGHT_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_LIGHT_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_LIGHT_GHOST_BLOCK);
+
+        // Dark Tags
+        tag(CrystalixTags.BLOCKTAG_DARK)
+                .addTag(CrystalixTags.BLOCKTAG_DARK_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_DARK_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_REINFORCED_DARK_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_REINFORCED_DARK_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_DARK_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_DARK_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_DARK_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_DARK_GHOST_BLOCK);
+
+        // Ghost Tags
+        tag(CrystalixTags.BLOCKTAG_GHOST)
+                .addTag(CrystalixTags.BLOCKTAG_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_LIGHT_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_DARK_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_REINFORCED_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_LIGHT_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_DARK_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_REINFORCED_LIGHT_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_REINFORCED_DARK_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_LIGHT_GHOST_BLOCK)
+                .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_DARK_GHOST_BLOCK);
 
         BlockSet.apply(set -> {
-
-            tag(BlockTags.WITHER_IMMUNE).addTag(CrystalixTags.BLOCKTAG_REINFORCED);
-
-            // General Tags
-            tag(CrystalixTags.BLOCKTAG_BLOCKS)
-                    .addTag(CrystalixTags.BLOCKTAG_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_REINFORCED_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_LIGHT_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_DARK_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED)
-                    .addTag(CrystalixTags.BLOCKTAG_REINFORCED)
-                    .addTag(CrystalixTags.BLOCKTAG_LIGHT)
-                    .addTag(CrystalixTags.BLOCKTAG_DARK)
-                    .addTag(CrystalixTags.BLOCKTAG_GHOST);
-
-            // Shaded Tags
-            tag(CrystalixTags.BLOCKTAG_SHADED)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_LIGHT_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_DARK_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_LIGHT_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_DARK_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_LIGHT_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_DARK_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_LIGHT_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_DARK_GHOST_BLOCK);
-
-            // Reinforced Tags
-            tag(CrystalixTags.BLOCKTAG_REINFORCED)
-                    .addTag(CrystalixTags.BLOCKTAG_REINFORCED_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_REINFORCED_LIGHT_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_REINFORCED_DARK_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_REINFORCED_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_REINFORCED_LIGHT_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_REINFORCED_DARK_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_LIGHT_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_DARK_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_LIGHT_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_DARK_GHOST_BLOCK);
-
-            // Light Tags
-            tag(CrystalixTags.BLOCKTAG_LIGHT)
-                    .addTag(CrystalixTags.BLOCKTAG_LIGHT_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_LIGHT_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_REINFORCED_LIGHT_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_REINFORCED_LIGHT_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_LIGHT_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_LIGHT_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_LIGHT_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_LIGHT_GHOST_BLOCK);
-
-            // Dark Tags
-            tag(CrystalixTags.BLOCKTAG_DARK)
-                    .addTag(CrystalixTags.BLOCKTAG_DARK_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_DARK_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_REINFORCED_DARK_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_REINFORCED_DARK_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_DARK_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_DARK_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_DARK_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_DARK_GHOST_BLOCK);
-
-            // Ghost Tags
-            tag(CrystalixTags.BLOCKTAG_GHOST)
-                    .addTag(CrystalixTags.BLOCKTAG_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_LIGHT_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_DARK_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_REINFORCED_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_LIGHT_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_DARK_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_REINFORCED_LIGHT_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_REINFORCED_DARK_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_LIGHT_GHOST_BLOCK)
-                    .addTag(CrystalixTags.BLOCKTAG_SHADED_REINFORCED_DARK_GHOST_BLOCK);
-
 
             // Individual Blocks
             tag(CrystalixTags.BLOCKTAG_BLOCK).add(set.BLOCK.get());
