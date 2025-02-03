@@ -1,20 +1,20 @@
 {
   "values": [
-    "crystalix:white_shaded_block",
-    "crystalix:light_gray_shaded_block",
-    "crystalix:gray_shaded_block",
-    "crystalix:black_shaded_block",
-    "crystalix:brown_shaded_block",
-    "crystalix:red_shaded_block",
-    "crystalix:orange_shaded_block",
-    "crystalix:yellow_shaded_block",
-    "crystalix:lime_shaded_block",
-    "crystalix:green_shaded_block",
-    "crystalix:cyan_shaded_block",
-    "crystalix:light_blue_shaded_block",
-    "crystalix:blue_shaded_block",
-    "crystalix:purple_shaded_block",
-    "crystalix:magenta_shaded_block",
-    "crystalix:pink_shaded_block"
+    "crystalix:white_shadeless_block",
+    "crystalix:light_gray_shadeless_block",
+    "crystalix:gray_shadeless_block",
+    "crystalix:black_shadeless_block",
+    "crystalix:brown_shadeless_block",
+    "crystalix:red_shadeless_block",
+    "crystalix:orange_shadeless_block",
+    "crystalix:yellow_shadeless_block",
+    "crystalix:lime_shadeless_block",
+    "crystalix:green_shadeless_block",
+    "crystalix:cyan_shadeless_block",
+    "crystalix:light_blue_shadeless_block",
+    "crystalix:blue_shadeless_block",
+    "crystalix:purple_shadeless_block",
+    "crystalix:magenta_shadeless_block",
+    "crystalix:pink_shadeless_block"
   ]
 }

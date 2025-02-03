@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "c:obsidians"
+    },
+    "g": {
+      "item": "crystalix:green_shadeless_dark_ghost_block"
+    }
+  },
+  "pattern": [
+    "gag",
+    "a a",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "id": "crystalix:green_shadeless_reinforced_dark_ghost_block"
+  }
+}
