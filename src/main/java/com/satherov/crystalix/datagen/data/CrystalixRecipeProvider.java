@@ -26,12 +26,12 @@ public class CrystalixRecipeProvider extends RecipeProvider implements IConditio
         super(output, registries);
     }
 
-    private void tint(TagKey<Item> item, TagKey<Item> color, DeferredHolder<Block, ?> output, RecipeOutput recipeOutput) {
+    private void tint(TagKey<Item> color, DeferredHolder<Block, ?> output, RecipeOutput recipeOutput) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, output.get().asItem(), 8)
                 .pattern("aaa")
                 .pattern("aba")
                 .pattern("aaa")
-                .define('a', item)
+                .define('a', CrystalixRegistry.ITEMTAG_BLOCKS)
                 .define('b', color)
                 .unlockedBy("has_glass", has(Tags.Items.GLASS_BLOCKS))
                 .save(recipeOutput, Crystalix.MOD_ID + ":tinted_" + output.getId().getPath());
@@ -52,7 +52,7 @@ public class CrystalixRecipeProvider extends RecipeProvider implements IConditio
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ((DeferredHolder<Item, ?>) CrystalixRegistry.WAND).get().asItem(), 4)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ((DeferredHolder<Item, ?>) CrystalixRegistry.WAND).get().asItem())
                 .pattern("  n")
                 .pattern(" s ")
                 .pattern("s  ")
@@ -62,7 +62,7 @@ public class CrystalixRecipeProvider extends RecipeProvider implements IConditio
                 .save(recipeOutput);
 
         CrystalixRegistry.BLOCKS_MAP.forEach((color, block) -> {
-            tint(CrystalixRegistry.ITEMTAG_BLOCKS, color.getTag(), block, recipeOutput);
+            tint(color.getTag(), block, recipeOutput);
             block(color.getTag(), block, recipeOutput);
         });
     }
