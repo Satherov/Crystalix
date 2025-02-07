@@ -1,14 +1,23 @@
 package com.satherov.crystalix.content;
 
+import java.util.Arrays;
+import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import com.satherov.crystalix.Crystalix;
+import com.satherov.crystalix.content.block.CrystalixBlock;
+import com.satherov.crystalix.content.item.CrystalixWand;
 
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -22,7 +31,7 @@ public class CrystalixRegistry {
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> CREATIVE_TAB = CREATIVE_TABS.register("creative_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable(String.format("itemGroup.%s", Crystalix.MOD_ID)))
-            .icon(() -> CrystalixRegistry.WHITE.LIGHT_BLOCK.get().asItem().getDefaultInstance())
+            .icon(() -> CrystalixRegistry.BLOCKS_MAP.get(DyeColor.WHITE).get().asItem().getDefaultInstance())
             .displayItems((parameters, output) ->
                     ITEMS.getEntries().stream()
                             .map(Supplier::get)
@@ -31,20 +40,22 @@ public class CrystalixRegistry {
             ).build()
     );
 
-    public static final BlockSet WHITE = new BlockSet(DyeColor.WHITE);
-    public static final BlockSet LIGHT_GRAY = new BlockSet(DyeColor.LIGHT_GRAY);
-    public static final BlockSet GRAY = new BlockSet(DyeColor.GRAY);
-    public static final BlockSet BLACK = new BlockSet(DyeColor.BLACK);
-    public static final BlockSet BROWN = new BlockSet(DyeColor.BROWN);
-    public static final BlockSet RED = new BlockSet(DyeColor.RED);
-    public static final BlockSet ORANGE = new BlockSet(DyeColor.ORANGE);
-    public static final BlockSet YELLOW = new BlockSet(DyeColor.YELLOW);
-    public static final BlockSet LIME = new BlockSet(DyeColor.LIME);
-    public static final BlockSet GREEN = new BlockSet(DyeColor.GREEN);
-    public static final BlockSet CYAN = new BlockSet(DyeColor.CYAN);
-    public static final BlockSet LIGHT_BLUE = new BlockSet(DyeColor.LIGHT_BLUE);
-    public static final BlockSet BLUE = new BlockSet(DyeColor.BLUE);
-    public static final BlockSet PURPLE = new BlockSet(DyeColor.PURPLE);
-    public static final BlockSet MAGENTA = new BlockSet(DyeColor.MAGENTA);
-    public static final BlockSet PINK = new BlockSet(DyeColor.PINK);
+    public static final TagKey<Block> BLOCKTAG_BLOCKS = BlockTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "blocks"));
+    public static final TagKey<Item> ITEMTAG_BLOCKS = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "blocks"));
+
+    public static final DeferredHolder<Item, CrystalixWand> WAND = ITEMS.register("crystalix_wand", () -> new CrystalixWand(new Item.Properties()));
+
+    public static final Map<DyeColor, DeferredHolder<Block, CrystalixBlock>> BLOCKS_MAP = Arrays.stream(DyeColor.values())
+            .collect(Collectors.toMap(
+                    color -> color,
+                    color -> register(String.format("%s_crystalix_glass", color.getName()), () -> new CrystalixBlock(color))
+            ));
+
+
+    private static DeferredHolder<Block, CrystalixBlock> register(String name, Supplier<CrystalixBlock> properties) {
+        DeferredHolder<Block, CrystalixBlock> block;
+        block = CrystalixRegistry.BLOCKS.register(name, properties);
+        CrystalixRegistry.ITEMS.registerSimpleBlockItem(name, block);
+        return block;
+    }
 }

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "n": {
+      "tag": "c:nether_stars"
+    },
+    "s": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "  n",
+    " s ",
+    "s  "
+  ],
+  "result": {
+    "count": 4,
+    "id": "crystalix:crystalix_wand"
+  }
+}

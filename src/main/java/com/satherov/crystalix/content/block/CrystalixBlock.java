@@ -1,30 +1,35 @@
 package com.satherov.crystalix.content.block;
 
-import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
 
+import com.satherov.crystalix.content.item.CrystalixWand;
+
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.BeaconBeamBlock;
-import net.minecraft.world.level.block.LiquidBlockContainer;
-import net.minecraft.world.level.block.TransparentBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -39,13 +44,10 @@ public class CrystalixBlock extends TransparentBlock implements BeaconBeamBlock,
     public static final EnumProperty<Light> LIGHT = EnumProperty.create("light", Light.class);
     public static final EnumProperty<Ghost> GHOST = EnumProperty.create("ghost", Ghost.class);
 
-    public CrystalixBlock(DyeColor dyeColor, BlockBehaviour.Properties properties) {
-        super(properties);
+    public CrystalixBlock(DyeColor dyeColor) {
+        super(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_STAINED_GLASS).mapColor(dyeColor));
+        this.registerDefaultState(this.stateDefinition.any().setValue(SHADED, true).setValue(REINFORCED, false).setValue(LIGHT, Light.NONE).setValue(GHOST, Ghost.BLOCK_ALL));
         this.color = dyeColor;
-    }
-
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-
     }
 
     @Override
@@ -54,9 +56,67 @@ public class CrystalixBlock extends TransparentBlock implements BeaconBeamBlock,
     }
 
     @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(SHADED, REINFORCED, LIGHT, GHOST);
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (stack.getItem() instanceof CrystalixWand wand) {
+            boolean success = wand.applyToBlock(level, pos, player);
+            return success ? ItemInteractionResult.sidedSuccess(!level.isClientSide) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    @Override
+    @Nullable
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Player player = context.getPlayer();
+        if (player == null) return this.defaultBlockState();
+
+        ItemStack offHandItem = player.getItemInHand(InteractionHand.OFF_HAND);
+
+        if (offHandItem.getItem() instanceof CrystalixWand wand) {
+            return this.defaultBlockState()
+                    .setValue(SHADED, wand.isShadeless())
+                    .setValue(REINFORCED, wand.isReinforced())
+                    .setValue(LIGHT, wand.getLightMode())
+                    .setValue(GHOST, wand.getGhostMode());
+        }
+
+        return this.defaultBlockState();
+    }
+
+
+
+    // Reinforced
+
+    @Override
+    public boolean canDropFromExplosion(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
+        return !state.getValue(REINFORCED);
+    }
+
+    @Override
+    public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
+        return !state.getValue(REINFORCED) && super.canBeReplaced(state, context);
+    }
+
+    @Override
+    public void onBlockExploded(BlockState state, Level level, BlockPos pos, Explosion explosion) {
+        if (!state.getValue(REINFORCED)) {
+            super.onBlockExploded(state, level, pos, explosion);
+        }
+    }
+
+    // Shaded
+
+    @Override
     protected float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
         return state.getValue(SHADED) ? 15 : 0;
     }
+
+    // Light
 
     @Override
     protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
@@ -65,8 +125,15 @@ public class CrystalixBlock extends TransparentBlock implements BeaconBeamBlock,
 
     @Override
     protected int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.getValue(LIGHT) == Light.NONE ? 0 : state.getValue(LIGHT) == Light.LIGHT ? 15 : level.getMaxLightLevel();
+        return state.getValue(LIGHT) == Light.DARK ? level.getMaxLightLevel() : 0;
     }
+
+    @Override
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+        return state.getValue(LIGHT) == Light.LIGHT ? 15 : 0;
+    }
+
+    // Ghost
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
@@ -76,6 +143,15 @@ public class CrystalixBlock extends TransparentBlock implements BeaconBeamBlock,
             }
         }
         return super.getCollisionShape(state, level, pos, context);
+    }
+
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        if (Objects.requireNonNull(pathComputationType) == PathComputationType.LAND) {
+            return state.getValue(GHOST) == Ghost.ALLOW_ALL ||
+                   state.getValue(GHOST) == Ghost.ALLOW_MONSTER ||
+                   state.getValue(GHOST) == Ghost.ALLOW_ANIMAL;
+        }
+        return false;
     }
 
     @Override
@@ -95,7 +171,7 @@ public class CrystalixBlock extends TransparentBlock implements BeaconBeamBlock,
 
         @Override
         public String getSerializedName() {
-            return this.name().toLowerCase();
+            return this.name().toLowerCase(Locale.ROOT);
         }
     }
 
@@ -121,7 +197,7 @@ public class CrystalixBlock extends TransparentBlock implements BeaconBeamBlock,
 
         @Override
         public String getSerializedName() {
-            return this.name().toLowerCase();
+            return this.name().toLowerCase(Locale.ROOT);
         }
     }
 }

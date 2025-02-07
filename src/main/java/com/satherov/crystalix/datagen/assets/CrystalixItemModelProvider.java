@@ -7,6 +7,7 @@ import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.BlockItem;
 
 public class CrystalixItemModelProvider extends ItemModelProvider {
 
@@ -17,5 +18,6 @@ public class CrystalixItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         CrystalixRegistry.BLOCKS.getEntries().forEach(block -> simpleBlockItem(block.get()));
+        CrystalixRegistry.ITEMS.getEntries().stream().filter(item -> !(item.get() instanceof BlockItem)).forEach(item -> handheldItem(item.get()));
     }
 }
