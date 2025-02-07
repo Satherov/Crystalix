@@ -35,7 +35,7 @@ public class CrystalixWand extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("tooltip.%s.wand.bulk", Crystalix.MOD_ID));
+        tooltipComponents.add(Component.translatable(String.format("tooltip.%s.wand.bulk", Crystalix.MOD_ID)));
         tooltipComponents.add(getTranslation("shadeless", shadelessMode));
         tooltipComponents.add(getTranslation("reinforced", reinforcedMode));
         tooltipComponents.add(getTranslation("light", lightMode.name().toLowerCase(Locale.ROOT)));
