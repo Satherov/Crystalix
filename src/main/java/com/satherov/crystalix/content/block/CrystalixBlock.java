@@ -63,8 +63,8 @@ public class CrystalixBlock extends TransparentBlock implements BeaconBeamBlock,
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (stack.getItem() instanceof CrystalixWand wand) {
-            boolean success = wand.applyToBlock(level, pos, player);
-            return success ? ItemInteractionResult.sidedSuccess(!level.isClientSide) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return wand.applyToBlock(level, pos, player) ?
+                    ItemInteractionResult.sidedSuccess(!level.isClientSide) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
@@ -75,9 +75,7 @@ public class CrystalixBlock extends TransparentBlock implements BeaconBeamBlock,
         Player player = context.getPlayer();
         if (player == null) return this.defaultBlockState();
 
-        ItemStack offHandItem = player.getItemInHand(InteractionHand.OFF_HAND);
-
-        if (offHandItem.getItem() instanceof CrystalixWand wand) {
+        if (player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof CrystalixWand wand) {
             return this.defaultBlockState()
                     .setValue(SHADED, wand.isShadeless())
                     .setValue(REINFORCED, wand.isReinforced())
@@ -87,8 +85,6 @@ public class CrystalixBlock extends TransparentBlock implements BeaconBeamBlock,
 
         return this.defaultBlockState();
     }
-
-
 
     // Reinforced
 
@@ -147,9 +143,9 @@ public class CrystalixBlock extends TransparentBlock implements BeaconBeamBlock,
 
     protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         if (Objects.requireNonNull(pathComputationType) == PathComputationType.LAND) {
-            return state.getValue(GHOST) == Ghost.ALLOW_ALL ||
-                   state.getValue(GHOST) == Ghost.ALLOW_MONSTER ||
-                   state.getValue(GHOST) == Ghost.ALLOW_ANIMAL;
+            return !(state.getValue(GHOST) == Ghost.ALLOW_ALL) ||
+                   !(state.getValue(GHOST) == Ghost.ALLOW_MONSTER) ||
+                   !(state.getValue(GHOST) == Ghost.ALLOW_ANIMAL);
         }
         return false;
     }

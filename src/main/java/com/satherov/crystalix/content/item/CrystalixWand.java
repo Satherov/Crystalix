@@ -59,7 +59,6 @@ public class CrystalixWand extends Item {
         return InteractionResultHolder.pass(stack);
     }
 
-
     public boolean applyToBlock(Level level, BlockPos pos, Player player) {
         if (!(level.getBlockState(pos).getBlock() instanceof CrystalixBlock)) {
             return false;
@@ -84,8 +83,6 @@ public class CrystalixWand extends Item {
         return true;
     }
 
-
-
     public Set<BlockPos> getConnectedBlocks(Level level, BlockPos start, Block targetBlock, int maxBlocks) {
         Set<BlockPos> visited = new HashSet<>();
         Queue<BlockPos> queue = new LinkedList<>();
@@ -106,7 +103,6 @@ public class CrystalixWand extends Item {
         }
         return visited;
     }
-
 
     public void cycleShadeless(Player player) {
         shadelessMode = !shadelessMode;
