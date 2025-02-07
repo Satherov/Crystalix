@@ -1,4 +1,4 @@
-// 1.21.1	2025-02-07T22:04:36.8184528	Example Mod Data Provider
+// 1.21.1	2025-02-07T22:36:24.5368731	Example Mod Data Provider
 4bedbf9ec7b3e1410c7098e47c5c2250cc94f0f8 assets/crystalix/blockstates/black_crystalix_glass.json
 a4b457054e9cc7ed811eaf8e5af69858635efe16 assets/crystalix/blockstates/blue_crystalix_glass.json
 ef8235f051ce78307977e8707db4bcfb0895a362 assets/crystalix/blockstates/brown_crystalix_glass.json
@@ -15,7 +15,7 @@ ec9548fa6feb94b05a850ac0d5dc2f33bfdb8c4f assets/crystalix/blockstates/purple_cry
 6082b4a560d58d69dd1c14579071346699a84097 assets/crystalix/blockstates/red_crystalix_glass.json
 3acbf96f65bc6ecca6c3b58abe7280c2be5185ad assets/crystalix/blockstates/white_crystalix_glass.json
 a5c76c21ec289585684b94ecebd00e6904967412 assets/crystalix/blockstates/yellow_crystalix_glass.json
-99754252f3ae9f0f810ac5af11aff618951fced0 assets/crystalix/lang/en_us.json
+adad6ca0881d7f4c7ca451dd86973084a7553621 assets/crystalix/lang/en_us.json
 92dbc8a6c7c7ade8a211c6f7db06833f3bf3f7f0 assets/crystalix/models/block/black_crystalix_glass.json
 48d298067341887cbfe4b9159935b7ff199349e6 assets/crystalix/models/block/black_crystalix_glass_no_shade.json
 6b8db7dfdaf6509fe022582b3b5c9a6d564ca336 assets/crystalix/models/block/blue_crystalix_glass.json

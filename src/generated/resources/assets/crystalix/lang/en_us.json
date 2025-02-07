@@ -23,6 +23,7 @@
   "key.crystalix.cycle_light": "Cycle Light Mode",
   "key.crystalix.cycle_reinforced": "Cycle Reinforced Mode",
   "key.crystalix.cycle_shadeless": "Cycle Shadeless Mode",
+  "tooltip.crystalix.wand.bulk": "§7Hold Shift to Bulk Edit",
   "tooltip.crystalix.wand.ghost.allow_all": "§7Ghost Mode: §2Allow §8All",
   "tooltip.crystalix.wand.ghost.allow_animal": "§7Ghost Mode: §2Allow §aAnimal",
   "tooltip.crystalix.wand.ghost.allow_monster": "§7Ghost Mode: §2Allow §cMonster",

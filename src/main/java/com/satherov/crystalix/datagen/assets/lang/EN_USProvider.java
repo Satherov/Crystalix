@@ -25,6 +25,7 @@ public class EN_USProvider extends CrystalixLanguageProvider {
         add("key.crystalix.cycle_light", "Cycle Light Mode");
         add("key.crystalix.cycle_ghost", "Cycle Ghost Mode");
 
+        add("tooltip.crystalix.wand.bulk", "§7Hold Shift to Bulk Edit");
         add("tooltip.crystalix.wand.shadeless.enabled", "§7Shadeless Mode: §2Enabled");
         add("tooltip.crystalix.wand.shadeless.disabled", "§7Shadeless Mode: §4Disabled");
         add("tooltip.crystalix.wand.reinforced.enabled", "§7Reinforced Mode: §2Enabled");
