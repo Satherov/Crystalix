@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import com.satherov.crystalix.Crystalix;
 import com.satherov.crystalix.content.CrystalixRegistry;
 
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
@@ -22,6 +23,7 @@ public class CrystalixBlockTagProvider extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(BlockTags.MINEABLE_WITH_PICKAXE).addTag(CrystalixRegistry.BLOCKTAG_BLOCKS);
+        tag(Tags.Blocks.GLASS_BLOCKS).addTag(CrystalixRegistry.BLOCKTAG_BLOCKS);
         CrystalixRegistry.BLOCKS.getEntries().forEach(block -> tag(CrystalixRegistry.BLOCKTAG_BLOCKS).add(block.get()));
     }
 }
