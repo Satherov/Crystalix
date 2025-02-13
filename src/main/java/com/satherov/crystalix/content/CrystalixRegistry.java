@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.satherov.crystalix.Crystalix;
-import com.satherov.crystalix.content.block.CrystalixBlock;
+import com.satherov.crystalix.content.block.CrystalixGlass;
 import com.satherov.crystalix.content.item.CrystalixWand;
 
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -31,7 +31,7 @@ public class CrystalixRegistry {
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> CREATIVE_TAB = CREATIVE_TABS.register("creative_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable(String.format("itemGroup.%s", Crystalix.MOD_ID)))
-            .icon(() -> CrystalixRegistry.BLOCKS_MAP.get(DyeColor.WHITE).get().asItem().getDefaultInstance())
+            .icon(() -> CrystalixRegistry.BLOCKS_MAP.get(DyeColor.WHITE).get("glass").get().asItem().getDefaultInstance())
             .displayItems((parameters, output) ->
                     ITEMS.getEntries().stream()
                             .map(Supplier::get)
@@ -45,15 +45,19 @@ public class CrystalixRegistry {
 
     public static final DeferredHolder<Item, CrystalixWand> WAND = ITEMS.register("crystalix_wand", () -> new CrystalixWand(new Item.Properties()));
 
-    public static final Map<DyeColor, DeferredHolder<Block, CrystalixBlock>> BLOCKS_MAP = Arrays.stream(DyeColor.values())
+    public static final Map<DyeColor, Map<String, DeferredHolder<Block, CrystalixGlass>>> BLOCKS_MAP = Arrays.stream(DyeColor.values())
             .collect(Collectors.toMap(
                     color -> color,
-                    color -> register(String.format("%s_crystalix_glass", color.getName()), () -> new CrystalixBlock(color))
+                    color -> Map.of(
+                            "glass", register(String.format("%s_crystalix_glass", color.getName()), () -> new CrystalixGlass(color)),
+                            "clear", register(String.format("%s_clear_crystalix_glass", color.getName()), () -> new CrystalixGlass(color)),
+                            "bordered", register(String.format("%s_bordered_crystalix_glass", color.getName()), () -> new CrystalixGlass(color)))
             ));
 
 
-    private static DeferredHolder<Block, CrystalixBlock> register(String name, Supplier<CrystalixBlock> properties) {
-        DeferredHolder<Block, CrystalixBlock> block;
+
+    private static DeferredHolder<Block, CrystalixGlass> register(String name, Supplier<CrystalixGlass> properties) {
+        DeferredHolder<Block, CrystalixGlass> block;
         block = CrystalixRegistry.BLOCKS.register(name, properties);
         CrystalixRegistry.ITEMS.registerSimpleBlockItem(name, block);
         return block;

@@ -13,11 +13,14 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
@@ -37,6 +40,7 @@ public class Crystalix {
             modEventBus.addListener(Client::ClientSetup);
             modEventBus.addListener(Client::registerKeys);
             Client.registerConfigScreen(modContainer);
+            modEventBus.addListener(Client::renderTypeSetup);
         }
     }
 
@@ -54,6 +58,10 @@ public class Crystalix {
 
         public static void registerConfigScreen(ModContainer modContainer) {
             modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+        }
+
+        public static void renderTypeSetup(EntityRenderersEvent.RegisterRenderers event) {
+            CrystalixRegistry.BLOCKS_MAP.forEach((color, set) -> set.forEach((name, block) -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.translucent())));
         }
     }
 

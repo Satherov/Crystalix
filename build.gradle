@@ -89,10 +89,14 @@ configurations {
 }
 
 dependencies {
+    implementation fileTree('libs') { include '*.jar'}
+
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 
     implementation "curse.maven:jade-324717:${jade_version}"
+    implementation "curse.maven:fusion-connected-textures-854949:${fusion_version}"
+    implementation "curse.maven:framedblocks-441647:${framedblocks_version}"
 }
 
 tasks.withType(ProcessResources).configureEach {

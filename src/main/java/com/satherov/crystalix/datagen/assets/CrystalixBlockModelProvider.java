@@ -20,18 +20,18 @@ public class CrystalixBlockModelProvider extends BlockModelProvider {
 
     @Override
     protected void registerModels() {
-        CrystalixRegistry.BLOCKS_MAP.forEach((color, block) -> {
-            shadedBlock(block, color);
-            shadelessBlock(block, color);
-        });
+        CrystalixRegistry.BLOCKS_MAP.forEach((color, set) -> set.forEach((name, block) -> {
+            shadedBlock(block, color, name);
+            shadelessBlock(block, color, name);
+        }));
     }
 
-    private void shadedBlock(DeferredHolder<Block, ? extends Block> block, DyeColor color) {
-        this.singleTexture("block/" + block.getId().getPath(), ResourceLocation.withDefaultNamespace("block/cube_all"), "all", modLoc("block/" + color.getName())).renderType("translucent");
+    private void shadedBlock(DeferredHolder<Block, ? extends Block> block, DyeColor color, String name) {
+        this.singleTexture("block/" + name + "/" + block.getId().getPath(), ResourceLocation.withDefaultNamespace("block/cube_all"), "all", modLoc("block/" + color.getName())).renderType("translucent");
     }
 
-    private void shadelessBlock(DeferredHolder<Block, ? extends Block> block, DyeColor color) {
-        this.singleTexture("block/" + block.getId().getPath() + "_no_shade", modLoc("block/no_shade_block"), "all", modLoc("block/" + color.getName())).renderType("translucent");
+    private void shadelessBlock(DeferredHolder<Block, ? extends Block> block, DyeColor color, String name) {
+        this.singleTexture("block/" + name + "/" + block.getId().getPath() + "_no_shade", modLoc("block/no_shade_block"), "all", modLoc("block/" + color.getName())).renderType("translucent");
     }
 
 }

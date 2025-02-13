@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import com.satherov.crystalix.Crystalix;
-import com.satherov.crystalix.datagen.assets.CrystalixBlockModelProvider;
 import com.satherov.crystalix.datagen.assets.CrystalixBlockStateProvider;
+import com.satherov.crystalix.datagen.assets.CrystalixFusionModelProvider;
 import com.satherov.crystalix.datagen.assets.CrystalixItemModelProvider;
 import com.satherov.crystalix.datagen.assets.lang.EN_USProvider;
 import com.satherov.crystalix.datagen.data.CrystalixLootTableProvider;
@@ -41,7 +41,7 @@ public class CrystalixDataGenerator {
         CrystalixDataProvider provider = new CrystalixDataProvider();
 
         // Assets
-        provider.addSubProvider(event.includeClient(), new CrystalixBlockModelProvider(packOutput, fileHelper));
+        provider.addSubProvider(event.includeClient(), new CrystalixFusionModelProvider(packOutput, fileHelper));
         provider.addSubProvider(event.includeClient(), new CrystalixBlockStateProvider(generator, fileHelper));
         provider.addSubProvider(event.includeClient(), new CrystalixItemModelProvider(packOutput, fileHelper));
 

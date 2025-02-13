@@ -61,9 +61,9 @@ public class CrystalixRecipeProvider extends RecipeProvider implements IConditio
                 .unlockedBy("has_star", has(Tags.Items.NETHER_STARS))
                 .save(recipeOutput);
 
-        CrystalixRegistry.BLOCKS_MAP.forEach((color, block) -> {
+        CrystalixRegistry.BLOCKS_MAP.forEach((color, set) -> set.forEach((name, block) -> {
             tint(color.getTag(), block, recipeOutput);
             block(color.getTag(), block, recipeOutput);
-        });
+        }));
     }
 }

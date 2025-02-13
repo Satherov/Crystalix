@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "shadeless=false": {
+      "model": "crystalix:block/bordered/light_gray_bordered_crystalix_glass"
+    },
+    "shadeless=true": {
+      "model": "crystalix:block/bordered/light_gray_bordered_crystalix_glass_no_shade"
+    }
+  }
+}

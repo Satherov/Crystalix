@@ -4,7 +4,7 @@ import java.util.*;
 
 import com.satherov.crystalix.Crystalix;
 import com.satherov.crystalix.CrystalixConfig;
-import com.satherov.crystalix.content.block.CrystalixBlock;
+import com.satherov.crystalix.content.block.CrystalixGlass;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,8 +26,8 @@ public class CrystalixWand extends Item {
 
     private boolean shadelessMode = false;
     private boolean reinforcedMode = false;
-    private CrystalixBlock.Light lightMode  = CrystalixBlock.Light.NONE;
-    private CrystalixBlock.Ghost ghostMode  = CrystalixBlock.Ghost.BLOCK_ALL;
+    private CrystalixGlass.Light lightMode  = CrystalixGlass.Light.NONE;
+    private CrystalixGlass.Ghost ghostMode  = CrystalixGlass.Ghost.BLOCK_ALL;
 
     public CrystalixWand(Properties properties) {
         super(properties);
@@ -61,7 +61,7 @@ public class CrystalixWand extends Item {
     }
 
     public boolean applyToBlock(Level level, BlockPos pos, Player player) {
-        if (!(level.getBlockState(pos).getBlock() instanceof CrystalixBlock)) {
+        if (!(level.getBlockState(pos).getBlock() instanceof CrystalixGlass)) {
             return false;
         }
 
@@ -73,10 +73,10 @@ public class CrystalixWand extends Item {
         for (BlockPos targetPos : blocksToModify) {
             System.out.println("targetPos: " + targetPos);
             BlockState newState = level.getBlockState(targetPos)
-                    .setValue(CrystalixBlock.SHADED, !this.isShadeless())
-                    .setValue(CrystalixBlock.REINFORCED, this.isReinforced())
-                    .setValue(CrystalixBlock.LIGHT, this.getLightMode())
-                    .setValue(CrystalixBlock.GHOST, this.getGhostMode());
+                    .setValue(CrystalixGlass.SHADELESS, this.isShadeless())
+                    .setValue(CrystalixGlass.REINFORCED, this.isReinforced())
+                    .setValue(CrystalixGlass.LIGHT, this.getLightMode())
+                    .setValue(CrystalixGlass.GHOST, this.getGhostMode());
 
             level.setBlock(targetPos, newState, 3);
         }
@@ -117,23 +117,23 @@ public class CrystalixWand extends Item {
 
     public void cycleLight(Player player) {
         switch (lightMode) {
-            case NONE -> lightMode = CrystalixBlock.Light.LIGHT;
-            case LIGHT -> lightMode = CrystalixBlock.Light.DARK;
-            case DARK -> lightMode = CrystalixBlock.Light.NONE;
+            case NONE -> lightMode = CrystalixGlass.Light.LIGHT;
+            case LIGHT -> lightMode = CrystalixGlass.Light.DARK;
+            case DARK -> lightMode = CrystalixGlass.Light.NONE;
         }
         sendMessage(player, "light", lightMode.name().toLowerCase(Locale.ROOT));
     }
 
     public void cycleGhost(Player player) {
         switch (ghostMode) {
-            case BLOCK_ALL -> ghostMode = CrystalixBlock.Ghost.ALLOW_ALL;
-            case ALLOW_ALL -> ghostMode = CrystalixBlock.Ghost.BLOCK_PLAYER;
-            case BLOCK_PLAYER -> ghostMode = CrystalixBlock.Ghost.ALLOW_PLAYER;
-            case ALLOW_PLAYER -> ghostMode = CrystalixBlock.Ghost.BLOCK_MONSTER;
-            case BLOCK_MONSTER -> ghostMode = CrystalixBlock.Ghost.ALLOW_MONSTER;
-            case ALLOW_MONSTER -> ghostMode = CrystalixBlock.Ghost.BLOCK_ANIMAL;
-            case BLOCK_ANIMAL -> ghostMode = CrystalixBlock.Ghost.ALLOW_ANIMAL;
-            default -> ghostMode = CrystalixBlock.Ghost.BLOCK_ALL;
+            case BLOCK_ALL -> ghostMode = CrystalixGlass.Ghost.ALLOW_ALL;
+            case ALLOW_ALL -> ghostMode = CrystalixGlass.Ghost.BLOCK_PLAYER;
+            case BLOCK_PLAYER -> ghostMode = CrystalixGlass.Ghost.ALLOW_PLAYER;
+            case ALLOW_PLAYER -> ghostMode = CrystalixGlass.Ghost.BLOCK_MONSTER;
+            case BLOCK_MONSTER -> ghostMode = CrystalixGlass.Ghost.ALLOW_MONSTER;
+            case ALLOW_MONSTER -> ghostMode = CrystalixGlass.Ghost.BLOCK_ANIMAL;
+            case BLOCK_ANIMAL -> ghostMode = CrystalixGlass.Ghost.ALLOW_ANIMAL;
+            default -> ghostMode = CrystalixGlass.Ghost.BLOCK_ALL;
         }
         sendMessage(player, "ghost", ghostMode.name().toLowerCase());
     }
@@ -162,11 +162,11 @@ public class CrystalixWand extends Item {
         return reinforcedMode;
     }
 
-    public CrystalixBlock.Light getLightMode() {
+    public CrystalixGlass.Light getLightMode() {
         return lightMode;
     }
 
-    public CrystalixBlock.Ghost getGhostMode() {
+    public CrystalixGlass.Ghost getGhostMode() {
         return ghostMode;
     }
 }
