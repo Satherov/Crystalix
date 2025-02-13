@@ -88,6 +88,11 @@ public class CrystalixGlass extends TransparentBlock implements BeaconBeamBlock,
     // Reinforced
 
     @Override
+    public boolean canDropFromExplosion(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
+        return !state.getValue(REINFORCED) && super.canDropFromExplosion(state, level, pos, explosion);
+    }
+
+    @Override
     public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
         return !state.getValue(REINFORCED) && super.canBeReplaced(state, context);
     }
