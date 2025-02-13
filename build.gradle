@@ -96,7 +96,6 @@ dependencies {
 
     implementation "curse.maven:jade-324717:${jade_version}"
     implementation "curse.maven:fusion-connected-textures-854949:${fusion_version}"
-    implementation "curse.maven:framedblocks-441647:${framedblocks_version}"
 }
 
 tasks.withType(ProcessResources).configureEach {
