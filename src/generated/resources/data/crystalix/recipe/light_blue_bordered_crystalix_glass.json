@@ -3,13 +3,13 @@
   "category": "misc",
   "key": {
     "a": {
-      "tag": "c:gems/amethyst"
+      "tag": "crystalix:glass"
     },
     "c": {
       "tag": "c:dyes/light_blue"
     },
     "g": {
-      "tag": "c:glass_blocks"
+      "tag": "c:gems/amethyst"
     }
   },
   "pattern": [

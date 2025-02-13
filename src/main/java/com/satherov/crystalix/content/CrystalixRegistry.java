@@ -41,7 +41,15 @@ public class CrystalixRegistry {
     );
 
     public static final TagKey<Block> BLOCKTAG_BLOCKS = BlockTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "blocks"));
+    public static final TagKey<Block> BLOCKTAG_GLASS = BlockTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "glass"));
+    public static final TagKey<Block> BLOCKTAG_CLEAR = BlockTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "clear"));
+    public static final TagKey<Block> BLOCKTAG_BORDERED = BlockTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "bordered"));
+
     public static final TagKey<Item> ITEMTAG_BLOCKS = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "blocks"));
+    public static final TagKey<Item> ITEMTAG_GLASS = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "glass"));
+    public static final TagKey<Item> ITEMTAG_CLEAR = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "clear"));
+    public static final TagKey<Item> ITEMTAG_BORDERED = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "bordered"));
+
 
     public static final DeferredHolder<Item, CrystalixWand> WAND = ITEMS.register("crystalix_wand", () -> new CrystalixWand(new Item.Properties()));
 

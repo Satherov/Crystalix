@@ -18,5 +18,10 @@ public class CrystalixItemTagProvider extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         CrystalixRegistry.ITEMS.getEntries().forEach(block -> tag(CrystalixRegistry.ITEMTAG_BLOCKS).add(block.get()));
+        CrystalixRegistry.BLOCKS_MAP.forEach((color, set) -> set.forEach((name, block) -> {
+            if (name.equals("glass")) tag(CrystalixRegistry.ITEMTAG_GLASS).add(block.get().asItem());
+            if (name.equals("clear")) tag(CrystalixRegistry.ITEMTAG_CLEAR).add(block.get().asItem());
+            if (name.equals("bordered")) tag(CrystalixRegistry.ITEMTAG_BORDERED).add(block.get().asItem());
+        }));
     }
 }

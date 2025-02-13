@@ -25,5 +25,10 @@ public class CrystalixBlockTagProvider extends BlockTagsProvider {
         tag(BlockTags.MINEABLE_WITH_PICKAXE).addTag(CrystalixRegistry.BLOCKTAG_BLOCKS);
         tag(Tags.Blocks.GLASS_BLOCKS).addTag(CrystalixRegistry.BLOCKTAG_BLOCKS);
         CrystalixRegistry.BLOCKS.getEntries().forEach(block -> tag(CrystalixRegistry.BLOCKTAG_BLOCKS).add(block.get()));
+        CrystalixRegistry.BLOCKS_MAP.forEach((color, set) -> set.forEach((name, block) -> {
+            if (name.equals("glass")) tag(CrystalixRegistry.BLOCKTAG_GLASS).add(block.get());
+            if (name.equals("clear")) tag(CrystalixRegistry.BLOCKTAG_CLEAR).add(block.get());
+            if (name.equals("bordered")) tag(CrystalixRegistry.BLOCKTAG_BORDERED).add(block.get());
+        }));
     }
 }

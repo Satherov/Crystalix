@@ -26,27 +26,15 @@ public class CrystalixRecipeProvider extends RecipeProvider implements IConditio
         super(output, registries);
     }
 
-    private void tint(TagKey<Item> color, DeferredHolder<Block, ?> output, RecipeOutput recipeOutput) {
+    private void tint(TagKey<Item> color, TagKey<Item> type, DeferredHolder<Block, ?> output, RecipeOutput recipeOutput) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, output.get().asItem(), 8)
                 .pattern("aaa")
                 .pattern("aba")
                 .pattern("aaa")
-                .define('a', CrystalixRegistry.ITEMTAG_BLOCKS)
+                .define('a', type)
                 .define('b', color)
                 .unlockedBy("has_glass", has(Tags.Items.GLASS_BLOCKS))
                 .save(recipeOutput, Crystalix.MOD_ID + ":tinted_" + output.getId().getPath());
-    }
-
-    private void block(TagKey<Item> color, DeferredHolder<Block, ?> output, RecipeOutput recipeOutput) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, output.get().asItem(), 4)
-                .pattern("gag")
-                .pattern("aca")
-                .pattern("gag")
-                .define('g', Tags.Items.GLASS_BLOCKS)
-                .define('a', Tags.Items.GEMS_AMETHYST)
-                .define('c', color)
-                .unlockedBy("has_glass", has(Tags.Items.GLASS_BLOCKS))
-                .save(recipeOutput);
     }
 
     @Override
@@ -62,8 +50,42 @@ public class CrystalixRecipeProvider extends RecipeProvider implements IConditio
                 .save(recipeOutput);
 
         CrystalixRegistry.BLOCKS_MAP.forEach((color, set) -> set.forEach((name, block) -> {
-            tint(color.getTag(), block, recipeOutput);
-            block(color.getTag(), block, recipeOutput);
+            if (name.equals("glass")) {
+                tint(color.getTag(), CrystalixRegistry.ITEMTAG_GLASS, block, recipeOutput);
+                ShapedRecipeBuilder.shaped(RecipeCategory.MISC, block.get().asItem(), 4)
+                        .pattern("gag")
+                        .pattern("aca")
+                        .pattern("gag")
+                        .define('g', Tags.Items.GLASS_BLOCKS)
+                        .define('a', Tags.Items.GEMS_AMETHYST)
+                        .define('c', color.getTag())
+                        .unlockedBy("has_glass", has(Tags.Items.GLASS_BLOCKS))
+                        .save(recipeOutput);
+            }
+            if (name.equals("clear")) {
+                tint(color.getTag(), CrystalixRegistry.ITEMTAG_CLEAR, block, recipeOutput);
+                ShapedRecipeBuilder.shaped(RecipeCategory.MISC, block.get().asItem(), 4)
+                        .pattern("gag")
+                        .pattern("aca")
+                        .pattern("gag")
+                        .define('g', CrystalixRegistry.ITEMTAG_GLASS)
+                        .define('a', Tags.Items.GEMS_AMETHYST)
+                        .define('c', color.getTag())
+                        .unlockedBy("has_glass", has(Tags.Items.GLASS_BLOCKS))
+                        .save(recipeOutput);
+            }
+            if (name.equals("bordered")) {
+                tint(color.getTag(), CrystalixRegistry.ITEMTAG_BORDERED, block, recipeOutput);
+                ShapedRecipeBuilder.shaped(RecipeCategory.MISC, block.get().asItem(), 4)
+                        .pattern("gag")
+                        .pattern("aca")
+                        .pattern("gag")
+                        .define('g', Tags.Items.GEMS_AMETHYST)
+                        .define('a', CrystalixRegistry.ITEMTAG_GLASS)
+                        .define('c', color.getTag())
+                        .unlockedBy("has_glass", has(Tags.Items.GLASS_BLOCKS))
+                        .save(recipeOutput);
+            }
         }));
     }
 }
