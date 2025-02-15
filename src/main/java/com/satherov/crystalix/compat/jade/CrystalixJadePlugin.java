@@ -5,6 +5,7 @@ import java.util.Locale;
 import com.satherov.crystalix.Crystalix;
 import com.satherov.crystalix.content.block.CrystalixGlass;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -43,10 +44,14 @@ public class CrystalixJadePlugin implements IWailaPlugin {
     }
 
     private static Component getTranslation(String key, boolean state) {
-        return Component.translatable(String.format("tooltip.%s.wand.%s.%s", Crystalix.MOD_ID, key, state ? "enabled" : "disabled"));
+        return Component.translatable(String.format("%s.property.%s", Crystalix.MOD_ID, key)).withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(": ")).withStyle(ChatFormatting.GRAY)
+                .append(Component.translatable(String.format("%s.property.%s.%s", Crystalix.MOD_ID, key, state ? "enabled" : "disabled")).withStyle(state ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
     }
 
     private static Component getTranslation(String key, String state) {
-        return Component.translatable(String.format("tooltip.%s.wand.%s.%s", Crystalix.MOD_ID, key, state));
+        return Component.translatable(String.format("%s.property.%s", Crystalix.MOD_ID, key))
+                .append(Component.literal(": "))
+                .append(Component.translatable(String.format("%s.property.%s.%s", Crystalix.MOD_ID, key, state)));
     }
 }

@@ -1,14 +1,17 @@
 package com.satherov.crystalix.client;
 
 import com.satherov.crystalix.Crystalix;
+import com.satherov.crystalix.content.CrystalixUtil;
 import com.satherov.crystalix.content.item.CrystalixWand;
+import com.satherov.crystalix.content.properties.BlockProperties;
+import com.satherov.crystalix.network.CrystalixNetworking;
+import com.satherov.crystalix.network.CyclePropertyPayload;
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -34,24 +37,28 @@ public class KeybindManager {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        ItemStack wand = wand(player);
-        if (wand.isEmpty() || !(wand.getItem() instanceof CrystalixWand crystalixWand)) return;
+        ItemStack wand = CrystalixUtil.getWand(player);
+        if (wand.isEmpty() || !(wand.getItem() instanceof CrystalixWand)) return;
 
-        if (CYCLE_SHADELESS.consumeClick()) crystalixWand.cycleShadeless(player);
-        if (CYCLE_REINFORCED.consumeClick()) crystalixWand.cycleReinforced(player);
-        if (CYCLE_LIGHT.consumeClick()) crystalixWand.cycleLight(player);
-        if (CYCLE_GHOST.consumeClick()) crystalixWand.cycleGhost(player);
-    }
-
-    public static ItemStack wand(Player player) {
-        ItemStack mainHand = player.getItemInHand(InteractionHand.MAIN_HAND);
-        ItemStack offHand = player.getItemInHand(InteractionHand.OFF_HAND);
-
-        if (!mainHand.isEmpty() && mainHand.getItem() instanceof CrystalixWand) {
-            return mainHand;
-        } else if (!offHand.isEmpty() && offHand.getItem() instanceof CrystalixWand) {
-            return offHand;
+        if (CYCLE_SHADELESS.consumeClick()) {
+            BlockProperties properties = new BlockProperties(wand);
+            properties.shadeless.next();
+            CrystalixNetworking.sendToServer(new CyclePropertyPayload(properties.shadeless));
         }
-        return ItemStack.EMPTY;
+        if (CYCLE_REINFORCED.consumeClick()) {
+            BlockProperties properties = new BlockProperties(wand);
+            properties.reinforced.next();
+            CrystalixNetworking.sendToServer(new CyclePropertyPayload(properties.reinforced));
+        }
+        if (CYCLE_LIGHT.consumeClick()) {
+            BlockProperties properties = new BlockProperties(wand);
+            properties.light.next();
+            CrystalixNetworking.sendToServer(new CyclePropertyPayload(properties.light));
+        }
+        if (CYCLE_GHOST.consumeClick()) {
+            BlockProperties properties = new BlockProperties(wand);
+            properties.ghost.next();
+            CrystalixNetworking.sendToServer(new CyclePropertyPayload(properties.ghost));
+        }
     }
 }

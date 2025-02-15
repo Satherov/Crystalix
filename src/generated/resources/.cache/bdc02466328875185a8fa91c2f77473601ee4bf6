@@ -1,4 +1,4 @@
-// 1.21.1	2025-02-13T22:32:48.2547751	Example Mod Data Provider
+// 1.21.1	2025-02-15T22:32:45.6380633	Example Mod Data Provider
 fb8a944616392b66f3ba477bfbbd85e587251b24 assets/crystalix/blockstates/black_bordered_crystalix_glass.json
 20e113f7a3837dd34084d28e686e8704b781d999 assets/crystalix/blockstates/black_clear_crystalix_glass.json
 6a19c18f9c6487cb8cd60daff6b94c7d71475a04 assets/crystalix/blockstates/black_crystalix_glass.json
@@ -47,7 +47,7 @@ ea2b32e191ca2c40b6dcad0ebc8cc4e92d76e35c assets/crystalix/blockstates/red_clear_
 7a8f56034449099e7f63cc3ee732362b72f79014 assets/crystalix/blockstates/yellow_bordered_crystalix_glass.json
 0d80f3fc2602becfb12f63dc62e83b2506709b5c assets/crystalix/blockstates/yellow_clear_crystalix_glass.json
 1f9bb3675d66f4f8fa7268331262973f08f3b303 assets/crystalix/blockstates/yellow_crystalix_glass.json
-4245d586ed92bd53ef224256127494b7bcc1d560 assets/crystalix/lang/en_us.json
+4a18e7c4667182fdf4053e1e6a62a81aad10b505 assets/crystalix/lang/en_us.json
 ae62af5fad7b799223626bd661d5111e21326fb0 assets/crystalix/models/block/bordered/black_bordered_crystalix_glass.json
 ff0f40d78f7beb3689155addc799bd9feb401d8e assets/crystalix/models/block/bordered/black_bordered_crystalix_glass_no_shade.json
 9913fc8d844937241b5fae0a9417e2d3a5c9b058 assets/crystalix/models/block/bordered/blue_bordered_crystalix_glass.json
@@ -436,12 +436,12 @@ bdb74263470cd2fd9deae8a580e8047db0849a25 data/crystalix/recipe/tinted_yellow_cle
 66d7afcc20dc31c0fd79e46f7137aa1bb53bd87b data/crystalix/recipe/yellow_clear_crystalix_glass.json
 6fdccf6addb12450ad50a6d73adcd882c064fbd6 data/crystalix/recipe/yellow_crystalix_glass.json
 05fd3d58f7ba1a18c165aba330d476b2b1a83077 data/crystalix/tags/block/blocks.json
-0bb84ebe0a05446053b1db734b0eeefbdc44991a data/crystalix/tags/block/bordered.json
-bf4d0b64c9056145680335dd4b8142b91b6e266d data/crystalix/tags/block/clear.json
-3299bfd9c289bbca52b7afe8f9c50b535964e9b8 data/crystalix/tags/block/glass.json
+8a184840a8280662ca2222c70316bc7f5faefa9b data/crystalix/tags/block/bordered.json
+e4d27f960106a714c08c93be7c1eac9bc29e671f data/crystalix/tags/block/clear.json
+13e4e83ef28ce4f033af1cac7d72650529fc1768 data/crystalix/tags/block/glass.json
 a0947a3939127f7753fe1ccb08fbb3585f59fa55 data/crystalix/tags/item/blocks.json
-0bb84ebe0a05446053b1db734b0eeefbdc44991a data/crystalix/tags/item/bordered.json
-bf4d0b64c9056145680335dd4b8142b91b6e266d data/crystalix/tags/item/clear.json
-3299bfd9c289bbca52b7afe8f9c50b535964e9b8 data/crystalix/tags/item/glass.json
+8a184840a8280662ca2222c70316bc7f5faefa9b data/crystalix/tags/item/bordered.json
+e4d27f960106a714c08c93be7c1eac9bc29e671f data/crystalix/tags/item/clear.json
+13e4e83ef28ce4f033af1cac7d72650529fc1768 data/crystalix/tags/item/glass.json
 1a8e6e03ba619e387c9c100289a17461d691c740 data/c/tags/block/glass_blocks.json
 1a8e6e03ba619e387c9c100289a17461d691c740 data/minecraft/tags/block/mineable/pickaxe.json

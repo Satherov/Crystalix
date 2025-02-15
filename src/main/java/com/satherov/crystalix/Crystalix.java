@@ -3,6 +3,7 @@ package com.satherov.crystalix;
 
 import com.satherov.crystalix.client.KeybindManager;
 import com.satherov.crystalix.content.CrystalixRegistry;
+import com.satherov.crystalix.network.CrystalixNetworking;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -30,6 +31,10 @@ public class Crystalix {
     public static final String MOD_ID = "crystalix";
 
     public Crystalix(IEventBus modEventBus, ModContainer modContainer) {
+
+        modEventBus.addListener(CrystalixNetworking::registerPayloads);
+
+        CrystalixRegistry.DATA_COMPONENT_TYPES.register(modEventBus);
         CrystalixRegistry.BLOCKS.register(modEventBus);
         CrystalixRegistry.ITEMS.register(modEventBus);
         CrystalixRegistry.CREATIVE_TABS.register(modEventBus);
@@ -39,8 +44,8 @@ public class Crystalix {
         if(FMLEnvironment.dist.isClient()) {
             modEventBus.addListener(Client::ClientSetup);
             modEventBus.addListener(Client::registerKeys);
-            Client.registerConfigScreen(modContainer);
             modEventBus.addListener(Client::renderTypeSetup);
+            Client.registerConfigScreen(modContainer);
         }
     }
 

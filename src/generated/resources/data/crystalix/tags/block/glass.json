@@ -1,20 +1,20 @@
 {
   "values": [
+    "crystalix:green_crystalix_glass",
     "crystalix:orange_crystalix_glass",
     "crystalix:blue_crystalix_glass",
-    "crystalix:light_gray_crystalix_glass",
-    "crystalix:red_crystalix_glass",
-    "crystalix:purple_crystalix_glass",
     "crystalix:yellow_crystalix_glass",
-    "crystalix:lime_crystalix_glass",
-    "crystalix:magenta_crystalix_glass",
-    "crystalix:pink_crystalix_glass",
-    "crystalix:black_crystalix_glass",
-    "crystalix:brown_crystalix_glass",
-    "crystalix:light_blue_crystalix_glass",
-    "crystalix:green_crystalix_glass",
     "crystalix:white_crystalix_glass",
     "crystalix:cyan_crystalix_glass",
-    "crystalix:gray_crystalix_glass"
+    "crystalix:pink_crystalix_glass",
+    "crystalix:light_blue_crystalix_glass",
+    "crystalix:brown_crystalix_glass",
+    "crystalix:purple_crystalix_glass",
+    "crystalix:red_crystalix_glass",
+    "crystalix:black_crystalix_glass",
+    "crystalix:light_gray_crystalix_glass",
+    "crystalix:lime_crystalix_glass",
+    "crystalix:gray_crystalix_glass",
+    "crystalix:magenta_crystalix_glass"
   ]
 }

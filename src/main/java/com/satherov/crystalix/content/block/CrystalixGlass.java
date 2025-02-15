@@ -1,18 +1,14 @@
 package com.satherov.crystalix.content.block;
 
-import java.util.Locale;
 import java.util.Objects;
-import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
 
+import com.satherov.crystalix.content.CrystalixRegistry;
 import com.satherov.crystalix.content.item.CrystalixWand;
+import com.satherov.crystalix.content.properties.BlockProperties;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -29,7 +25,6 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -41,12 +36,16 @@ public class CrystalixGlass extends TransparentBlock implements BeaconBeamBlock,
 
     public static final BooleanProperty SHADELESS = BooleanProperty.create("shadeless");
     public static final BooleanProperty REINFORCED = BooleanProperty.create("reinforced");
-    public static final EnumProperty<Light> LIGHT = EnumProperty.create("light", Light.class);
-    public static final EnumProperty<Ghost> GHOST = EnumProperty.create("ghost", Ghost.class);
+    public static final EnumProperty<BlockProperties.Light> LIGHT = EnumProperty.create("light", BlockProperties.Light.class);
+    public static final EnumProperty<BlockProperties.Ghost> GHOST = EnumProperty.create("ghost", BlockProperties.Ghost.class);
 
     public CrystalixGlass(DyeColor dyeColor) {
         super(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_STAINED_GLASS).mapColor(dyeColor));
-        this.registerDefaultState(this.stateDefinition.any().setValue(SHADELESS, false).setValue(REINFORCED, false).setValue(LIGHT, Light.NONE).setValue(GHOST, Ghost.BLOCK_ALL));
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(SHADELESS, false)
+                .setValue(REINFORCED, false)
+                .setValue(LIGHT, BlockProperties.Light.NONE)
+                .setValue(GHOST, BlockProperties.Ghost.BLOCK_ALL));
         this.color = dyeColor;
     }
 
@@ -61,25 +60,18 @@ public class CrystalixGlass extends TransparentBlock implements BeaconBeamBlock,
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (stack.getItem() instanceof CrystalixWand wand) {
-            return wand.applyToBlock(level, pos, player) ? ItemInteractionResult.sidedSuccess(!level.isClientSide) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-    }
-
-    @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Player player = context.getPlayer();
         if (player == null) return this.defaultBlockState();
 
-        if (player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof CrystalixWand wand) {
+        if (player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof CrystalixWand) {
+            ItemStack wand = player.getItemInHand(InteractionHand.OFF_HAND);
             return this.defaultBlockState()
-                    .setValue(SHADELESS, wand.isShadeless())
-                    .setValue(REINFORCED, wand.isReinforced())
-                    .setValue(LIGHT, wand.getLightMode())
-                    .setValue(GHOST, wand.getGhostMode());
+                    .setValue(SHADELESS, Objects.requireNonNull(wand.get(CrystalixRegistry.SHADELESS)))
+                    .setValue(REINFORCED, Objects.requireNonNull(wand.get(CrystalixRegistry.REINFORCED)))
+                    .setValue(LIGHT, Objects.requireNonNull(wand.get(CrystalixRegistry.LIGHT)))
+                    .setValue(GHOST, Objects.requireNonNull(wand.get(CrystalixRegistry.GHOST)));
         }
 
         return this.defaultBlockState();
@@ -108,17 +100,17 @@ public class CrystalixGlass extends TransparentBlock implements BeaconBeamBlock,
 
     @Override
     protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.getValue(LIGHT) != Light.DARK && super.propagatesSkylightDown(state, level, pos);
+        return state.getValue(LIGHT) != BlockProperties.Light.DARK && super.propagatesSkylightDown(state, level, pos);
     }
 
     @Override
     protected int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.getValue(LIGHT) == Light.DARK ? level.getMaxLightLevel() : 0;
+        return state.getValue(LIGHT) == BlockProperties.Light.DARK ? level.getMaxLightLevel() : 0;
     }
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.getValue(LIGHT) == Light.LIGHT ? 15 : 0;
+        return state.getValue(LIGHT) == BlockProperties.Light.LIGHT ? 15 : 0;
     }
 
     // Ghost
@@ -135,9 +127,9 @@ public class CrystalixGlass extends TransparentBlock implements BeaconBeamBlock,
 
     protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         if (Objects.requireNonNull(pathComputationType) == PathComputationType.LAND) {
-            return !(state.getValue(GHOST) == Ghost.ALLOW_ALL) ||
-                   !(state.getValue(GHOST) == Ghost.ALLOW_MONSTER) ||
-                   !(state.getValue(GHOST) == Ghost.ALLOW_ANIMAL);
+            return !(state.getValue(GHOST) == BlockProperties.Ghost.ALLOW_ALL) ||
+                   !(state.getValue(GHOST) == BlockProperties.Ghost.ALLOW_MONSTER) ||
+                   !(state.getValue(GHOST) == BlockProperties.Ghost.ALLOW_ANIMAL);
         }
         return false;
     }
@@ -150,42 +142,5 @@ public class CrystalixGlass extends TransparentBlock implements BeaconBeamBlock,
     @Override
     public boolean placeLiquid(LevelAccessor level, BlockPos pos, BlockState state, FluidState fluidState) {
         return false;
-    }
-
-    public enum Light implements StringRepresentable {
-        NONE,
-        LIGHT,
-        DARK;
-
-        @Override
-        public String getSerializedName() {
-            return this.name().toLowerCase(Locale.ROOT);
-        }
-    }
-
-    public enum Ghost implements StringRepresentable {
-        BLOCK_ALL(context -> false),
-        ALLOW_ALL(context -> true),
-        BLOCK_PLAYER(context -> !(context.getEntity() instanceof Player)),
-        ALLOW_PLAYER(context -> context.getEntity() instanceof Player),
-        BLOCK_MONSTER(context -> !(context.getEntity() instanceof Monster)),
-        ALLOW_MONSTER(context -> context.getEntity() instanceof Monster),
-        BLOCK_ANIMAL(context -> !(context.getEntity() instanceof Animal)),
-        ALLOW_ANIMAL(context -> context.getEntity() instanceof Animal);
-
-        private final Predicate<EntityCollisionContext> collisionPredicate;
-
-        Ghost(Predicate<EntityCollisionContext> collisionPredicate) {
-            this.collisionPredicate = collisionPredicate;
-        }
-
-        public boolean canCollide(EntityCollisionContext context) {
-            return this.collisionPredicate.test(context);
-        }
-
-        @Override
-        public String getSerializedName() {
-            return this.name().toLowerCase(Locale.ROOT);
-        }
     }
 }
