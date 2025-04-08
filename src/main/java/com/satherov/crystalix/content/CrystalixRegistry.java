@@ -1,15 +1,6 @@
 package com.satherov.crystalix.content;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import com.satherov.crystalix.Crystalix;
-import com.satherov.crystalix.content.block.CrystalixGlass;
-import com.satherov.crystalix.content.item.CrystalixWand;
-import com.satherov.crystalix.content.properties.BlockProperties;
-
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -21,12 +12,25 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
 import com.mojang.serialization.Codec;
+import com.satherov.crystalix.Crystalix;
+import com.satherov.crystalix.content.block.CrystalixGlass;
+import com.satherov.crystalix.content.item.CrystalixWand;
+import com.satherov.crystalix.content.properties.BlockProperties;
+
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class CrystalixRegistry {
 
@@ -46,26 +50,64 @@ public class CrystalixRegistry {
             ).build()
     );
 
-    public static final TagKey<Block> BLOCKTAG_BLOCKS = BlockTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "blocks"));
-    public static final TagKey<Block> BLOCKTAG_GLASS = BlockTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "glass"));
-    public static final TagKey<Block> BLOCKTAG_CLEAR = BlockTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "clear"));
-    public static final TagKey<Block> BLOCKTAG_BORDERED = BlockTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "bordered"));
-
-    public static final TagKey<Item> ITEMTAG_BLOCKS = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "blocks"));
-    public static final TagKey<Item> ITEMTAG_GLASS = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "glass"));
-    public static final TagKey<Item> ITEMTAG_CLEAR = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "clear"));
-    public static final TagKey<Item> ITEMTAG_BORDERED = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "bordered"));
-
-
     public static final DeferredHolder<Item, CrystalixWand> WAND = ITEMS.register("crystalix_wand", () -> new CrystalixWand(new Item.Properties(), false, false, BlockProperties.Light.NONE, BlockProperties.Ghost.BLOCK_ALL));
 
-    public static final Map<DyeColor, Map<String, DeferredHolder<Block, CrystalixGlass>>> BLOCKS_MAP = Arrays.stream(DyeColor.values())
+    public enum BlockTypes implements StringRepresentable {
+        GLASS(Tags.Items.GEMS_AMETHYST),
+        CLEAR(Tags.Items.GEMS_QUARTZ),
+        BORDERED(Tags.Items.INGOTS_IRON);
+
+        private final TagKey<Item> tag;
+
+        BlockTypes(TagKey<Item> tag) {
+            this.tag = tag;
+        }
+
+        public TagKey<Item> getTag() {
+            return tag;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name().toLowerCase(Locale.ROOT);
+        }
+    }
+
+    public static final Map<DyeColor, Map<BlockTypes, DeferredHolder<Block, CrystalixGlass>>> BLOCKS_MAP =
+            Arrays.stream(DyeColor.values()).collect(Collectors.toMap(
+                    Function.identity(),
+                    color -> Arrays.stream(BlockTypes.values()).collect(Collectors.toMap(
+                            Function.identity(),
+                            type -> {
+                                String name = type == BlockTypes.GLASS
+                                        ? String.format("%s_crystalix_glass", color.getName())
+                                        : String.format("%s_%s_crystalix_glass", color.getName(), type.getSerializedName());
+                                return register(name, () -> new CrystalixGlass(color));
+                            },
+                            (a, b) -> b,
+                            () -> new EnumMap<>(BlockTypes.class)
+                    )),
+                    (a, b) -> b,
+                    () -> new EnumMap<>(DyeColor.class)
+            ));
+
+    public static final TagKey<Item> ITEM_TAG = ItemTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "blocks"));
+    public static final TagKey<Block> BLOCK_TAG = BlockTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "blocks"));
+
+    public static final Map<BlockTypes, TagKey<Block>> BLOCK_TAGS = Arrays.stream(BlockTypes.values())
             .collect(Collectors.toMap(
-                    color -> color,
-                    color -> Map.of(
-                            "glass", register(String.format("%s_crystalix_glass", color.getName()), () -> new CrystalixGlass(color)),
-                            "clear", register(String.format("%s_clear_crystalix_glass", color.getName()), () -> new CrystalixGlass(color)),
-                            "bordered", register(String.format("%s_bordered_crystalix_glass", color.getName()), () -> new CrystalixGlass(color)))
+                    Function.identity(),
+                    type -> BlockTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, type.getSerializedName())),
+                    (a, b) -> b,
+                    () -> new EnumMap<>(BlockTypes.class)
+            ));
+
+    public static final Map<BlockTypes, TagKey<Item>> ITEM_TAGS = Arrays.stream(BlockTypes.values())
+            .collect(Collectors.toMap(
+                    Function.identity(),
+                    type -> ItemTags.create(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, type.getSerializedName())),
+                    (a, b) -> b,
+                    () -> new EnumMap<>(BlockTypes.class)
             ));
 
     private static DeferredHolder<Block, CrystalixGlass> register(String name, Supplier<CrystalixGlass> properties) {

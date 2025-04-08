@@ -1,16 +1,13 @@
 package com.satherov.crystalix.content.block;
 
-import java.util.Objects;
-import org.jetbrains.annotations.Nullable;
-
-import com.satherov.crystalix.content.CrystalixRegistry;
-import com.satherov.crystalix.content.item.CrystalixWand;
-import com.satherov.crystalix.content.properties.BlockProperties;
-
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
@@ -29,6 +26,13 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import com.satherov.crystalix.content.CrystalixRegistry;
+import com.satherov.crystalix.content.item.CrystalixWand;
+import com.satherov.crystalix.content.properties.BlockProperties;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class CrystalixGlass extends TransparentBlock implements BeaconBeamBlock, LiquidBlockContainer {
 
@@ -57,6 +61,16 @@ public class CrystalixGlass extends TransparentBlock implements BeaconBeamBlock,
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(SHADELESS, REINFORCED, LIGHT, GHOST);
+    }
+
+    @Override
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+
+        if (state.getValue(LIGHT) == BlockProperties.Light.FAKE_LIGHT) {
+            level.scheduleTick(pos, this, 60 + level.getRandom().nextInt(40));
+        }
+
+        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
     }
 
     @Override
@@ -103,15 +117,28 @@ public class CrystalixGlass extends TransparentBlock implements BeaconBeamBlock,
         return state.getValue(LIGHT) != BlockProperties.Light.DARK && super.propagatesSkylightDown(state, level, pos);
     }
 
+
     @Override
-    protected int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.getValue(LIGHT) == BlockProperties.Light.DARK ? level.getMaxLightLevel() : 0;
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(LIGHT) == BlockProperties.Light.FAKE_LIGHT) {
+            level.getLightEngine().checkBlock(pos);
+        }
+        super.animateTick(state, level, pos, random);
     }
 
     @Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.getValue(LIGHT) == BlockProperties.Light.LIGHT ? 15 : 0;
+    public int getLightEmission(BlockState state, BlockGetter blockGetter, BlockPos pos) {
+        var light = state.getValue(LIGHT);
+
+        if (light == BlockProperties.Light.FAKE_LIGHT)
+            return blockGetter instanceof ServerLevel ? 0 : 15;
+
+        if (light == BlockProperties.Light.LIGHT)
+            return 15;
+
+        return 0;
     }
+
 
     // Ghost
 
@@ -128,8 +155,8 @@ public class CrystalixGlass extends TransparentBlock implements BeaconBeamBlock,
     protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         if (Objects.requireNonNull(pathComputationType) == PathComputationType.LAND) {
             return !(state.getValue(GHOST) == BlockProperties.Ghost.ALLOW_ALL) ||
-                   !(state.getValue(GHOST) == BlockProperties.Ghost.ALLOW_MONSTER) ||
-                   !(state.getValue(GHOST) == BlockProperties.Ghost.ALLOW_ANIMAL);
+                    !(state.getValue(GHOST) == BlockProperties.Ghost.ALLOW_MONSTER) ||
+                    !(state.getValue(GHOST) == BlockProperties.Ghost.ALLOW_ANIMAL);
         }
         return false;
     }

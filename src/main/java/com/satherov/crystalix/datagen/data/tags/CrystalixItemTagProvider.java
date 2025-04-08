@@ -1,13 +1,15 @@
 package com.satherov.crystalix.datagen.data.tags;
 
-import java.util.concurrent.CompletableFuture;
-
-import com.satherov.crystalix.content.CrystalixRegistry;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.world.level.block.Block;
+
+import com.satherov.crystalix.content.CrystalixRegistry;
+
+import java.util.concurrent.CompletableFuture;
 
 public class CrystalixItemTagProvider extends ItemTagsProvider {
 
@@ -17,11 +19,20 @@ public class CrystalixItemTagProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        CrystalixRegistry.ITEMS.getEntries().forEach(block -> tag(CrystalixRegistry.ITEMTAG_BLOCKS).add(block.get()));
-        CrystalixRegistry.BLOCKS_MAP.forEach((color, set) -> set.forEach((name, block) -> {
-            if (name.equals("glass")) tag(CrystalixRegistry.ITEMTAG_GLASS).add(block.get().asItem());
-            if (name.equals("clear")) tag(CrystalixRegistry.ITEMTAG_CLEAR).add(block.get().asItem());
-            if (name.equals("bordered")) tag(CrystalixRegistry.ITEMTAG_BORDERED).add(block.get().asItem());
-        }));
+        for (var type : CrystalixRegistry.BlockTypes.values()) {
+            var tagKey = CrystalixRegistry.ITEM_TAGS.get(type);
+            tag(tagKey).addAll(
+                    CrystalixRegistry.BLOCKS_MAP.values().stream()
+                            .map(map -> map.get(type))
+                            .map(holder -> CrystalixRegistry.ITEMS.getEntries().stream()
+                                    .filter(item -> item.get() == holder.get().asItem())
+                                    .findFirst()
+                                    .map(DeferredHolder::getKey)
+                                    .orElseThrow())
+                            .toList()
+            );
+
+            tag(CrystalixRegistry.ITEM_TAG).addTag(tagKey);
+        }
     }
 }

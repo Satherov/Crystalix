@@ -1,14 +1,5 @@
 package com.satherov.crystalix.content.item;
 
-import java.util.*;
-
-import com.satherov.crystalix.Crystalix;
-import com.satherov.crystalix.CrystalixConfig;
-import com.satherov.crystalix.content.CrystalixRegistry;
-import com.satherov.crystalix.content.block.CrystalixGlass;
-import com.satherov.crystalix.content.properties.BlockProperties;
-import com.satherov.crystalix.content.properties.IProperty;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,6 +14,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+
+import com.satherov.crystalix.Crystalix;
+import com.satherov.crystalix.CrystalixConfig;
+import com.satherov.crystalix.content.CrystalixRegistry;
+import com.satherov.crystalix.content.block.CrystalixGlass;
+import com.satherov.crystalix.content.properties.BlockProperties;
+import com.satherov.crystalix.content.properties.IProperty;
+
+import java.util.*;
 
 public class CrystalixWand extends Item {
 
@@ -43,17 +43,17 @@ public class CrystalixWand extends Item {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        Level level = context.getLevel() ;
+        Level level = context.getLevel();
         Player player = context.getPlayer();
 
-        if (!level.isClientSide && player != null) {
+        if (player != null && !level.isClientSide) {
             BlockPos blockpos = context.getClickedPos();
             if (!applyToBlock(level, blockpos, player)) {
                 return InteractionResult.FAIL;
             }
         }
 
-        return InteractionResult.sidedSuccess(level.isClientSide()) ;
+        return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
     public boolean applyToBlock(LevelAccessor accessor, BlockPos pos, Player player) {

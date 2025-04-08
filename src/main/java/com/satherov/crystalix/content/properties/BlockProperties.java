@@ -1,13 +1,5 @@
 package com.satherov.crystalix.content.properties;
 
-import java.util.Locale;
-import java.util.function.IntFunction;
-import java.util.function.Predicate;
-
-import org.jetbrains.annotations.Nullable;
-
-import com.satherov.crystalix.content.CrystalixRegistry;
-
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
@@ -19,19 +11,25 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 
 import com.mojang.serialization.Codec;
+import com.satherov.crystalix.content.CrystalixRegistry;
 import io.netty.buffer.ByteBuf;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Locale;
+import java.util.function.IntFunction;
+import java.util.function.Predicate;
 
 public class BlockProperties {
 
     public enum Ghost implements StringRepresentable {
-        BLOCK_ALL(    0, context -> false),
-        ALLOW_ALL(    1, context -> true),
-        BLOCK_PLAYER( 2, context -> !(context.getEntity() instanceof Player)),
-        ALLOW_PLAYER( 3, context ->   context.getEntity() instanceof Player),
+        BLOCK_ALL(0, context -> false),
+        ALLOW_ALL(1, context -> true),
+        BLOCK_PLAYER(2, context -> !(context.getEntity() instanceof Player)),
+        ALLOW_PLAYER(3, context -> context.getEntity() instanceof Player),
         BLOCK_MONSTER(4, context -> !(context.getEntity() instanceof Monster)),
-        ALLOW_MONSTER(5, context ->   context.getEntity() instanceof Monster),
-        BLOCK_ANIMAL( 6, context -> !(context.getEntity() instanceof Animal)),
-        ALLOW_ANIMAL( 7, context ->   context.getEntity() instanceof Animal);
+        ALLOW_MONSTER(5, context -> context.getEntity() instanceof Monster),
+        BLOCK_ANIMAL(6, context -> !(context.getEntity() instanceof Animal)),
+        ALLOW_ANIMAL(7, context -> context.getEntity() instanceof Animal);
 
         private final int id;
         private final Predicate<EntityCollisionContext> collisionPredicate;
@@ -60,9 +58,11 @@ public class BlockProperties {
     }
 
     public enum Light implements StringRepresentable {
-        NONE( 0),
+        NONE(0),
         LIGHT(1),
-        DARK( 2),;
+        DARK(2),
+        FAKE_LIGHT(3),
+        ;
 
         private final int id;
 
@@ -101,7 +101,7 @@ public class BlockProperties {
         light = new EnumProperty<>(wand, CrystalixRegistry.LIGHT.get(), "light", Light.class, Light.NONE);
         ghost = new EnumProperty<>(wand, CrystalixRegistry.GHOST.get(), "ghost", Ghost.class, Ghost.BLOCK_ALL);
 
-        properties = new IProperty<?>[] {shadeless, reinforced, light, ghost};
+        properties = new IProperty<?>[]{shadeless, reinforced, light, ghost};
     }
 
     @Nullable

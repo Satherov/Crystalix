@@ -3,13 +3,13 @@
   "category": "misc",
   "key": {
     "a": {
-      "tag": "crystalix:glass"
+      "tag": "c:ingots/iron"
     },
     "c": {
       "tag": "c:dyes/magenta"
     },
     "g": {
-      "tag": "c:gems/amethyst"
+      "tag": "crystalix:glass"
     }
   },
   "pattern": [

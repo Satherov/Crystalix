@@ -1,11 +1,11 @@
 package com.satherov.crystalix.datagen.assets.lang;
 
+import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.BlockItem;
+
 import com.satherov.crystalix.Crystalix;
 import com.satherov.crystalix.content.CrystalixRegistry;
 import com.satherov.crystalix.datagen.assets.CrystalixLanguageProvider;
-
-import net.minecraft.data.PackOutput;
-import net.minecraft.world.item.BlockItem;
 
 public class EN_USProvider extends CrystalixLanguageProvider {
 
@@ -40,6 +40,7 @@ public class EN_USProvider extends CrystalixLanguageProvider {
         add("crystalix.property.light", "Light Mode");
         add("crystalix.property.light.light", "§6Light");
         add("crystalix.property.light.dark", "§8Dark");
+        add("crystalix.property.light.fake_light", "§5Fake Light");
         add("crystalix.property.light.none", "§7None");
 
         add("crystalix.property.ghost", "Ghost Mode");
