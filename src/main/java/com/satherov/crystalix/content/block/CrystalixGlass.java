@@ -1,7 +1,6 @@
 package com.satherov.crystalix.content.block;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -64,16 +63,6 @@ public class CrystalixGlass extends TransparentBlock implements BeaconBeamBlock,
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
-
-        if (state.getValue(LIGHT) == BlockProperties.Light.FAKE_LIGHT) {
-            level.scheduleTick(pos, this, 60 + level.getRandom().nextInt(40));
-        }
-
-        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
-    }
-
-    @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Player player = context.getPlayer();
@@ -117,13 +106,18 @@ public class CrystalixGlass extends TransparentBlock implements BeaconBeamBlock,
         return state.getValue(LIGHT) != BlockProperties.Light.DARK && super.propagatesSkylightDown(state, level, pos);
     }
 
-
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        if (state.getValue(LIGHT) == BlockProperties.Light.FAKE_LIGHT) {
+        if (state.getValue(LIGHT) == BlockProperties.Light.FAKE_LIGHT && level.getGameTime() % 4 == 0) {
             level.getLightEngine().checkBlock(pos);
+            level.sendBlockUpdated(pos, state, state, 2);
         }
-        super.animateTick(state, level, pos, random);
+
+    }
+
+    @Override
+    protected int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
+        return state.getValue(LIGHT) == BlockProperties.Light.LIGHT ? 15 : 0;
     }
 
     @Override
@@ -138,7 +132,6 @@ public class CrystalixGlass extends TransparentBlock implements BeaconBeamBlock,
 
         return 0;
     }
-
 
     // Ghost
 
