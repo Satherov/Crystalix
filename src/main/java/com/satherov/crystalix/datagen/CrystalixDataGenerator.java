@@ -1,19 +1,5 @@
 package com.satherov.crystalix.datagen;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
-import com.satherov.crystalix.Crystalix;
-import com.satherov.crystalix.datagen.assets.CrystalixBlockStateProvider;
-import com.satherov.crystalix.datagen.assets.CrystalixFusionModelProvider;
-import com.satherov.crystalix.datagen.assets.CrystalixItemModelProvider;
-import com.satherov.crystalix.datagen.assets.lang.EN_USProvider;
-import com.satherov.crystalix.datagen.data.CrystalixLootTableProvider;
-import com.satherov.crystalix.datagen.data.CrystalixRecipeProvider;
-import com.satherov.crystalix.datagen.data.tags.CrystalixBlockTagProvider;
-import com.satherov.crystalix.datagen.data.tags.CrystalixItemTagProvider;
-
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -26,6 +12,20 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+
+import com.satherov.crystalix.Crystalix;
+import com.satherov.crystalix.datagen.assets.CrystalixBlockStateProvider;
+import com.satherov.crystalix.datagen.assets.CrystalixFusionModelProvider;
+import com.satherov.crystalix.datagen.assets.CrystalixItemModelProvider;
+import com.satherov.crystalix.datagen.assets.lang.EN_USProvider;
+import com.satherov.crystalix.datagen.data.CrystalixLootTableProvider;
+import com.satherov.crystalix.datagen.data.CrystalixRecipeProvider;
+import com.satherov.crystalix.datagen.data.tags.CrystalixBlockTagProvider;
+import com.satherov.crystalix.datagen.data.tags.CrystalixItemTagProvider;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(modid = Crystalix.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class CrystalixDataGenerator {

@@ -1,10 +1,10 @@
 package com.satherov.crystalix.datagen.assets;
 
-import com.satherov.crystalix.Crystalix;
-
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 import net.minecraft.data.PackOutput;
+
+import com.satherov.crystalix.Crystalix;
 
 public class CrystalixLanguageProvider extends LanguageProvider {
 

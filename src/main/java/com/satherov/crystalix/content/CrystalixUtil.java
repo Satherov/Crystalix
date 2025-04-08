@@ -1,10 +1,10 @@
 package com.satherov.crystalix.content;
 
-import com.satherov.crystalix.content.item.CrystalixWand;
-
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+
+import com.satherov.crystalix.content.item.CrystalixWand;
 
 public class CrystalixUtil {
 

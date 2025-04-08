@@ -1,15 +1,15 @@
 package com.satherov.crystalix.datagen.data;
 
-import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
-
-import com.satherov.crystalix.content.CrystalixRegistry;
-
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
 import net.minecraft.world.level.block.Block;
+
+import com.satherov.crystalix.content.CrystalixRegistry;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.stream.Collectors;
 
 public class CrystalixLootTableProvider extends VanillaBlockLoot {
 

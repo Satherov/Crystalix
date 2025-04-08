@@ -19,8 +19,7 @@ public class CrystalixConfig {
     public static int max_wand_edit;
 
     @SubscribeEvent
-    static void onLoad(final ModConfigEvent event)
-    {
+    static void onLoad(final ModConfigEvent event) {
         max_wand_edit = MAX_WAND_EDIT.get();
     }
 }

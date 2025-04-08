@@ -1,8 +1,8 @@
 package com.satherov.crystalix.content.properties;
 
-import com.satherov.crystalix.Crystalix;
-
 import net.minecraft.network.chat.Component;
+
+import com.satherov.crystalix.Crystalix;
 
 public interface IProperty<T> {
 

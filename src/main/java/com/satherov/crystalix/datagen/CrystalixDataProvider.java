@@ -1,11 +1,11 @@
 package com.satherov.crystalix.datagen;
 
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataProvider;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataProvider;
 
 public class CrystalixDataProvider implements DataProvider {
 

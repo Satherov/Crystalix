@@ -1,12 +1,5 @@
 package com.satherov.crystalix.client;
 
-import com.satherov.crystalix.Crystalix;
-import com.satherov.crystalix.content.CrystalixUtil;
-import com.satherov.crystalix.content.item.CrystalixWand;
-import com.satherov.crystalix.content.properties.BlockProperties;
-import com.satherov.crystalix.network.CrystalixNetworking;
-import com.satherov.crystalix.network.CyclePropertyPayload;
-
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 
@@ -15,6 +8,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
+import com.satherov.crystalix.Crystalix;
+import com.satherov.crystalix.content.CrystalixUtil;
+import com.satherov.crystalix.content.item.CrystalixWand;
+import com.satherov.crystalix.content.properties.BlockProperties;
+import com.satherov.crystalix.network.CrystalixNetworking;
+import com.satherov.crystalix.network.CyclePropertyPayload;
 import org.lwjgl.glfw.GLFW;
 
 public class KeybindManager {

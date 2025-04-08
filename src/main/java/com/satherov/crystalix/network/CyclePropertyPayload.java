@@ -1,11 +1,5 @@
 package com.satherov.crystalix.network;
 
-import com.satherov.crystalix.Crystalix;
-import com.satherov.crystalix.content.CrystalixUtil;
-import com.satherov.crystalix.content.item.CrystalixWand;
-import com.satherov.crystalix.content.properties.BlockProperties;
-import com.satherov.crystalix.content.properties.IProperty;
-
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,6 +9,12 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+
+import com.satherov.crystalix.Crystalix;
+import com.satherov.crystalix.content.CrystalixUtil;
+import com.satherov.crystalix.content.item.CrystalixWand;
+import com.satherov.crystalix.content.properties.BlockProperties;
+import com.satherov.crystalix.content.properties.IProperty;
 
 public record CyclePropertyPayload(String key, String value) implements CustomPacketPayload {
 
@@ -45,18 +45,18 @@ public record CyclePropertyPayload(String key, String value) implements CustomPa
     public static class Handler {
         public static void handle(final CyclePropertyPayload message, final IPayloadContext ctx) {
             ctx.enqueueWork(() -> {
-                        if (ctx.flow().isServerbound() && ctx.player() instanceof ServerPlayer player) {
-                            ItemStack wand = CrystalixUtil.getWand(player);
-                            if (wand.isEmpty()) return;
-                            BlockProperties properties = new BlockProperties(wand);
+                if (ctx.flow().isServerbound() && ctx.player() instanceof ServerPlayer player) {
+                    ItemStack wand = CrystalixUtil.getWand(player);
+                    if (wand.isEmpty()) return;
+                    BlockProperties properties = new BlockProperties(wand);
 
-                            IProperty<?> property = properties.get(message.key);
-                            if (property == null) return;
-                            property.setValueString(message.value);
+                    IProperty<?> property = properties.get(message.key);
+                    if (property == null) return;
+                    property.setValueString(message.value);
 
-                            CrystalixWand.sendMessage(player, property);
-                            player.getInventory().setChanged();
-                        }
+                    CrystalixWand.sendMessage(player, property);
+                    player.getInventory().setChanged();
+                }
             }).exceptionally(e -> {
                 ctx.disconnect(Component.translatable(String.format("%s.networking.cycle_property.failed", Crystalix.MOD_ID), e.getMessage()));
                 return null;

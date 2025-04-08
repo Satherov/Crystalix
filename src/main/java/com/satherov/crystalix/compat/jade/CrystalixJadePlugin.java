@@ -1,16 +1,15 @@
 package com.satherov.crystalix.compat.jade;
 
-import java.util.Locale;
-
-import com.satherov.crystalix.Crystalix;
-import com.satherov.crystalix.content.block.CrystalixGlass;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import com.satherov.crystalix.Crystalix;
+import com.satherov.crystalix.content.block.CrystalixGlass;
 import snownee.jade.api.*;
 import snownee.jade.api.config.IPluginConfig;
+
+import java.util.Locale;
 
 @WailaPlugin
 public class CrystalixJadePlugin implements IWailaPlugin {
@@ -22,7 +21,7 @@ public class CrystalixJadePlugin implements IWailaPlugin {
         registration.registerBlockComponent(CrystalixComponentProvider.INSTANCE, CrystalixGlass.class);
     }
 
-    enum CrystalixComponentProvider implements IBlockComponentProvider  {
+    enum CrystalixComponentProvider implements IBlockComponentProvider {
         INSTANCE;
 
         @Override
