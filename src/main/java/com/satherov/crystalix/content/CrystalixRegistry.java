@@ -41,7 +41,7 @@ public class CrystalixRegistry {
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> CREATIVE_TAB = CREATIVE_TABS.register("creative_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable(String.format("itemGroup.%s", Crystalix.MOD_ID)))
-            .icon(() -> CrystalixRegistry.BLOCKS_MAP.get(DyeColor.WHITE).get("glass").get().asItem().getDefaultInstance())
+            .icon(() -> CrystalixRegistry.BLOCKS_MAP.get(DyeColor.WHITE).get(BlockTypes.GLASS).get().asItem().getDefaultInstance())
             .displayItems((parameters, output) ->
                     ITEMS.getEntries().stream()
                             .map(Supplier::get)
