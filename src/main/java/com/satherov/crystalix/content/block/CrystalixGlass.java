@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -94,6 +95,17 @@ public class CrystalixGlass extends TransparentBlock implements LiquidBlockConta
         if (!state.getValue(REINFORCED)) {
             super.onBlockExploded(state, level, pos, explosion);
         }
+    }
+
+    @Override
+    public boolean canEntityDestroy(BlockState state, BlockGetter world, BlockPos pos, Entity entity) {
+        return !state.getValue(REINFORCED);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public float getExplosionResistance(BlockState state, BlockGetter world, BlockPos pos, Explosion explosion) {
+        return state.getValue(REINFORCED) ? Float.MAX_VALUE : super.getExplosionResistance();
     }
 
     // Light
