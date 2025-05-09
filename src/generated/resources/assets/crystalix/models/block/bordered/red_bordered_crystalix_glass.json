@@ -1,15 +1,6 @@
 {
-  "type": "fusion:connecting",
-  "parent": "crystalix:block/block",
-  "connections": {
-    "type": "fusion:or",
-    "predicates": [
-      {
-        "type": "fusion:is_same_block"
-      }
-    ]
-  },
-  "loader": "fusion:model",
+  "parent": "minecraft:block/cube_all",
+  "render_type": "minecraft:translucent",
   "textures": {
     "all": "crystalix:block/bordered/red"
   }

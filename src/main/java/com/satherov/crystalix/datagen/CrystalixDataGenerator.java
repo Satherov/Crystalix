@@ -14,6 +14,7 @@ import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
 import com.satherov.crystalix.Crystalix;
+import com.satherov.crystalix.datagen.assets.CrystalixBlockModelProvider;
 import com.satherov.crystalix.datagen.assets.CrystalixBlockStateProvider;
 import com.satherov.crystalix.datagen.assets.CrystalixFusionModelProvider;
 import com.satherov.crystalix.datagen.assets.CrystalixItemModelProvider;
@@ -41,8 +42,9 @@ public class CrystalixDataGenerator {
         CrystalixDataProvider provider = new CrystalixDataProvider();
 
         // Assets
+        provider.addSubProvider(event.includeClient(), new CrystalixBlockModelProvider(packOutput, fileHelper));
         provider.addSubProvider(event.includeClient(), new CrystalixFusionModelProvider(packOutput, fileHelper));
-        provider.addSubProvider(event.includeClient(), new CrystalixBlockStateProvider(generator, fileHelper));
+        provider.addSubProvider(event.includeClient(), new CrystalixBlockStateProvider(packOutput, fileHelper));
         provider.addSubProvider(event.includeClient(), new CrystalixItemModelProvider(packOutput, fileHelper));
 
         //Languages

@@ -16,6 +16,7 @@ public class EN_USProvider extends CrystalixLanguageProvider {
     @Override
     protected void addTranslations() {
         add("itemGroup." + Crystalix.MOD_ID, "Crystalix");
+        add("config.jade.plugin_crystalix.crystalix_block", "Crystalix Block");
 
         add("crystalix.configuration.max_wand_edit", "Maxiumum Wand Edit Amount");
 

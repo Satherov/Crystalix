@@ -6,7 +6,7 @@ import net.neoforged.neoforge.client.model.generators.VariantBlockStateBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
 
 import com.satherov.crystalix.Crystalix;
@@ -15,8 +15,8 @@ import com.satherov.crystalix.content.block.CrystalixGlass;
 
 public class CrystalixBlockStateProvider extends BlockStateProvider {
 
-    public CrystalixBlockStateProvider(DataGenerator generator, ExistingFileHelper fileHelper) {
-        super(generator.getPackOutput(), Crystalix.MOD_ID, fileHelper);
+    public CrystalixBlockStateProvider(PackOutput output, ExistingFileHelper fileHelper) {
+        super(output, Crystalix.MOD_ID, fileHelper);
     }
 
     @Override

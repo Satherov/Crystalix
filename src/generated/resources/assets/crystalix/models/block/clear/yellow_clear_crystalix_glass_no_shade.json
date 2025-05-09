@@ -1,15 +1,6 @@
 {
-  "type": "fusion:connecting",
   "parent": "crystalix:block/no_shade_block",
-  "connections": {
-    "type": "fusion:or",
-    "predicates": [
-      {
-        "type": "fusion:is_same_block"
-      }
-    ]
-  },
-  "loader": "fusion:model",
+  "render_type": "minecraft:translucent",
   "textures": {
     "all": "crystalix:block/clear/yellow"
   }

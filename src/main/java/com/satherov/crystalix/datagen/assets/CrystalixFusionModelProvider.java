@@ -16,10 +16,12 @@ import com.supermartijn642.fusion.api.model.data.ConnectingModelData;
 import com.supermartijn642.fusion.api.predicate.DefaultConnectionPredicates;
 import com.supermartijn642.fusion.api.provider.FusionModelProvider;
 
+import java.nio.file.*;
+
 public class CrystalixFusionModelProvider extends FusionModelProvider {
 
     public CrystalixFusionModelProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper) {
-        super(Crystalix.MOD_ID, packOutput, existingFileHelper);
+        super(Crystalix.MOD_ID, new PackOutput(Path.of(packOutput.getOutputFolder().toAbsolutePath().toString(), "crystalix-fusion-overrides")), existingFileHelper);
     }
 
     @Override

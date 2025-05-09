@@ -47,6 +47,7 @@
   "block.crystalix.yellow_bordered_crystalix_glass": "Yellow Bordered Crystalix Glass",
   "block.crystalix.yellow_clear_crystalix_glass": "Yellow Clear Crystalix Glass",
   "block.crystalix.yellow_crystalix_glass": "Yellow Crystalix Glass",
+  "config.jade.plugin_crystalix.crystalix_block": "Crystalix Block",
   "crystalix.configuration.max_wand_edit": "Maxiumum Wand Edit Amount",
   "crystalix.networking.cycle_property.failed": "Error sending Crystalix property change to server:",
   "crystalix.property.ghost": "Ghost Mode",

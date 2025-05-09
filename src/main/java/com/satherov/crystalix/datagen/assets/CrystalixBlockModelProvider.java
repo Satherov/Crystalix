@@ -31,14 +31,14 @@ public class CrystalixBlockModelProvider extends BlockModelProvider {
     private void shadedBlock(DeferredHolder<Block, ? extends Block> block, DyeColor color, CrystalixRegistry.BlockTypes type) {
         this.singleTexture("block/" + type.getSerializedName() + "/" + block.getId().getPath(),
                         ResourceLocation.withDefaultNamespace("block/cube_all"),
-                        "all", modLoc("block/" + color.getName()))
+                        "all", modLoc("block/" + type.getSerializedName() + "/" + color.getName()))
                 .renderType("translucent");
     }
 
     private void shadelessBlock(DeferredHolder<Block, ? extends Block> block, DyeColor color, CrystalixRegistry.BlockTypes type) {
         this.singleTexture("block/" + type.getSerializedName() + "/" + block.getId().getPath() + "_no_shade",
                         modLoc("block/no_shade_block"),
-                        "all", modLoc("block/" + color.getName()))
+                        "all", modLoc("block/" + type.getSerializedName() + "/" + color.getName()))
                 .renderType("translucent");
     }
 }
