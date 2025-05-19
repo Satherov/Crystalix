@@ -6,7 +6,13 @@ import net.minecraft.resources.ResourceLocation;
 
 import com.satherov.crystalix.Crystalix;
 import com.satherov.crystalix.content.block.CrystalixGlass;
-import snownee.jade.api.*;
+
+import snownee.jade.api.BlockAccessor;
+import snownee.jade.api.IBlockComponentProvider;
+import snownee.jade.api.ITooltip;
+import snownee.jade.api.IWailaClientRegistration;
+import snownee.jade.api.IWailaPlugin;
+import snownee.jade.api.WailaPlugin;
 import snownee.jade.api.config.IPluginConfig;
 
 import java.util.Locale;
@@ -14,7 +20,19 @@ import java.util.Locale;
 @WailaPlugin
 public class CrystalixJadePlugin implements IWailaPlugin {
 
-    private static final ResourceLocation CRYSTALIX_BLOCK = ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "crystalix_block");
+    private static final ResourceLocation CRYSTALIX_BLOCK = new ResourceLocation(Crystalix.MOD_ID, "crystalix_block");
+
+    private static Component getTranslation(String key, boolean state) {
+        return Component.translatable(String.format("%s.property.%s", Crystalix.MOD_ID, key)).withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(": ")).withStyle(ChatFormatting.GRAY)
+                .append(Component.translatable(String.format("%s.property.%s.%s", Crystalix.MOD_ID, key, state ? "enabled" : "disabled")).withStyle(state ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
+    }
+
+    private static Component getTranslation(String key, String state) {
+        return Component.translatable(String.format("%s.property.%s", Crystalix.MOD_ID, key))
+                .append(Component.literal(": "))
+                .append(Component.translatable(String.format("%s.property.%s.%s", Crystalix.MOD_ID, key, state)));
+    }
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {
@@ -40,17 +58,5 @@ public class CrystalixJadePlugin implements IWailaPlugin {
         public ResourceLocation getUid() {
             return CrystalixJadePlugin.CRYSTALIX_BLOCK;
         }
-    }
-
-    private static Component getTranslation(String key, boolean state) {
-        return Component.translatable(String.format("%s.property.%s", Crystalix.MOD_ID, key)).withStyle(ChatFormatting.GRAY)
-                .append(Component.literal(": ")).withStyle(ChatFormatting.GRAY)
-                .append(Component.translatable(String.format("%s.property.%s.%s", Crystalix.MOD_ID, key, state ? "enabled" : "disabled")).withStyle(state ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
-    }
-
-    private static Component getTranslation(String key, String state) {
-        return Component.translatable(String.format("%s.property.%s", Crystalix.MOD_ID, key))
-                .append(Component.literal(": "))
-                .append(Component.translatable(String.format("%s.property.%s.%s", Crystalix.MOD_ID, key, state)));
     }
 }

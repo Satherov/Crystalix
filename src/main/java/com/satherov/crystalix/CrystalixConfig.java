@@ -1,25 +1,31 @@
 package com.satherov.crystalix;
 
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.config.ModConfigEvent;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.common.Mod;
 
-@EventBusSubscriber(modid = Crystalix.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+import org.apache.commons.lang3.tuple.Pair;
+
+@Mod.EventBusSubscriber(modid = Crystalix.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CrystalixConfig {
 
-    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    public static final ForgeConfigSpec SPEC;
+    public static final CommonConfig COMMON_CONFIG;
 
-    private static final ModConfigSpec.IntValue MAX_WAND_EDIT = BUILDER
-            .comment("Defines the maximum number of blocks that can be edited with the wand at once")
-            .defineInRange("max_wand_edit", 512, 1, 16384);
+    static {
+        final Pair<CommonConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(CommonConfig::new);
+        SPEC = specPair.getRight();
+        COMMON_CONFIG = specPair.getLeft();
+    }
 
-    static final ModConfigSpec SPEC = BUILDER.build();
+    public static class CommonConfig {
 
-    public static int max_wand_edit;
+        public final ForgeConfigSpec.IntValue maxWandEdit;
 
-    @SubscribeEvent
-    static void onLoad(final ModConfigEvent event) {
-        max_wand_edit = MAX_WAND_EDIT.get();
+        public CommonConfig(ForgeConfigSpec.Builder builder) {
+
+            maxWandEdit = builder.comment("Defines the maximum number of blocks that can be edited with the wand at once")
+                    .defineInRange("max_wand_edit", 512, 1, 16384);
+
+        }
     }
 }

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "crystalix:glass"
+    },
+    "b": {
+      "tag": "forge:dyes/light_blue"
+    }
+  },
+  "pattern": [
+    "aaa",
+    "aba",
+    "aaa"
+  ],
+  "result": {
+    "count": 8,
+    "item": "crystalix:light_blue_crystalix_glass"
+  },
+  "show_notification": true
+}

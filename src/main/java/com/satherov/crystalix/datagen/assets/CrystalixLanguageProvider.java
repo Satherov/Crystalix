@@ -1,30 +1,23 @@
 package com.satherov.crystalix.datagen.assets;
 
-import net.neoforged.neoforge.common.data.LanguageProvider;
-
 import net.minecraft.data.PackOutput;
+
+import net.minecraftforge.common.data.LanguageProvider;
 
 import com.satherov.crystalix.Crystalix;
 
-public class CrystalixLanguageProvider extends LanguageProvider {
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
+public abstract class CrystalixLanguageProvider extends LanguageProvider {
 
     public CrystalixLanguageProvider(PackOutput output, String locale) {
         super(output, Crystalix.MOD_ID, locale);
     }
 
-    @Override
-    protected void addTranslations() {
+    protected String format(String snake) {
+        return Arrays.stream(snake.split("_"))
+                .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
+                .collect(Collectors.joining(" "));
     }
-
-    protected String format(String string) {
-        String[] words = string.replace("_", " ").split(" ");
-        StringBuilder formatted = new StringBuilder();
-        for (String word : words) {
-            formatted.append(Character.toUpperCase(word.charAt(0)))
-                    .append(word.substring(1))
-                    .append(" ");
-        }
-        return formatted.toString().trim();
-    }
-
 }

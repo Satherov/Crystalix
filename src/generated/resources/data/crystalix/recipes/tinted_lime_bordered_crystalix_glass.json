@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "crystalix:bordered"
+    },
+    "b": {
+      "tag": "forge:dyes/lime"
+    }
+  },
+  "pattern": [
+    "aaa",
+    "aba",
+    "aaa"
+  ],
+  "result": {
+    "count": 8,
+    "item": "crystalix:lime_bordered_crystalix_glass"
+  },
+  "show_notification": true
+}

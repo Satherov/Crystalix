@@ -1,10 +1,5 @@
 package com.satherov.crystalix.datagen;
 
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.data.event.GatherDataEvent;
-
 import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -12,6 +7,11 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import com.satherov.crystalix.Crystalix;
 import com.satherov.crystalix.datagen.assets.CrystalixBlockModelProvider;
@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(modid = Crystalix.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = Crystalix.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CrystalixDataGenerator {
 
     @SubscribeEvent
@@ -56,10 +56,10 @@ public class CrystalixDataGenerator {
         provider.addSubProvider(event.includeServer(), new CrystalixItemTagProvider(packOutput, lookupProvider, blockTags.contentsGetter()));
 
         // Recipes
-        provider.addSubProvider(event.includeServer(), new CrystalixRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new CrystalixRecipeProvider(packOutput));
 
         // Loot Tables
-        provider.addSubProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(), List.of(new LootTableProvider.SubProviderEntry(CrystalixLootTableProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
+        provider.addSubProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(), List.of(new LootTableProvider.SubProviderEntry(CrystalixLootTableProvider::new, LootContextParamSets.BLOCK))));
 
 
         generator.addProvider(true, provider);

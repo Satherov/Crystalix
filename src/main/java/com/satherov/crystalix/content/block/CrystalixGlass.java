@@ -9,8 +9,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.AbstractGlassBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlockContainer;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -24,24 +31,21 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import com.satherov.crystalix.content.CrystalixRegistry;
 import com.satherov.crystalix.content.item.CrystalixWand;
 import com.satherov.crystalix.content.properties.BlockProperties;
+
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
-public class CrystalixGlass extends TransparentBlock implements LiquidBlockContainer {
-
-    private final DyeColor color;
+public class CrystalixGlass extends AbstractGlassBlock implements LiquidBlockContainer {
 
     public static final BooleanProperty SHADELESS = BooleanProperty.create("shadeless");
     public static final BooleanProperty REINFORCED = BooleanProperty.create("reinforced");
     public static final EnumProperty<BlockProperties.Light> LIGHT = EnumProperty.create("light", BlockProperties.Light.class);
     public static final EnumProperty<BlockProperties.Ghost> GHOST = EnumProperty.create("ghost", BlockProperties.Ghost.class);
+    private final DyeColor color;
 
     public CrystalixGlass(DyeColor dyeColor) {
-        super(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_STAINED_GLASS).mapColor(dyeColor));
+        super(BlockBehaviour.Properties.copy(Blocks.WHITE_STAINED_GLASS).mapColor(dyeColor));
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(SHADELESS, false)
                 .setValue(REINFORCED, false)
@@ -51,8 +55,8 @@ public class CrystalixGlass extends TransparentBlock implements LiquidBlockConta
     }
 
     @Override
-    public Integer getBeaconColorMultiplier(BlockState state, LevelReader level, BlockPos pos, BlockPos beaconPos) {
-         return this.color.getTextureDiffuseColor();
+    public float[] getBeaconColorMultiplier(BlockState state, LevelReader level, BlockPos pos, BlockPos beaconPos) {
+        return this.color.getTextureDiffuseColors();
     }
 
     @Override
@@ -64,19 +68,23 @@ public class CrystalixGlass extends TransparentBlock implements LiquidBlockConta
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Player player = context.getPlayer();
-        if (player == null) return this.defaultBlockState();
-
-        if (player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof CrystalixWand) {
-            ItemStack wand = player.getItemInHand(InteractionHand.OFF_HAND);
-            return this.defaultBlockState()
-                    .setValue(SHADELESS, Objects.requireNonNull(wand.get(CrystalixRegistry.SHADELESS)))
-                    .setValue(REINFORCED, Objects.requireNonNull(wand.get(CrystalixRegistry.REINFORCED)))
-                    .setValue(LIGHT, Objects.requireNonNull(wand.get(CrystalixRegistry.LIGHT)))
-                    .setValue(GHOST, Objects.requireNonNull(wand.get(CrystalixRegistry.GHOST)));
+        if (player == null) {
+            return defaultBlockState();
         }
 
-        return this.defaultBlockState();
+        ItemStack offhand = player.getItemInHand(InteractionHand.OFF_HAND);
+        if (offhand.getItem() instanceof CrystalixWand) {
+            BlockProperties properties = new BlockProperties(offhand);
+            return defaultBlockState()
+                    .setValue(SHADELESS, properties.shadeless.get())
+                    .setValue(REINFORCED, properties.reinforced.get())
+                    .setValue(LIGHT, properties.light.get())
+                    .setValue(GHOST, properties.ghost.get());
+        }
+
+        return defaultBlockState();
     }
+
 
     // Reinforced
 
@@ -103,15 +111,13 @@ public class CrystalixGlass extends TransparentBlock implements LiquidBlockConta
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public float getExplosionResistance(BlockState state, BlockGetter world, BlockPos pos, Explosion explosion) {
-        return state.getValue(REINFORCED) ? Float.MAX_VALUE : super.getExplosionResistance();
+    public float getExplosionResistance(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
+        return state.getValue(REINFORCED) ? Float.MAX_VALUE : super.getExplosionResistance(state, level, pos, explosion);
     }
 
-    // Light
-
+    //––– Light behavior –––
     @Override
-    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
         return state.getValue(LIGHT) != BlockProperties.Light.DARK;
     }
 
@@ -124,51 +130,60 @@ public class CrystalixGlass extends TransparentBlock implements LiquidBlockConta
     }
 
     @Override
-    protected int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.getValue(LIGHT) == BlockProperties.Light.DARK ? level.getMaxLightLevel() : 0;
+    public int getLightBlock(BlockState state, BlockGetter world, BlockPos pos) {
+        return state.getValue(LIGHT) == BlockProperties.Light.DARK
+                ? world.getMaxLightLevel()
+                : 0;
     }
 
     @Override
-    public int getLightEmission(BlockState state, BlockGetter blockGetter, BlockPos pos) {
-        var light = state.getValue(LIGHT);
-
-        if (light == BlockProperties.Light.FAKE_LIGHT)
-            return blockGetter instanceof ServerLevel ? 0 : 15;
-
-        if (light == BlockProperties.Light.LIGHT)
-            return 15;
-
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
+        switch (state.getValue(LIGHT)) {
+            case FAKE_LIGHT -> {
+                // fake light only on client
+                if (!(world instanceof ServerLevel)) {
+                    return 15;
+                }
+            }
+            case LIGHT -> {
+                return 15;
+            }
+            default -> {
+            }
+        }
         return 0;
     }
 
     // Ghost
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        if (context instanceof EntityCollisionContext entityCollisionContext && entityCollisionContext != CollisionContext.empty()) {
-            if (state.getValue(GHOST).canCollide(entityCollisionContext)) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        if (context instanceof EntityCollisionContext entityCtx && !entityCtx.equals(CollisionContext.empty())) {
+            if (state.getValue(GHOST).canCollide(entityCtx)) {
                 return Shapes.empty();
             }
         }
-        return super.getCollisionShape(state, level, pos, context);
+        return super.getCollisionShape(state, world, pos, context);
     }
 
-    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
-        if (Objects.requireNonNull(pathComputationType) == PathComputationType.LAND) {
-            return !(state.getValue(GHOST) == BlockProperties.Ghost.ALLOW_ALL) ||
-                    !(state.getValue(GHOST) == BlockProperties.Ghost.ALLOW_MONSTER) ||
-                    !(state.getValue(GHOST) == BlockProperties.Ghost.ALLOW_ANIMAL);
+    @Override
+    public boolean isPathfindable(BlockState state, BlockGetter world, BlockPos pos, PathComputationType pathType) {
+        if (pathType == PathComputationType.LAND) {
+            var ghost = state.getValue(GHOST);
+            return ghost != BlockProperties.Ghost.ALLOW_ALL
+                    && ghost != BlockProperties.Ghost.ALLOW_MONSTER
+                    && ghost != BlockProperties.Ghost.ALLOW_ANIMAL;
         }
         return false;
     }
 
     @Override
-    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
+    public boolean canPlaceLiquid(BlockGetter world, BlockPos pos, BlockState state, Fluid fluid) {
         return false;
     }
 
     @Override
-    public boolean placeLiquid(LevelAccessor level, BlockPos pos, BlockState state, FluidState fluidState) {
+    public boolean placeLiquid(LevelAccessor world, BlockPos pos, BlockState state, FluidState fluidState) {
         return false;
     }
 }

@@ -1,66 +1,59 @@
 package com.satherov.crystalix.network;
 
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-import com.satherov.crystalix.Crystalix;
+import net.minecraftforge.network.NetworkEvent;
+
 import com.satherov.crystalix.content.CrystalixUtil;
 import com.satherov.crystalix.content.item.CrystalixWand;
 import com.satherov.crystalix.content.properties.BlockProperties;
 import com.satherov.crystalix.content.properties.IProperty;
 
-public record CyclePropertyPayload(String key, String value) implements CustomPacketPayload {
+import java.util.function.Supplier;
 
-    public static final StreamCodec<FriendlyByteBuf, CyclePropertyPayload> STREAM_CODEC = CustomPacketPayload.codec(
-            CyclePropertyPayload::encode,
-            CyclePropertyPayload::new);
+public class CyclePropertyPayload {
+    public final String key;
+    public final String value;
 
-    public static final Type<CyclePropertyPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "cycle_property"));
-
-    private CyclePropertyPayload(FriendlyByteBuf buffer) {
-        this(buffer.readUtf(100), buffer.readUtf(100));
+    public CyclePropertyPayload(String key, String value) {
+        this.key = key;
+        this.value = value;
     }
 
-    public CyclePropertyPayload(IProperty<?> property) {
-        this(property.getKey(), property.getValueString());
+    // write to the buffer
+    public static void encode(CyclePropertyPayload msg, FriendlyByteBuf buf) {
+        buf.writeUtf(msg.key);
+        buf.writeUtf(msg.value);
     }
 
-    public void encode(FriendlyByteBuf buffer) {
-        buffer.writeUtf(key);
-        buffer.writeUtf(value);
+    // read from the buffer
+    public static CyclePropertyPayload decode(FriendlyByteBuf buf) {
+        String key = buf.readUtf(100);
+        String value = buf.readUtf(100);
+        return new CyclePropertyPayload(key, value);
     }
 
-    @Override
-    public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
-        return TYPE;
-    }
-
+    // server‐side handler
     public static class Handler {
-        public static void handle(final CyclePropertyPayload message, final IPayloadContext ctx) {
+        public static void handle(CyclePropertyPayload msg, Supplier<NetworkEvent.Context> ctxSupplier) {
+            NetworkEvent.Context ctx = ctxSupplier.get();
             ctx.enqueueWork(() -> {
-                if (ctx.flow().isServerbound() && ctx.player() instanceof ServerPlayer player) {
-                    ItemStack wand = CrystalixUtil.getWand(player);
-                    if (wand.isEmpty()) return;
-                    BlockProperties properties = new BlockProperties(wand);
+                ServerPlayer player = ctx.getSender();
+                if (player == null) return;
+                ItemStack wand = CrystalixUtil.getWand(player);
+                if (wand.isEmpty()) return;
 
-                    IProperty<?> property = properties.get(message.key);
-                    if (property == null) return;
-                    property.setValueString(message.value);
+                BlockProperties props = new BlockProperties(wand);
+                IProperty<?> property = props.get(msg.key);
+                if (property == null) return;
 
-                    CrystalixWand.sendMessage(player, property);
-                    player.getInventory().setChanged();
-                }
-            }).exceptionally(e -> {
-                ctx.disconnect(Component.translatable(String.format("%s.networking.cycle_property.failed", Crystalix.MOD_ID), e.getMessage()));
-                return null;
+                property.setValueString(msg.value);
+                CrystalixWand.sendMessage(player, property);
+                player.getInventory().setChanged();
             });
+            ctx.setPacketHandled(true);
         }
     }
 }

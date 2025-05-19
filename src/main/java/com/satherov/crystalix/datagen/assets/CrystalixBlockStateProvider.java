@@ -1,13 +1,13 @@
 package com.satherov.crystalix.datagen.assets;
 
-import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
-import net.neoforged.neoforge.client.model.generators.VariantBlockStateBuilder;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.DeferredHolder;
-
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
+
+import net.minecraftforge.client.model.generators.BlockStateProvider;
+import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.RegistryObject;
 
 import com.satherov.crystalix.Crystalix;
 import com.satherov.crystalix.content.CrystalixRegistry;
@@ -26,7 +26,7 @@ public class CrystalixBlockStateProvider extends BlockStateProvider {
         );
     }
 
-    private void registerCrystalixBlock(CrystalixRegistry.BlockTypes type, DeferredHolder<Block, ? extends Block> block) {
+    private void registerCrystalixBlock(CrystalixRegistry.BlockTypes type, RegistryObject<? extends Block> block) {
         VariantBlockStateBuilder builder = getVariantBuilder(block.get());
 
         String path = "block/" + type.getSerializedName() + "/" + block.getId().getPath();

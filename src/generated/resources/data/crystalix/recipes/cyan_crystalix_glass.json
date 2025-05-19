@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "forge:gems/amethyst"
+    },
+    "c": {
+      "tag": "forge:dyes/cyan"
+    },
+    "g": {
+      "tag": "forge:glass"
+    }
+  },
+  "pattern": [
+    "gag",
+    "aca",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "item": "crystalix:cyan_crystalix_glass"
+  },
+  "show_notification": true
+}

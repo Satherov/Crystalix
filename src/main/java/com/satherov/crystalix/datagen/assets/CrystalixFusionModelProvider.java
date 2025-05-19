@@ -1,12 +1,12 @@
 package com.satherov.crystalix.datagen.assets;
 
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.DeferredHolder;
-
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
+
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.RegistryObject;
 
 import com.satherov.crystalix.Crystalix;
 import com.satherov.crystalix.content.CrystalixRegistry;
@@ -16,7 +16,7 @@ import com.supermartijn642.fusion.api.model.data.ConnectingModelData;
 import com.supermartijn642.fusion.api.predicate.DefaultConnectionPredicates;
 import com.supermartijn642.fusion.api.provider.FusionModelProvider;
 
-import java.nio.file.*;
+import java.nio.file.Path;
 
 public class CrystalixFusionModelProvider extends FusionModelProvider {
 
@@ -34,25 +34,25 @@ public class CrystalixFusionModelProvider extends FusionModelProvider {
         );
     }
 
-    private void shadedBlock(DeferredHolder<Block, ? extends Block> block, DyeColor color, CrystalixRegistry.BlockTypes type) {
-        this.addModel(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + block.getId().getPath()),
+    private void shadedBlock(RegistryObject<? extends Block> block, DyeColor color, CrystalixRegistry.BlockTypes type) {
+        this.addModel(new ResourceLocation(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + block.getId().getPath()),
                 ModelInstance.of(
                         DefaultModelTypes.CONNECTING,
                         ConnectingModelData.builder()
-                                .parent(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/block"))
-                                .texture("all", ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + color.getName()))
+                                .parent(new ResourceLocation(Crystalix.MOD_ID, "block/block"))
+                                .texture("all", new ResourceLocation(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + color.getName()))
                                 .connection(DefaultConnectionPredicates.isSameBlock())
                                 .build()
                 ));
     }
 
-    private void shadelessBlock(DeferredHolder<Block, ? extends Block> block, DyeColor color, CrystalixRegistry.BlockTypes type) {
-        this.addModel(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + block.getId().getPath() + "_no_shade"),
+    private void shadelessBlock(RegistryObject<? extends Block> block, DyeColor color, CrystalixRegistry.BlockTypes type) {
+        this.addModel(new ResourceLocation(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + block.getId().getPath() + "_no_shade"),
                 ModelInstance.of(
                         DefaultModelTypes.CONNECTING,
                         ConnectingModelData.builder()
-                                .parent(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/no_shade_block"))
-                                .texture("all", ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + color.getName()))
+                                .parent(new ResourceLocation(Crystalix.MOD_ID, "block/no_shade_block"))
+                                .texture("all", new ResourceLocation(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + color.getName()))
                                 .connection(DefaultConnectionPredicates.isSameBlock())
                                 .build()
                 ));

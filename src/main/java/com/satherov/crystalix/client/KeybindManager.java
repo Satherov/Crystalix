@@ -1,12 +1,12 @@
 package com.satherov.crystalix.client;
 
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.InputEvent;
-
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import com.satherov.crystalix.Crystalix;
 import com.satherov.crystalix.content.CrystalixUtil;
@@ -14,6 +14,7 @@ import com.satherov.crystalix.content.item.CrystalixWand;
 import com.satherov.crystalix.content.properties.BlockProperties;
 import com.satherov.crystalix.network.CrystalixNetworking;
 import com.satherov.crystalix.network.CyclePropertyPayload;
+
 import org.lwjgl.glfw.GLFW;
 
 public class KeybindManager {
@@ -42,22 +43,22 @@ public class KeybindManager {
         if (CYCLE_SHADELESS.consumeClick()) {
             BlockProperties properties = new BlockProperties(wand);
             properties.shadeless.next();
-            CrystalixNetworking.sendToServer(new CyclePropertyPayload(properties.shadeless));
+            CrystalixNetworking.sendToServer(new CyclePropertyPayload(properties.shadeless.getKey(), properties.shadeless.getValueString()));
         }
         if (CYCLE_REINFORCED.consumeClick()) {
             BlockProperties properties = new BlockProperties(wand);
             properties.reinforced.next();
-            CrystalixNetworking.sendToServer(new CyclePropertyPayload(properties.reinforced));
+            CrystalixNetworking.sendToServer(new CyclePropertyPayload(properties.reinforced.getKey(), properties.reinforced.getValueString()));
         }
         if (CYCLE_LIGHT.consumeClick()) {
             BlockProperties properties = new BlockProperties(wand);
             properties.light.next();
-            CrystalixNetworking.sendToServer(new CyclePropertyPayload(properties.light));
+            CrystalixNetworking.sendToServer(new CyclePropertyPayload(properties.light.getKey(), properties.light.getValueString()));
         }
         if (CYCLE_GHOST.consumeClick()) {
             BlockProperties properties = new BlockProperties(wand);
             properties.ghost.next();
-            CrystalixNetworking.sendToServer(new CyclePropertyPayload(properties.ghost));
+            CrystalixNetworking.sendToServer(new CyclePropertyPayload(properties.ghost.getKey(), properties.ghost.getValueString()));
         }
     }
 }

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "forge:gems/quartz"
+    },
+    "c": {
+      "tag": "forge:dyes/brown"
+    },
+    "g": {
+      "tag": "crystalix:glass"
+    }
+  },
+  "pattern": [
+    "gag",
+    "aca",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "item": "crystalix:brown_clear_crystalix_glass"
+  },
+  "show_notification": true
+}

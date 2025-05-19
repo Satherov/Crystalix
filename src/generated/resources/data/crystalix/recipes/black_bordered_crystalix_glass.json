@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "forge:ingots/iron"
+    },
+    "c": {
+      "tag": "forge:dyes/black"
+    },
+    "g": {
+      "tag": "crystalix:glass"
+    }
+  },
+  "pattern": [
+    "gag",
+    "aca",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "item": "crystalix:black_bordered_crystalix_glass"
+  },
+  "show_notification": true
+}
