@@ -112,7 +112,7 @@ public class CrystalixGlass extends TransparentBlock implements LiquidBlockConta
 
     @Override
     protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.getValue(LIGHT) != BlockProperties.Light.DARK && super.propagatesSkylightDown(state, level, pos);
+        return state.getValue(LIGHT) != BlockProperties.Light.DARK;
     }
 
     @Override
@@ -125,7 +125,7 @@ public class CrystalixGlass extends TransparentBlock implements LiquidBlockConta
 
     @Override
     protected int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.getValue(LIGHT) == BlockProperties.Light.LIGHT ? 15 : 0;
+        return state.getValue(LIGHT) == BlockProperties.Light.DARK ? level.getMaxLightLevel() : 0;
     }
 
     @Override
