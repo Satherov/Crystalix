@@ -45,7 +45,7 @@ public class CrystalixRecipeProvider extends RecipeProvider implements IConditio
                 .pattern("s  ")
                 .define('s', Items.STICK)
                 .define('n', Tags.Items.NETHER_STARS)
-                .unlockedBy("has_star", has(Tags.Items.NETHER_STARS))
+                .unlockedBy("has_star", has(Tags.Items.GEMS_DIAMOND))
                 .save(recipeOutput);
 
         CrystalixRegistry.BLOCKS_MAP.forEach((color, typeMap) -> {
