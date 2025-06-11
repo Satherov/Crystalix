@@ -3,26 +3,34 @@ package com.satherov.crystalix.content.properties;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 
-public class BooleanProperty implements IProperty<Boolean> {
+import com.satherov.crystalix.core.annotations.NothingNull;
+import com.satherov.crystalix.core.lang.CrystalixLanguage;
+import com.satherov.crystalix.core.lang.ILangEntry;
+
+@NothingNull
+public class BooleanProperty implements ITranslatableProperty<Boolean> {
     private final ItemStack stack;
     private final DataComponentType<Boolean> componentType;
     private final String key;
     private final boolean enabled;
+    private final ILangEntry langEntry;
     private boolean value;
 
-    public BooleanProperty(ItemStack stack, DataComponentType<Boolean> componentType, String key, boolean defaultValue, boolean enabled) {
+    public BooleanProperty(ItemStack stack, DataComponentType<Boolean> componentType, String key, boolean defaultValue, boolean enabled, ILangEntry langEntry) {
         this.stack = stack;
         this.componentType = componentType;
         this.key = key;
         this.enabled = enabled;
+        this.langEntry = langEntry;
 
         value = stack.getOrDefault(componentType, defaultValue);
     }
 
-    public BooleanProperty(ItemStack stack, DataComponentType<Boolean> componentType, String key, boolean defaultValue) {
-        this(stack, componentType, key, defaultValue, true);
+    public BooleanProperty(ItemStack stack, DataComponentType<Boolean> componentType, String key, boolean defaultValue, ILangEntry langEntry) {
+        this(stack, componentType, key, defaultValue, true, langEntry);
     }
 
     @Override
@@ -59,9 +67,11 @@ public class BooleanProperty implements IProperty<Boolean> {
     }
 
     @Override
-    public Component toComponent() {
-        return Component.translatable(this.getKeyTranslation()).withStyle(ChatFormatting.GRAY)
-                .append(Component.literal(": "))
-                .append(Component.translatable(this.getValueTranslation()).withStyle(this.get() ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
+    public MutableComponent getTranslation() {
+        return this.langEntry.translateFormatted(ChatFormatting.GRAY)
+                .append(Component.literal(" "))
+                .append(value
+                        ? CrystalixLanguage.PROPERTY_ENABLED.translateFormatted(ChatFormatting.DARK_GREEN)
+                        : CrystalixLanguage.PROPERTY_DISABLED.translateFormatted(ChatFormatting.DARK_RED));
     }
 }

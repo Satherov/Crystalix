@@ -1,13 +1,14 @@
 package com.satherov.crystalix.content.properties;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 import com.google.common.base.Enums;
+import com.satherov.crystalix.core.annotations.NothingNull;
+import com.satherov.crystalix.core.lang.ITranslatable;
 
-public class EnumProperty<E extends Enum<E>> implements IProperty<E> {
+@NothingNull
+public class EnumProperty<E extends Enum<E> & ITranslatable> implements ITranslatableValueProperty<E> {
     private final ItemStack stack;
     private final DataComponentType<E> componentType;
     private final String key;
@@ -65,12 +66,5 @@ public class EnumProperty<E extends Enum<E>> implements IProperty<E> {
         if (i < 0) i += enumValues.length;
         set(enumValues[i % enumValues.length]);
         return value;
-    }
-
-    @Override
-    public Component toComponent() {
-        return Component.translatable(this.getKeyTranslation()).withStyle(ChatFormatting.GRAY)
-                .append(Component.literal(": "))
-                .append(Component.translatable(this.getValueTranslation()));
     }
 }

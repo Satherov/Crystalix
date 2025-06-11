@@ -6,7 +6,8 @@ import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
 import net.minecraft.world.level.block.Block;
 
-import com.satherov.crystalix.content.CrystalixRegistry;
+import com.satherov.crystalix.core.CrystalixRegistry;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Collectors;

@@ -6,15 +6,36 @@ import net.minecraft.resources.ResourceLocation;
 
 import com.satherov.crystalix.Crystalix;
 import com.satherov.crystalix.content.block.CrystalixGlass;
-import snownee.jade.api.*;
+import com.satherov.crystalix.core.annotations.NothingNull;
+import com.satherov.crystalix.core.lang.CrystalixLanguage;
+import com.satherov.crystalix.core.lang.ILangEntry;
+import com.satherov.crystalix.core.lang.ITranslatable;
+
+import snownee.jade.api.BlockAccessor;
+import snownee.jade.api.IBlockComponentProvider;
+import snownee.jade.api.ITooltip;
+import snownee.jade.api.IWailaClientRegistration;
+import snownee.jade.api.IWailaPlugin;
+import snownee.jade.api.WailaPlugin;
 import snownee.jade.api.config.IPluginConfig;
 
-import java.util.Locale;
-
+@NothingNull
 @WailaPlugin
 public class CrystalixJadePlugin implements IWailaPlugin {
 
     private static final ResourceLocation CRYSTALIX_BLOCK = ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "crystalix_block");
+
+    private static Component getTranslation(ILangEntry langEntry, boolean state) {
+        return langEntry.translateFormatted(ChatFormatting.GRAY)
+                .append(Component.literal(" "))
+                .append(state
+                        ? CrystalixLanguage.PROPERTY_ENABLED.translateFormatted(ChatFormatting.DARK_GREEN)
+                        : CrystalixLanguage.PROPERTY_DISABLED.translateFormatted(ChatFormatting.DARK_RED));
+    }
+
+    private static <T extends ITranslatable> Component getTranslation(T state) {
+        return state.getTranslation();
+    }
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {
@@ -30,27 +51,16 @@ public class CrystalixJadePlugin implements IWailaPlugin {
                 BlockAccessor accessor,
                 IPluginConfig config
         ) {
-            tooltip.add(getTranslation("shadeless", accessor.getBlockState().getValue(CrystalixGlass.SHADELESS)));
-            tooltip.add(getTranslation("reinforced", accessor.getBlockState().getValue(CrystalixGlass.REINFORCED)));
-            tooltip.add(getTranslation("light", accessor.getBlockState().getValue(CrystalixGlass.LIGHT).name().toLowerCase(Locale.ROOT)));
-            tooltip.add(getTranslation("ghost", accessor.getBlockState().getValue(CrystalixGlass.GHOST).name().toLowerCase(Locale.ROOT)));
+            tooltip.add(getTranslation(CrystalixLanguage.PROPERTY_INVISIBLE, accessor.getBlockState().getValue(CrystalixGlass.INVISIBLE)));
+            tooltip.add(getTranslation(CrystalixLanguage.PROPERTY_SHADELESS, accessor.getBlockState().getValue(CrystalixGlass.SHADELESS)));
+            tooltip.add(getTranslation(CrystalixLanguage.PROPERTY_REINFORCED, accessor.getBlockState().getValue(CrystalixGlass.REINFORCED)));
+            tooltip.add(getTranslation(accessor.getBlockState().getValue(CrystalixGlass.LIGHT)));
+            tooltip.add(getTranslation(accessor.getBlockState().getValue(CrystalixGlass.GHOST)));
         }
 
         @Override
         public ResourceLocation getUid() {
             return CrystalixJadePlugin.CRYSTALIX_BLOCK;
         }
-    }
-
-    private static Component getTranslation(String key, boolean state) {
-        return Component.translatable(String.format("%s.property.%s", Crystalix.MOD_ID, key)).withStyle(ChatFormatting.GRAY)
-                .append(Component.literal(": ")).withStyle(ChatFormatting.GRAY)
-                .append(Component.translatable(String.format("%s.property.%s.%s", Crystalix.MOD_ID, key, state ? "enabled" : "disabled")).withStyle(state ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
-    }
-
-    private static Component getTranslation(String key, String state) {
-        return Component.translatable(String.format("%s.property.%s", Crystalix.MOD_ID, key))
-                .append(Component.literal(": "))
-                .append(Component.translatable(String.format("%s.property.%s.%s", Crystalix.MOD_ID, key, state)));
     }
 }

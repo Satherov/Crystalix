@@ -3,18 +3,18 @@ package com.satherov.crystalix.network;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
 import com.satherov.crystalix.Crystalix;
-import com.satherov.crystalix.content.CrystalixUtil;
 import com.satherov.crystalix.content.item.CrystalixWand;
 import com.satherov.crystalix.content.properties.BlockProperties;
 import com.satherov.crystalix.content.properties.IProperty;
+import com.satherov.crystalix.content.properties.ITranslatableProperty;
+import com.satherov.crystalix.core.CrystalixUtil;
+import com.satherov.crystalix.core.lang.CrystalixLanguage;
 
 public record CyclePropertyPayload(String key, String value) implements CustomPacketPayload {
 
@@ -22,7 +22,7 @@ public record CyclePropertyPayload(String key, String value) implements CustomPa
             CyclePropertyPayload::encode,
             CyclePropertyPayload::new);
 
-    public static final Type<CyclePropertyPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "cycle_property"));
+    public static final Type<CyclePropertyPayload> TYPE = new Type<>(Crystalix.rl("cycle_property"));
 
     private CyclePropertyPayload(FriendlyByteBuf buffer) {
         this(buffer.readUtf(100), buffer.readUtf(100));
@@ -50,7 +50,7 @@ public record CyclePropertyPayload(String key, String value) implements CustomPa
                     if (wand.isEmpty()) return;
                     BlockProperties properties = new BlockProperties(wand);
 
-                    IProperty<?> property = properties.get(message.key);
+                    ITranslatableProperty<?> property = properties.get(message.key);
                     if (property == null) return;
                     property.setValueString(message.value);
 
@@ -58,7 +58,7 @@ public record CyclePropertyPayload(String key, String value) implements CustomPa
                     player.getInventory().setChanged();
                 }
             }).exceptionally(e -> {
-                ctx.disconnect(Component.translatable(String.format("%s.networking.cycle_property.failed", Crystalix.MOD_ID), e.getMessage()));
+                ctx.disconnect(CrystalixLanguage.NETWORK_CYCLE_FAILED.translate(e.getMessage()));
                 return null;
             });
         }

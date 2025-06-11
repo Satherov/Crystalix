@@ -16,7 +16,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 
 import com.satherov.crystalix.Crystalix;
-import com.satherov.crystalix.content.CrystalixRegistry;
+import com.satherov.crystalix.core.CrystalixRegistry;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -24,6 +24,12 @@ public class CrystalixRecipeProvider extends RecipeProvider implements IConditio
 
     public CrystalixRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries);
+    }
+
+    private static TagKey<Item> getGlassIngredient(CrystalixRegistry.BlockTypes type) {
+        return type == CrystalixRegistry.BlockTypes.GLASS
+                ? Tags.Items.GLASS_BLOCKS
+                : CrystalixRegistry.ITEM_TAGS.get(CrystalixRegistry.BlockTypes.GLASS);
     }
 
     private void tint(TagKey<Item> color, TagKey<Item> type, DeferredHolder<Block, ?> output, RecipeOutput recipeOutput) {
@@ -44,7 +50,7 @@ public class CrystalixRecipeProvider extends RecipeProvider implements IConditio
                 .pattern(" s ")
                 .pattern("s  ")
                 .define('s', Items.STICK)
-                .define('n', Tags.Items.NETHER_STARS)
+                .define('n', Tags.Items.GEMS_DIAMOND)
                 .unlockedBy("has_star", has(Tags.Items.GEMS_DIAMOND))
                 .save(recipeOutput);
 
@@ -64,12 +70,6 @@ public class CrystalixRecipeProvider extends RecipeProvider implements IConditio
                         .save(recipeOutput);
             });
         });
-    }
-
-    private static TagKey<Item> getGlassIngredient(CrystalixRegistry.BlockTypes type) {
-        return type == CrystalixRegistry.BlockTypes.GLASS
-                ? Tags.Items.GLASS_BLOCKS
-                : CrystalixRegistry.ITEM_TAGS.get(CrystalixRegistry.BlockTypes.GLASS);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.satherov.crystalix.content.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -9,8 +10,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlockContainer;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -24,25 +33,29 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import com.satherov.crystalix.content.CrystalixRegistry;
 import com.satherov.crystalix.content.item.CrystalixWand;
 import com.satherov.crystalix.content.properties.BlockProperties;
+import com.satherov.crystalix.core.CrystalixRegistry;
+import com.satherov.crystalix.core.annotations.NothingNull;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+@NothingNull
 public class CrystalixGlass extends TransparentBlock implements LiquidBlockContainer {
 
-    private final DyeColor color;
-
+    public static final BooleanProperty INVISIBLE = BooleanProperty.create("invisible");
     public static final BooleanProperty SHADELESS = BooleanProperty.create("shadeless");
     public static final BooleanProperty REINFORCED = BooleanProperty.create("reinforced");
     public static final EnumProperty<BlockProperties.Light> LIGHT = EnumProperty.create("light", BlockProperties.Light.class);
     public static final EnumProperty<BlockProperties.Ghost> GHOST = EnumProperty.create("ghost", BlockProperties.Ghost.class);
+    private final DyeColor color;
 
     public CrystalixGlass(DyeColor dyeColor) {
         super(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_STAINED_GLASS).mapColor(dyeColor));
         this.registerDefaultState(this.stateDefinition.any()
+                .setValue(INVISIBLE, false)
                 .setValue(SHADELESS, false)
                 .setValue(REINFORCED, false)
                 .setValue(LIGHT, BlockProperties.Light.NONE)
@@ -52,12 +65,12 @@ public class CrystalixGlass extends TransparentBlock implements LiquidBlockConta
 
     @Override
     public Integer getBeaconColorMultiplier(BlockState state, LevelReader level, BlockPos pos, BlockPos beaconPos) {
-         return this.color.getTextureDiffuseColor();
+        return this.color.getTextureDiffuseColor();
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(SHADELESS, REINFORCED, LIGHT, GHOST);
+        builder.add(INVISIBLE, SHADELESS, REINFORCED, LIGHT, GHOST);
     }
 
     @Override
@@ -69,6 +82,7 @@ public class CrystalixGlass extends TransparentBlock implements LiquidBlockConta
         if (player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof CrystalixWand) {
             ItemStack wand = player.getItemInHand(InteractionHand.OFF_HAND);
             return this.defaultBlockState()
+                    .setValue(INVISIBLE, Objects.requireNonNull(wand.get(CrystalixRegistry.INVISIBLE)))
                     .setValue(SHADELESS, Objects.requireNonNull(wand.get(CrystalixRegistry.SHADELESS)))
                     .setValue(REINFORCED, Objects.requireNonNull(wand.get(CrystalixRegistry.REINFORCED)))
                     .setValue(LIGHT, Objects.requireNonNull(wand.get(CrystalixRegistry.LIGHT)))
@@ -76,6 +90,18 @@ public class CrystalixGlass extends TransparentBlock implements LiquidBlockConta
         }
 
         return this.defaultBlockState();
+    }
+
+    // Invisible
+
+    @Override
+    protected RenderShape getRenderShape(BlockState state) {
+        return state.getValue(INVISIBLE) ? RenderShape.INVISIBLE : super.getRenderShape(state);
+    }
+
+    @Override
+    protected boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
+        return adjacentBlockState.is(this) && !adjacentBlockState.getValue(INVISIBLE);
     }
 
     // Reinforced

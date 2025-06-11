@@ -3,8 +3,8 @@ package com.satherov.crystalix.datagen.assets.lang;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.BlockItem;
 
-import com.satherov.crystalix.Crystalix;
-import com.satherov.crystalix.content.CrystalixRegistry;
+import com.satherov.crystalix.core.CrystalixRegistry;
+import com.satherov.crystalix.core.lang.CrystalixLanguage;
 import com.satherov.crystalix.datagen.assets.CrystalixLanguageProvider;
 
 public class EN_USProvider extends CrystalixLanguageProvider {
@@ -15,46 +15,48 @@ public class EN_USProvider extends CrystalixLanguageProvider {
 
     @Override
     protected void addTranslations() {
-        add("itemGroup." + Crystalix.MOD_ID, "Crystalix");
-        add("config.jade.plugin_crystalix.crystalix_block", "Crystalix Block");
 
-        add("crystalix.configuration.max_wand_edit", "Maxiumum Wand Edit Amount");
+        add(CrystalixLanguage.ITEM_GROUP, "Crystalix");
+        add(CrystalixLanguage.NETWORK_CYCLE_FAILED, "Error sending Crystalix property change to server: %s");
 
-        add("crystalix.networking.cycle_property.failed", "Error sending Crystalix property change to server:");
+        add(CrystalixLanguage.CONFIG_MAX_EDIT, "Maxiumum Wand Edit Amount");
+        add(CrystalixLanguage.CONFIG_JADE_CRYSTALIX_BLOCK, "Crystalix Block");
 
-        add("key.crystalix.category", "Crystalix");
-        add("key.crystalix.cycle_shadeless", "Cycle Shadeless Mode");
-        add("key.crystalix.cycle_reinforced", "Cycle Reinforced Mode");
-        add("key.crystalix.cycle_light", "Cycle Light Mode");
-        add("key.crystalix.cycle_ghost", "Cycle Ghost Mode");
+        add(CrystalixLanguage.TOOLTIP_BULK, "Hold Shift to Bulk Edit");
 
-        add("crystalix.wand.bulk", "§7Hold Shift to Bulk Edit");
+        add(CrystalixLanguage.KEY_CATEGORY, "Crystalix");
+        add(CrystalixLanguage.KEY_INVISIBLE, "Toggle Invisible Mode");
+        add(CrystalixLanguage.KEY_SHADELESS, "Toggle Shadeless Mode");
+        add(CrystalixLanguage.KEY_REINFORCED, "Toggle Reinforced Mode");
+        add(CrystalixLanguage.KEY_LIGHT, "Cycle Light Mode");
+        add(CrystalixLanguage.KEY_GHOST, "Cycle Ghost Mode");
 
-        add("crystalix.property.shadeless", "Shadeless Mode");
-        add("crystalix.property.shadeless.enabled", "Enabled");
-        add("crystalix.property.shadeless.disabled", "Disabled");
+        add(CrystalixLanguage.PROPERTY_INVISIBLE, "Invisible Mode");
+        add(CrystalixLanguage.PROPERTY_SHADELESS, "Shadeless Mode");
+        add(CrystalixLanguage.PROPERTY_REINFORCED, "Reinforced Mode");
+        add(CrystalixLanguage.PROPERTY_LIGHT, "Light Mode");
+        add(CrystalixLanguage.PROPERTY_GHOST, "Ghost Mode");
 
-        add("crystalix.property.reinforced", "Reinforced Mode");
-        add("crystalix.property.reinforced.enabled", "Enabled");
-        add("crystalix.property.reinforced.disabled", "Disabled");
+        add(CrystalixLanguage.PROPERTY_ENABLED, "Enabled");
+        add(CrystalixLanguage.PROPERTY_DISABLED, "Disabled");
 
-        add("crystalix.property.light", "Light Mode");
-        add("crystalix.property.light.light", "§6Light");
-        add("crystalix.property.light.dark", "§8Dark");
-        add("crystalix.property.light.fake_light", "§5Fake Light");
-        add("crystalix.property.light.none", "§7None");
+        add(CrystalixLanguage.PROPERTY_LIGHT_NONE, "None");
+        add(CrystalixLanguage.PROPERTY_LIGHT_DARK, "Dark");
+        add(CrystalixLanguage.PROPERTY_LIGHT_LIGHT, "Light");
+        add(CrystalixLanguage.PROPERTY_LIGHT_FAKE, "Fake Light");
 
-        add("crystalix.property.ghost", "Ghost Mode");
-        add("crystalix.property.ghost.block_all", "§4Block §8All");
-        add("crystalix.property.ghost.allow_all", "§2Allow §8All");
-        add("crystalix.property.ghost.block_player", "§4Block §bPlayer");
-        add("crystalix.property.ghost.allow_player", "§2Allow §bPlayer");
-        add("crystalix.property.ghost.block_monster", "§4Block §cMonster");
-        add("crystalix.property.ghost.allow_monster", "§2Allow §cMonster");
-        add("crystalix.property.ghost.block_animal", "§4Block §aAnimal");
-        add("crystalix.property.ghost.allow_animal", "§2Allow §aAnimal");
+        add(CrystalixLanguage.PROPERTY_GHOST_ALLOW, "Allow");
+        add(CrystalixLanguage.PROPERTY_GHOST_DENY, "Deny");
+        add(CrystalixLanguage.PROPERTY_GHOST_ALL, "All");
+        add(CrystalixLanguage.PROPERTY_GHOST_PLAYER, "Player");
+        add(CrystalixLanguage.PROPERTY_GHOST_ANIMAL, "Animal");
+        add(CrystalixLanguage.PROPERTY_GHOST_MONSTER, "Monster");
 
         CrystalixRegistry.BLOCKS.getEntries().forEach(block -> add(block.get(), format(block.getId().getPath())));
         CrystalixRegistry.ITEMS.getEntries().stream().filter(item -> !(item.get() instanceof BlockItem)).forEach(item -> add(item.get(), format(item.getId().getPath())));
+    }
+
+    private void add(CrystalixLanguage lang, String translation) {
+        this.add(lang.getTranslationKey(), translation);
     }
 }

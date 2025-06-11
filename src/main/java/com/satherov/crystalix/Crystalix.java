@@ -15,9 +15,10 @@ import net.neoforged.neoforge.common.NeoForge;
 
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 
 import com.satherov.crystalix.client.KeybindManager;
-import com.satherov.crystalix.content.CrystalixRegistry;
+import com.satherov.crystalix.core.CrystalixRegistry;
 import com.satherov.crystalix.network.CrystalixNetworking;
 
 @Mod(Crystalix.MOD_ID)
@@ -43,12 +44,17 @@ public class Crystalix {
         }
     }
 
+    public static ResourceLocation rl(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    }
+
     static class Client {
         public static void ClientSetup(final FMLClientSetupEvent event) {
             NeoForge.EVENT_BUS.register(new KeybindManager());
         }
 
         public static void registerKeys(final RegisterKeyMappingsEvent event) {
+            event.register(KeybindManager.CYCLE_INVISIBLE);
             event.register(KeybindManager.CYCLE_SHADELESS);
             event.register(KeybindManager.CYCLE_REINFORCED);
             event.register(KeybindManager.CYCLE_LIGHT);

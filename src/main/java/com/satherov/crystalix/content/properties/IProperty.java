@@ -1,9 +1,5 @@
 package com.satherov.crystalix.content.properties;
 
-import net.minecraft.network.chat.Component;
-
-import com.satherov.crystalix.Crystalix;
-
 public interface IProperty<T> {
 
     String getKey();
@@ -11,14 +7,6 @@ public interface IProperty<T> {
     String getValueString();
 
     void setValueString(String val);
-
-    default String getKeyTranslation() {
-        return Crystalix.MOD_ID + ".property." + getKey();
-    }
-
-    default String getValueTranslation() {
-        return Crystalix.MOD_ID + ".property." + getKey() + "." + getValueString();
-    }
 
     void set(T val);
 
@@ -29,6 +17,4 @@ public interface IProperty<T> {
     default T next() {
         return next(true);
     }
-
-    Component toComponent();
 }

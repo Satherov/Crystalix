@@ -15,30 +15,43 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import com.satherov.crystalix.Crystalix;
 import com.satherov.crystalix.CrystalixConfig;
-import com.satherov.crystalix.content.CrystalixRegistry;
 import com.satherov.crystalix.content.block.CrystalixGlass;
 import com.satherov.crystalix.content.properties.BlockProperties;
-import com.satherov.crystalix.content.properties.IProperty;
+import com.satherov.crystalix.content.properties.ITranslatableProperty;
+import com.satherov.crystalix.core.CrystalixRegistry;
+import com.satherov.crystalix.core.annotations.NothingNull;
+import com.satherov.crystalix.core.lang.CrystalixLanguage;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Queue;
+import java.util.Set;
 
+@NothingNull
 public class CrystalixWand extends Item {
 
-    public CrystalixWand(Properties properties, boolean shadeless, boolean reinforced, BlockProperties.Light light, BlockProperties.Ghost ghost) {
+    public CrystalixWand(Properties properties) {
         super(properties
                 .stacksTo(1)
-                .component(CrystalixRegistry.SHADELESS, shadeless)
-                .component(CrystalixRegistry.REINFORCED, reinforced)
-                .component(CrystalixRegistry.LIGHT, light)
-                .component(CrystalixRegistry.GHOST, ghost));
+                .component(CrystalixRegistry.INVISIBLE, false)
+                .component(CrystalixRegistry.SHADELESS, false)
+                .component(CrystalixRegistry.REINFORCED, false)
+                .component(CrystalixRegistry.LIGHT, BlockProperties.Light.NONE)
+                .component(CrystalixRegistry.GHOST, BlockProperties.Ghost.BLOCK_ALL));
+    }
+
+    public static void sendMessage(Player player, ITranslatableProperty<?> property) {
+        player.displayClientMessage(property.getTranslation(), true);
     }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable(String.format("%s.wand.bulk", Crystalix.MOD_ID)).withStyle(ChatFormatting.GRAY));
-        Arrays.stream(new BlockProperties(stack).properties).toList().forEach(property -> tooltipComponents.add(property.toComponent()));
+        tooltipComponents.add(CrystalixLanguage.TOOLTIP_BULK.translateFormatted(ChatFormatting.GRAY));
+        Arrays.stream(new BlockProperties(stack).properties).toList().forEach(property -> tooltipComponents.add(property.getTranslation()));
     }
 
     @Override
@@ -61,11 +74,12 @@ public class CrystalixWand extends Item {
         ItemStack wand = player.getMainHandItem();
 
         Set<BlockPos> blocksToModify = player.isCrouching()
-                ? getConnectedBlocks(accessor, pos, accessor.getBlockState(pos).getBlock(), CrystalixConfig.max_wand_edit)
+                ? getConnectedBlocks(accessor, pos, accessor.getBlockState(pos).getBlock())
                 : Set.of(pos);
 
         for (BlockPos targetPos : blocksToModify) {
             BlockState newState = accessor.getBlockState(targetPos)
+                    .setValue(CrystalixGlass.INVISIBLE, Objects.requireNonNull(wand.get(CrystalixRegistry.INVISIBLE)))
                     .setValue(CrystalixGlass.SHADELESS, Objects.requireNonNull(wand.get(CrystalixRegistry.SHADELESS)))
                     .setValue(CrystalixGlass.REINFORCED, Objects.requireNonNull(wand.get(CrystalixRegistry.REINFORCED)))
                     .setValue(CrystalixGlass.LIGHT, Objects.requireNonNull(wand.get(CrystalixRegistry.LIGHT)))
@@ -77,14 +91,14 @@ public class CrystalixWand extends Item {
         return true;
     }
 
-    public Set<BlockPos> getConnectedBlocks(LevelAccessor accessor, BlockPos start, Block targetBlock, int maxBlocks) {
+    public Set<BlockPos> getConnectedBlocks(LevelAccessor accessor, BlockPos start, Block targetBlock) {
         Set<BlockPos> visited = new HashSet<>();
         Queue<BlockPos> queue = new LinkedList<>();
 
         queue.add(start);
         visited.add(start);
 
-        while (!queue.isEmpty() && visited.size() < maxBlocks) {
+        while (!queue.isEmpty() && visited.size() < CrystalixConfig.max_wand_edit) {
             BlockPos pos = queue.poll();
 
             for (Direction direction : Direction.values()) {
@@ -96,9 +110,5 @@ public class CrystalixWand extends Item {
             }
         }
         return visited;
-    }
-
-    public static void sendMessage(Player player, IProperty<?> property) {
-        player.displayClientMessage(property.toComponent(), true);
     }
 }
