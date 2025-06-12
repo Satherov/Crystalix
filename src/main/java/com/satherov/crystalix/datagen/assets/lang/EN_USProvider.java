@@ -3,7 +3,7 @@ package com.satherov.crystalix.datagen.assets.lang;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.BlockItem;
 
-import com.satherov.crystalix.core.CrystalixRegistry;
+import com.satherov.crystalix.content.CrystalixRegistry;
 import com.satherov.crystalix.core.lang.CrystalixLanguage;
 import com.satherov.crystalix.datagen.assets.CrystalixLanguageProvider;
 

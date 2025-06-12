@@ -9,11 +9,14 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public class CrystalixConfig {
 
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
-    static final ModConfigSpec SPEC = BUILDER.build();
+
+    public static int max_wand_edit;
+
     private static final ModConfigSpec.IntValue MAX_WAND_EDIT = BUILDER
             .comment("Defines the maximum number of blocks that can be edited with the wand at once")
             .defineInRange("max_wand_edit", 512, 1, 16384);
-    public static int max_wand_edit;
+
+    static final ModConfigSpec SPEC = BUILDER.build();
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {

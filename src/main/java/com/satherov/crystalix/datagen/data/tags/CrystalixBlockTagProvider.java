@@ -10,7 +10,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 
 import com.satherov.crystalix.Crystalix;
-import com.satherov.crystalix.core.CrystalixRegistry;
+import com.satherov.crystalix.content.CrystalixRegistry;
 
 import org.jetbrains.annotations.Nullable;
 

@@ -9,7 +9,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 
 import com.satherov.crystalix.Crystalix;
-import com.satherov.crystalix.core.CrystalixRegistry;
+import com.satherov.crystalix.content.CrystalixRegistry;
 import com.supermartijn642.fusion.api.model.DefaultModelTypes;
 import com.supermartijn642.fusion.api.model.ModelInstance;
 import com.supermartijn642.fusion.api.model.data.ConnectingModelData;

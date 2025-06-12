@@ -13,7 +13,7 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 
 import com.mojang.serialization.Codec;
 
-import com.satherov.crystalix.core.CrystalixRegistry;
+import com.satherov.crystalix.content.CrystalixRegistry;
 import com.satherov.crystalix.core.annotations.NothingNull;
 import com.satherov.crystalix.core.lang.CrystalixLanguage;
 import com.satherov.crystalix.core.lang.ILangEntry;

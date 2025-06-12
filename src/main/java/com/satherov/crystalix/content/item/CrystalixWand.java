@@ -19,7 +19,7 @@ import com.satherov.crystalix.CrystalixConfig;
 import com.satherov.crystalix.content.block.CrystalixGlass;
 import com.satherov.crystalix.content.properties.BlockProperties;
 import com.satherov.crystalix.content.properties.ITranslatableProperty;
-import com.satherov.crystalix.core.CrystalixRegistry;
+import com.satherov.crystalix.content.CrystalixRegistry;
 import com.satherov.crystalix.core.annotations.NothingNull;
 import com.satherov.crystalix.core.lang.CrystalixLanguage;
 

@@ -13,7 +13,7 @@ import com.satherov.crystalix.content.item.CrystalixWand;
 import com.satherov.crystalix.content.properties.BlockProperties;
 import com.satherov.crystalix.content.properties.IProperty;
 import com.satherov.crystalix.content.properties.ITranslatableProperty;
-import com.satherov.crystalix.core.CrystalixUtil;
+import com.satherov.crystalix.content.CrystalixUtil;
 import com.satherov.crystalix.core.lang.CrystalixLanguage;
 
 public record CyclePropertyPayload(String key, String value) implements CustomPacketPayload {

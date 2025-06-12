@@ -1,4 +1,4 @@
-package com.satherov.crystalix.core;
+package com.satherov.crystalix.content;
 
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredHolder;

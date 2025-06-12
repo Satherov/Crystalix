@@ -16,7 +16,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 
 import com.satherov.crystalix.Crystalix;
-import com.satherov.crystalix.core.CrystalixRegistry;
+import com.satherov.crystalix.content.CrystalixRegistry;
 
 import java.util.concurrent.CompletableFuture;
 

@@ -1,4 +1,4 @@
-package com.satherov.crystalix.core;
+package com.satherov.crystalix.content;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;

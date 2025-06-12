@@ -35,7 +35,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import com.satherov.crystalix.content.item.CrystalixWand;
 import com.satherov.crystalix.content.properties.BlockProperties;
-import com.satherov.crystalix.core.CrystalixRegistry;
+import com.satherov.crystalix.content.CrystalixRegistry;
 import com.satherov.crystalix.core.annotations.NothingNull;
 
 import org.jetbrains.annotations.Nullable;

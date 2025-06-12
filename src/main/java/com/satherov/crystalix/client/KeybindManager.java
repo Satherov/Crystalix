@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 
 import com.satherov.crystalix.content.item.CrystalixWand;
 import com.satherov.crystalix.content.properties.BlockProperties;
-import com.satherov.crystalix.core.CrystalixUtil;
+import com.satherov.crystalix.content.CrystalixUtil;
 import com.satherov.crystalix.core.lang.CrystalixLanguage;
 import com.satherov.crystalix.core.lang.ILangEntry;
 import com.satherov.crystalix.network.CrystalixNetworking;

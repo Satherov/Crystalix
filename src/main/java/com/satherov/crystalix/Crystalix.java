@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
 import com.satherov.crystalix.client.KeybindManager;
-import com.satherov.crystalix.core.CrystalixRegistry;
+import com.satherov.crystalix.content.CrystalixRegistry;
 import com.satherov.crystalix.network.CrystalixNetworking;
 
 @Mod(Crystalix.MOD_ID)
