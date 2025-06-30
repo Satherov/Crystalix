@@ -10,14 +10,17 @@ import net.minecraft.world.level.block.Block;
 
 import com.satherov.crystalix.Crystalix;
 import com.satherov.crystalix.content.CrystalixRegistry;
+import com.satherov.crystalix.content.block.CrystalixGlass;
 import com.supermartijn642.fusion.api.model.DefaultModelTypes;
 import com.supermartijn642.fusion.api.model.ModelInstance;
 import com.supermartijn642.fusion.api.model.data.ConnectingModelData;
 import com.supermartijn642.fusion.api.predicate.DefaultConnectionPredicates;
 import com.supermartijn642.fusion.api.provider.FusionModelProvider;
+import com.supermartijn642.fusion.api.util.Pair;
 
 import java.nio.file.Path;
 
+@SuppressWarnings("unchecked")
 public class CrystalixFusionModelProvider extends FusionModelProvider {
 
     public CrystalixFusionModelProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper) {
@@ -41,7 +44,7 @@ public class CrystalixFusionModelProvider extends FusionModelProvider {
                         ConnectingModelData.builder()
                                 .parent(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/block"))
                                 .texture("all", ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + color.getName()))
-                                .connection(DefaultConnectionPredicates.isSameBlock())
+                                .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(block.get(), Pair.of(CrystalixGlass.INVISIBLE, false))))
                                 .build()
                 ));
     }
@@ -53,7 +56,7 @@ public class CrystalixFusionModelProvider extends FusionModelProvider {
                         ConnectingModelData.builder()
                                 .parent(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/no_shade_block"))
                                 .texture("all", ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + color.getName()))
-                                .connection(DefaultConnectionPredicates.isSameBlock())
+                                .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(block.get(), Pair.of(CrystalixGlass.INVISIBLE, false))))
                                 .build()
                 ));
     }

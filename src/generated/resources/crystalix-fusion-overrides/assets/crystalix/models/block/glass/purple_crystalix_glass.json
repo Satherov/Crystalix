@@ -5,7 +5,21 @@
     "type": "fusion:or",
     "predicates": [
       {
-        "type": "fusion:is_same_block"
+        "type": "fusion:and",
+        "predicates": [
+          {
+            "type": "fusion:is_same_block"
+          },
+          {
+            "type": "fusion:match_state",
+            "block": "crystalix:purple_crystalix_glass",
+            "properties": {
+              "invisible": [
+                "false"
+              ]
+            }
+          }
+        ]
       }
     ]
   },
