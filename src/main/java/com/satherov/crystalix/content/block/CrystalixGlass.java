@@ -20,13 +20,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlockContainer;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.TransparentBlock;
+import net.minecraft.world.level.block.WaterloggedTransparentBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
@@ -43,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 @NothingNull
-public class CrystalixGlass extends TransparentBlock implements LiquidBlockContainer {
+public class CrystalixGlass extends WaterloggedTransparentBlock implements LiquidBlockContainer {
 
     public static final BooleanProperty INVISIBLE = BooleanProperty.create("invisible");
     public static final BooleanProperty SHADELESS = BooleanProperty.create("shadeless");
@@ -55,6 +54,7 @@ public class CrystalixGlass extends TransparentBlock implements LiquidBlockConta
     public CrystalixGlass(DyeColor dyeColor) {
         super(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_STAINED_GLASS).mapColor(dyeColor));
         this.registerDefaultState(this.stateDefinition.any()
+                .setValue(WATERLOGGED, false)
                 .setValue(INVISIBLE, false)
                 .setValue(SHADELESS, false)
                 .setValue(REINFORCED, false)
@@ -70,7 +70,7 @@ public class CrystalixGlass extends TransparentBlock implements LiquidBlockConta
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(INVISIBLE, SHADELESS, REINFORCED, LIGHT, GHOST);
+        builder.add(WATERLOGGED, INVISIBLE, SHADELESS, REINFORCED, LIGHT, GHOST);
     }
 
     @Override
@@ -134,6 +134,14 @@ public class CrystalixGlass extends TransparentBlock implements LiquidBlockConta
         return state.getValue(REINFORCED) ? Float.MAX_VALUE : super.getExplosionResistance();
     }
 
+    @Override
+    public float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
+        float destroyProgress = super.getDestroyProgress(state, player, level, pos);
+        if (state.getValue(REINFORCED)) destroyProgress *= 0.1f;
+        return destroyProgress;
+    }
+
+
     // Light
 
     @Override
@@ -185,16 +193,6 @@ public class CrystalixGlass extends TransparentBlock implements LiquidBlockConta
                     !(state.getValue(GHOST) == BlockProperties.Ghost.ALLOW_MONSTER) ||
                     !(state.getValue(GHOST) == BlockProperties.Ghost.ALLOW_ANIMAL);
         }
-        return false;
-    }
-
-    @Override
-    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
-        return false;
-    }
-
-    @Override
-    public boolean placeLiquid(LevelAccessor level, BlockPos pos, BlockState state, FluidState fluidState) {
         return false;
     }
 }
