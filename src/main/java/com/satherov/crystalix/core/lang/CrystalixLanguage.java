@@ -39,7 +39,8 @@ public enum CrystalixLanguage implements ILangEntry {
     PROPERTY_GHOST_ANIMAL("property", "ghost.animal"),
     PROPERTY_GHOST_MONSTER("property", "ghost.monster"),
 
-    CONFIG_MAX_EDIT("config", "max_edit"),
+    CONFIG_MAX_EDIT("crystalix.configuration.max_wand_edit"),
+    CONFIG_JADE_MODE("crystalix.configuration.jade_mode"),
     CONFIG_JADE_CRYSTALIX_BLOCK("config.jade.plugin_crystalix.crystalix_block");
 
     private final String key;

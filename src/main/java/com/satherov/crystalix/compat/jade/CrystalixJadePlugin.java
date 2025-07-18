@@ -1,11 +1,15 @@
 package com.satherov.crystalix.compat.jade;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
 
 import com.satherov.crystalix.Crystalix;
+import com.satherov.crystalix.CrystalixConfig;
 import com.satherov.crystalix.content.block.CrystalixGlass;
+import com.satherov.crystalix.content.item.CrystalixWand;
 import com.satherov.crystalix.core.annotations.NothingNull;
 import com.satherov.crystalix.core.lang.CrystalixLanguage;
 import com.satherov.crystalix.core.lang.ILangEntry;
@@ -51,16 +55,30 @@ public class CrystalixJadePlugin implements IWailaPlugin {
                 BlockAccessor accessor,
                 IPluginConfig config
         ) {
-            tooltip.add(getTranslation(CrystalixLanguage.PROPERTY_INVISIBLE, accessor.getBlockState().getValue(CrystalixGlass.INVISIBLE)));
-            tooltip.add(getTranslation(CrystalixLanguage.PROPERTY_SHADELESS, accessor.getBlockState().getValue(CrystalixGlass.SHADELESS)));
-            tooltip.add(getTranslation(CrystalixLanguage.PROPERTY_REINFORCED, accessor.getBlockState().getValue(CrystalixGlass.REINFORCED)));
-            tooltip.add(getTranslation(accessor.getBlockState().getValue(CrystalixGlass.LIGHT)));
-            tooltip.add(getTranslation(accessor.getBlockState().getValue(CrystalixGlass.GHOST)));
+            switch (CrystalixConfig.getJadeMode()) {
+                case ALWAYS -> showTooltips(tooltip, accessor);
+                case WAND -> {
+                    if (accessor.getPlayer().getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof CrystalixWand ||
+                        accessor.getPlayer().getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof CrystalixWand
+                    ) {
+                        showTooltips(tooltip, accessor);
+                    }
+                }
+                case NEVER -> { /* ignored */ }
+            }
         }
 
         @Override
         public ResourceLocation getUid() {
             return CrystalixJadePlugin.CRYSTALIX_BLOCK;
         }
+    }
+
+    private static void showTooltips(ITooltip tooltip, BlockAccessor accessor) {
+        tooltip.add(getTranslation(CrystalixLanguage.PROPERTY_INVISIBLE, accessor.getBlockState().getValue(CrystalixGlass.INVISIBLE)));
+        tooltip.add(getTranslation(CrystalixLanguage.PROPERTY_SHADELESS, accessor.getBlockState().getValue(CrystalixGlass.SHADELESS)));
+        tooltip.add(getTranslation(CrystalixLanguage.PROPERTY_REINFORCED, accessor.getBlockState().getValue(CrystalixGlass.REINFORCED)));
+        tooltip.add(getTranslation(accessor.getBlockState().getValue(CrystalixGlass.LIGHT)));
+        tooltip.add(getTranslation(accessor.getBlockState().getValue(CrystalixGlass.GHOST)));
     }
 }

@@ -19,7 +19,8 @@ public class EN_USProvider extends CrystalixLanguageProvider {
         add(CrystalixLanguage.ITEM_GROUP, "Crystalix");
         add(CrystalixLanguage.NETWORK_CYCLE_FAILED, "Error sending Crystalix property change to server: %s");
 
-        add(CrystalixLanguage.CONFIG_MAX_EDIT, "Maxiumum Wand Edit Amount");
+        add(CrystalixLanguage.CONFIG_MAX_EDIT, "Maximum Wand Edit Amount");
+        add(CrystalixLanguage.CONFIG_JADE_MODE, "Jade Mode");
         add(CrystalixLanguage.CONFIG_JADE_CRYSTALIX_BLOCK, "Crystalix Block");
 
         add(CrystalixLanguage.TOOLTIP_BULK, "Hold Shift to Bulk Edit");

@@ -98,7 +98,7 @@ public class CrystalixWand extends Item {
         queue.add(start);
         visited.add(start);
 
-        while (!queue.isEmpty() && visited.size() < CrystalixConfig.max_wand_edit) {
+        while (!queue.isEmpty() && visited.size() < CrystalixConfig.getMaxWandEdit()) {
             BlockPos pos = queue.poll();
 
             for (Direction direction : Direction.values()) {

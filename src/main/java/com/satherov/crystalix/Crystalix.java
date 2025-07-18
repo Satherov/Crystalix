@@ -34,7 +34,8 @@ public class Crystalix {
         CrystalixRegistry.ITEMS.register(modEventBus);
         CrystalixRegistry.CREATIVE_TABS.register(modEventBus);
 
-        modContainer.registerConfig(ModConfig.Type.COMMON, CrystalixConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.CLIENT, CrystalixConfig.Client.SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON, CrystalixConfig.Common.SPEC);
 
         if (FMLEnvironment.dist.isClient()) {
             modEventBus.addListener(Client::ClientSetup);
