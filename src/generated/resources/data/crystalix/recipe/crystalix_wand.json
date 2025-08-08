@@ -2,16 +2,19 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "n": {
+    "d": {
       "tag": "c:gems/diamond"
+    },
+    "g": {
+      "tag": "crystalix:glass"
     },
     "s": {
       "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "  n",
-    " s ",
+    " gd",
+    " sg",
     "s  "
   ],
   "result": {

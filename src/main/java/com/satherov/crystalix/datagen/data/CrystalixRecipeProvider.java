@@ -46,12 +46,13 @@ public class CrystalixRecipeProvider extends RecipeProvider implements IConditio
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, CrystalixRegistry.WAND.get().asItem())
-                .pattern("  n")
-                .pattern(" s ")
+                .pattern(" gd")
+                .pattern(" sg")
                 .pattern("s  ")
                 .define('s', Items.STICK)
-                .define('n', Tags.Items.GEMS_DIAMOND)
-                .unlockedBy("has_star", has(Tags.Items.GEMS_DIAMOND))
+                .define('g', CrystalixRegistry.ITEM_TAGS.get(CrystalixRegistry.BlockTypes.GLASS))
+                .define('d', Tags.Items.GEMS_DIAMOND)
+                .unlockedBy("has_diamond", has(Tags.Items.GEMS_DIAMOND))
                 .save(recipeOutput);
 
         CrystalixRegistry.BLOCKS_MAP.forEach((color, typeMap) -> {
