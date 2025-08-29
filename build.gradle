@@ -96,6 +96,8 @@ dependencies {
 
     implementation "curse.maven:jade-324717:${jade_version}"
     implementation "curse.maven:fusion-connected-textures-854949:${fusion_version}"
+
+    implementation "curse.maven:keybind-bundles-1172594:6896142"
 }
 
 tasks.withType(ProcessResources).configureEach {

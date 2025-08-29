@@ -68,6 +68,12 @@ public class CrystalixRegistry {
                     .persistent(Codec.BOOL)
                     .networkSynchronized(ByteBufCodecs.BOOL)
                     .build());
+    
+    public static final Supplier<DataComponentType<Boolean>> WATERLOGGABLE = DATA_COMPONENT_TYPES.register("waterloggable", () ->
+            DataComponentType.<Boolean>builder()
+                    .persistent(Codec.BOOL)
+                    .networkSynchronized(ByteBufCodecs.BOOL)
+                    .build());
     public static final Supplier<DataComponentType<BlockProperties.Ghost>> GHOST = DATA_COMPONENT_TYPES.register("ghost", () ->
             DataComponentType.<BlockProperties.Ghost>builder()
                     .persistent(BlockProperties.Ghost.CODEC)

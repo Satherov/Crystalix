@@ -1,0 +1,56 @@
+[
+  {
+    "id": "c3163ac0-b118-4a20-913a-a0128147d1d8",
+    "name": "Crystalix",
+    "entries": [
+      {
+        "key": "key.crystalix.ghost",
+        "title": "Cycle Ghost Mode",
+        "icon": {
+          "id": "minecraft:ghast_tear",
+          "count": 1
+        }
+      },
+      {
+        "key": "key.crystalix.light",
+        "title": "Cycle Light Mode",
+        "icon": {
+          "id": "minecraft:glowstone",
+          "count": 1
+        }
+      },
+      {
+        "key": "key.crystalix.invisible",
+        "title": "Toggle Invisible Mode",
+        "icon": {
+          "id": "minecraft:phantom_membrane",
+          "count": 1
+        }
+      },
+      {
+        "key": "key.crystalix.reinforce",
+        "title": "Toggle Reinforced Mode",
+        "icon": {
+          "id": "minecraft:obsidian",
+          "count": 1
+        }
+      },
+      {
+        "key": "key.crystalix.shadeless",
+        "title": "Toggle Shadeless Mode",
+        "icon": {
+          "id": "minecraft:glass",
+          "count": 1
+        }
+      },
+      {
+        "key": "key.crystalix.waterloggable",
+        "title": "Toggle Waterlogging Mode",
+        "icon": {
+          "id": "minecraft:water_bucket",
+          "count": 1
+        }
+      }
+    ]
+  }
+]

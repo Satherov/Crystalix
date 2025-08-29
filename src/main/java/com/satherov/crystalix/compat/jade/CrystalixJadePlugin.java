@@ -78,6 +78,7 @@ public class CrystalixJadePlugin implements IWailaPlugin {
         tooltip.add(getTranslation(CrystalixLanguage.PROPERTY_INVISIBLE, accessor.getBlockState().getValue(CrystalixGlass.INVISIBLE)));
         tooltip.add(getTranslation(CrystalixLanguage.PROPERTY_SHADELESS, accessor.getBlockState().getValue(CrystalixGlass.SHADELESS)));
         tooltip.add(getTranslation(CrystalixLanguage.PROPERTY_REINFORCED, accessor.getBlockState().getValue(CrystalixGlass.REINFORCED)));
+        tooltip.add(getTranslation(CrystalixLanguage.PROPERTY_WATERLOGGABLE, accessor.getBlockState().getValue(CrystalixGlass.WATERLOGGABLE)));
         tooltip.add(getTranslation(accessor.getBlockState().getValue(CrystalixGlass.LIGHT)));
         tooltip.add(getTranslation(accessor.getBlockState().getValue(CrystalixGlass.GHOST)));
     }

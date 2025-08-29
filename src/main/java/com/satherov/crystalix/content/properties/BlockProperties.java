@@ -33,6 +33,7 @@ public class BlockProperties {
     public final BooleanProperty invisible;
     public final BooleanProperty shadeless;
     public final BooleanProperty reinforced;
+    public final BooleanProperty waterloggable;
     public final EnumProperty<Light> light;
     public final EnumProperty<Ghost> ghost;
     public final ITranslatableProperty<?>[] properties;
@@ -42,10 +43,11 @@ public class BlockProperties {
         invisible = new BooleanProperty(wand, CrystalixRegistry.INVISIBLE.get(), "invisible", false, CrystalixLanguage.PROPERTY_INVISIBLE);
         shadeless = new BooleanProperty(wand, CrystalixRegistry.SHADELESS.get(), "shadeless", false, CrystalixLanguage.PROPERTY_SHADELESS);
         reinforced = new BooleanProperty(wand, CrystalixRegistry.REINFORCED.get(), "reinforced", false, CrystalixLanguage.PROPERTY_REINFORCED);
+        waterloggable = new BooleanProperty(wand, CrystalixRegistry.WATERLOGGABLE.get(), "waterloggable", false, CrystalixLanguage.PROPERTY_WATERLOGGABLE);
         light = new EnumProperty<>(wand, CrystalixRegistry.LIGHT.get(), "light", Light.class, Light.NONE);
         ghost = new EnumProperty<>(wand, CrystalixRegistry.GHOST.get(), "ghost", Ghost.class, Ghost.BLOCK_ALL);
 
-        properties = new ITranslatableProperty<?>[]{invisible, shadeless, reinforced, light, ghost};
+        properties = new ITranslatableProperty<?>[]{invisible, shadeless, reinforced, waterloggable, light, ghost};
     }
 
     @Nullable

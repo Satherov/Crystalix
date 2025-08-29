@@ -40,6 +40,7 @@ public class CrystalixWand extends Item {
                 .component(CrystalixRegistry.INVISIBLE, false)
                 .component(CrystalixRegistry.SHADELESS, false)
                 .component(CrystalixRegistry.REINFORCED, false)
+                .component(CrystalixRegistry.WATERLOGGABLE, false)
                 .component(CrystalixRegistry.LIGHT, BlockProperties.Light.NONE)
                 .component(CrystalixRegistry.GHOST, BlockProperties.Ghost.BLOCK_ALL));
     }
@@ -70,7 +71,7 @@ public class CrystalixWand extends Item {
     }
 
     public boolean applyToBlock(LevelAccessor accessor, BlockPos pos, Player player) {
-        if (!(accessor.getBlockState(pos).getBlock() instanceof CrystalixGlass)) return false;
+        if (!(accessor.getBlockState(pos).getBlock() instanceof CrystalixGlass glass)) return false;
         ItemStack wand = player.getMainHandItem();
 
         Set<BlockPos> blocksToModify = player.isCrouching()
@@ -78,14 +79,7 @@ public class CrystalixWand extends Item {
                 : Set.of(pos);
 
         for (BlockPos targetPos : blocksToModify) {
-            BlockState newState = accessor.getBlockState(targetPos)
-                    .setValue(CrystalixGlass.INVISIBLE, Objects.requireNonNull(wand.get(CrystalixRegistry.INVISIBLE)))
-                    .setValue(CrystalixGlass.SHADELESS, Objects.requireNonNull(wand.get(CrystalixRegistry.SHADELESS)))
-                    .setValue(CrystalixGlass.REINFORCED, Objects.requireNonNull(wand.get(CrystalixRegistry.REINFORCED)))
-                    .setValue(CrystalixGlass.LIGHT, Objects.requireNonNull(wand.get(CrystalixRegistry.LIGHT)))
-                    .setValue(CrystalixGlass.GHOST, Objects.requireNonNull(wand.get(CrystalixRegistry.GHOST)));
-
-            accessor.setBlock(targetPos, newState, 3);
+            accessor.setBlock(targetPos, glass.modifyFromWand(accessor.getBlockState(targetPos), wand), 3);
         }
 
         return true;

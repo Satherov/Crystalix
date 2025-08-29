@@ -26,15 +26,18 @@ public class EN_USProvider extends CrystalixLanguageProvider {
         add(CrystalixLanguage.TOOLTIP_BULK, "Hold Shift to Bulk Edit");
 
         add(CrystalixLanguage.KEY_CATEGORY, "Crystalix");
+        add(CrystalixLanguage.KEY_DIRECTION_MODIFIER, "Direction Modifier");
         add(CrystalixLanguage.KEY_INVISIBLE, "Toggle Invisible Mode");
         add(CrystalixLanguage.KEY_SHADELESS, "Toggle Shadeless Mode");
         add(CrystalixLanguage.KEY_REINFORCED, "Toggle Reinforced Mode");
+        add(CrystalixLanguage.KEY_WATERLOGGABLE, "Toggle Waterlogging Mode");
         add(CrystalixLanguage.KEY_LIGHT, "Cycle Light Mode");
         add(CrystalixLanguage.KEY_GHOST, "Cycle Ghost Mode");
 
         add(CrystalixLanguage.PROPERTY_INVISIBLE, "Invisible Mode");
         add(CrystalixLanguage.PROPERTY_SHADELESS, "Shadeless Mode");
         add(CrystalixLanguage.PROPERTY_REINFORCED, "Reinforced Mode");
+        add(CrystalixLanguage.PROPERTY_WATERLOGGABLE, "Waterlogging Mode");
         add(CrystalixLanguage.PROPERTY_LIGHT, "Light Mode");
         add(CrystalixLanguage.PROPERTY_GHOST, "Ghost Mode");
 

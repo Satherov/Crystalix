@@ -1,5 +1,8 @@
 package com.satherov.crystalix.content.block;
 
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.loading.FMLLoader;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -9,6 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
@@ -24,8 +28,13 @@ import net.minecraft.world.level.block.WaterloggedTransparentBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.lighting.LevelLightEngine;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
@@ -42,11 +51,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 @NothingNull
-public class CrystalixGlass extends WaterloggedTransparentBlock implements LiquidBlockContainer {
+public class CrystalixGlass extends WaterloggedTransparentBlock {
 
     public static final BooleanProperty INVISIBLE = BooleanProperty.create("invisible");
     public static final BooleanProperty SHADELESS = BooleanProperty.create("shadeless");
     public static final BooleanProperty REINFORCED = BooleanProperty.create("reinforced");
+    public static final BooleanProperty WATERLOGGABLE = BooleanProperty.create("waterloggable");
     public static final EnumProperty<BlockProperties.Light> LIGHT = EnumProperty.create("light", BlockProperties.Light.class);
     public static final EnumProperty<BlockProperties.Ghost> GHOST = EnumProperty.create("ghost", BlockProperties.Ghost.class);
     private final DyeColor color;
@@ -58,6 +68,7 @@ public class CrystalixGlass extends WaterloggedTransparentBlock implements Liqui
                 .setValue(INVISIBLE, false)
                 .setValue(SHADELESS, false)
                 .setValue(REINFORCED, false)
+                .setValue(WATERLOGGABLE, false)
                 .setValue(LIGHT, BlockProperties.Light.NONE)
                 .setValue(GHOST, BlockProperties.Ghost.BLOCK_ALL));
         this.color = dyeColor;
@@ -70,7 +81,7 @@ public class CrystalixGlass extends WaterloggedTransparentBlock implements Liqui
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(WATERLOGGED, INVISIBLE, SHADELESS, REINFORCED, LIGHT, GHOST);
+        builder.add(WATERLOGGED, INVISIBLE, SHADELESS, REINFORCED, WATERLOGGABLE, LIGHT, GHOST);
     }
 
     @Override
@@ -81,16 +92,43 @@ public class CrystalixGlass extends WaterloggedTransparentBlock implements Liqui
 
         if (player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof CrystalixWand) {
             ItemStack wand = player.getItemInHand(InteractionHand.OFF_HAND);
-            return this.defaultBlockState()
-                    .setValue(INVISIBLE, Objects.requireNonNull(wand.get(CrystalixRegistry.INVISIBLE)))
-                    .setValue(SHADELESS, Objects.requireNonNull(wand.get(CrystalixRegistry.SHADELESS)))
-                    .setValue(REINFORCED, Objects.requireNonNull(wand.get(CrystalixRegistry.REINFORCED)))
-                    .setValue(LIGHT, Objects.requireNonNull(wand.get(CrystalixRegistry.LIGHT)))
-                    .setValue(GHOST, Objects.requireNonNull(wand.get(CrystalixRegistry.GHOST)));
+            return this.modifyFromWand(this.defaultBlockState(), wand);
         }
 
         return this.defaultBlockState();
     }
+    
+    public BlockState modifyFromWand(BlockState state, ItemStack wand) {
+        return state
+                   .setValue(INVISIBLE, Objects.requireNonNull(wand.get(CrystalixRegistry.INVISIBLE)))
+                   .setValue(SHADELESS, Objects.requireNonNull(wand.get(CrystalixRegistry.SHADELESS)))
+                   .setValue(REINFORCED, Objects.requireNonNull(wand.get(CrystalixRegistry.REINFORCED)))
+                   .setValue(WATERLOGGABLE, Objects.requireNonNull(wand.get(CrystalixRegistry.WATERLOGGABLE)))
+                   .setValue(LIGHT, Objects.requireNonNull(wand.get(CrystalixRegistry.LIGHT)))
+                   .setValue(GHOST, Objects.requireNonNull(wand.get(CrystalixRegistry.GHOST)));
+    }
+    
+    // Waterlogging
+    
+    @Override
+    public boolean canPlaceLiquid(@javax.annotation.Nullable Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
+        return state.getValue(WATERLOGGABLE) && fluid == Fluids.WATER;
+    }
+    
+    @Override
+    public boolean placeLiquid(LevelAccessor level, BlockPos pos, BlockState state, FluidState fluidState) {
+        if (!state.getValue(WATERLOGGABLE)) return false;
+        if (state.getValue(BlockStateProperties.WATERLOGGED) || fluidState.getType() != Fluids.WATER) return false;
+        
+        if (!level.isClientSide()) {
+            level.setBlock(pos, state.setValue(BlockStateProperties.WATERLOGGED, Boolean.TRUE), 3);
+            level.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(level));
+        }
+        
+        return true;
+    }
+    
+    
 
     // Invisible
 
@@ -151,10 +189,9 @@ public class CrystalixGlass extends WaterloggedTransparentBlock implements Liqui
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        if (state.getValue(LIGHT) == BlockProperties.Light.FAKE_LIGHT && level.getGameTime() % 4 == 0) {
-            level.getLightEngine().checkBlock(pos);
-            level.sendBlockUpdated(pos, state, state, 2);
-        }
+       if (level instanceof ServerLevel) return;
+       if (!((state.getValue(LIGHT) == BlockProperties.Light.FAKE_LIGHT))) return;
+       level.getLightEngine().checkBlock(pos);
     }
 
     @Override
@@ -167,7 +204,7 @@ public class CrystalixGlass extends WaterloggedTransparentBlock implements Liqui
         var light = state.getValue(LIGHT);
 
         if (light == BlockProperties.Light.FAKE_LIGHT)
-            return blockGetter instanceof ServerLevel ? 0 : 15;
+            return FMLLoader.getDist() == Dist.CLIENT ? 15 : 0;
 
         if (light == BlockProperties.Light.LIGHT)
             return 15;

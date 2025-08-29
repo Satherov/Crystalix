@@ -10,18 +10,21 @@ public enum CrystalixLanguage implements ILangEntry {
     NETWORK_CYCLE_FAILED("network", "cycle.failed"),
 
     TOOLTIP_BULK("tooltip", "bulk"),
-
+    
     KEY_CATEGORY("key", "category"),
+    KEY_DIRECTION_MODIFIER("key", "direction_modifier"),
     KEY_SHADELESS("key", "shadeless"),
     KEY_REINFORCED("key", "reinforce"),
+    KEY_INVISIBLE("key", "invisible"),
+    KEY_WATERLOGGABLE("key", "waterloggable"),
     KEY_LIGHT("key", "light"),
     KEY_GHOST("key", "ghost"),
-    KEY_INVISIBLE("key", "invisible"),
 
     PROPERTY_INVISIBLE("property", "invisible"),
     PROPERTY_GHOST("property", "ghost"),
     PROPERTY_SHADELESS("property", "shadeless"),
     PROPERTY_REINFORCED("property", "reinforce"),
+    PROPERTY_WATERLOGGABLE("property", "waterloggable"),
     PROPERTY_LIGHT("property", "light"),
 
     PROPERTY_ENABLED("property", "enabled"),
