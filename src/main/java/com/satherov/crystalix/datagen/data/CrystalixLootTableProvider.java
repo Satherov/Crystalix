@@ -13,21 +13,21 @@ import org.jetbrains.annotations.NotNull;
 import java.util.stream.Collectors;
 
 public class CrystalixLootTableProvider extends VanillaBlockLoot {
-
+    
     public CrystalixLootTableProvider(Provider provider) {
         super(provider);
     }
-
+    
     @Override
     public void generate() {
         getKnownBlocks().forEach(this::dropSelf);
     }
-
+    
     @Override
     protected @NotNull Iterable<Block> getKnownBlocks() {
         return CrystalixRegistry.BLOCKS.getEntries()
-                .stream()
-                .map(DeferredHolder::get)
-                .collect(Collectors.toList());
+                                       .stream()
+                                       .map(DeferredHolder::get)
+                                       .collect(Collectors.toList());
     }
 }

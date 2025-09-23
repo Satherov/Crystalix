@@ -16,7 +16,7 @@ public class EnumProperty<E extends Enum<E> & ITranslatable> implements ITransla
     private final boolean enabled;
     private final E defaultValue;
     private E value;
-
+    
     public EnumProperty(ItemStack stack, DataComponentType<E> componentType, String key, Class<E> enumClass, E defaultValue, boolean enabled) {
         this.stack = stack;
         this.componentType = componentType;
@@ -24,41 +24,41 @@ public class EnumProperty<E extends Enum<E> & ITranslatable> implements ITransla
         this.enumClass = enumClass;
         this.enabled = enabled;
         this.defaultValue = defaultValue;
-
+        
         value = stack.getOrDefault(componentType, defaultValue);
     }
-
+    
     public EnumProperty(ItemStack stack, DataComponentType<E> componentType, String key, Class<E> enumClass, E defaultValue) {
         this(stack, componentType, key, enumClass, defaultValue, true);
     }
-
+    
     @Override
     public String getKey() {
         return key;
     }
-
+    
     @Override
     public String getValueString() {
         return value.name().toLowerCase();
     }
-
+    
     @Override
     public void setValueString(String val) {
         set(Enums.getIfPresent(enumClass, val.toUpperCase()).or(defaultValue));
     }
-
+    
     @Override
     public void set(E val) {
         if (!enabled) return;
         value = val;
         stack.set(componentType, val);
     }
-
+    
     @Override
     public E get() {
         return value;
     }
-
+    
     @Override
     public E next(boolean dir) {
         E[] enumValues = enumClass.getEnumConstants();

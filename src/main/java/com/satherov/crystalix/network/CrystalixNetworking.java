@@ -10,20 +10,20 @@ import net.minecraft.server.level.ServerPlayer;
 import com.satherov.crystalix.Crystalix;
 
 public final class CrystalixNetworking {
-
+    
     private CrystalixNetworking() {
     }
-
+    
     public static void registerPayloads(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(Crystalix.MOD_ID);
-
+        
         registrar.playToServer(CyclePropertyPayload.TYPE, CyclePropertyPayload.STREAM_CODEC, CyclePropertyPayload.Handler::handle);
     }
-
+    
     public static void sendToServer(CustomPacketPayload message) {
         PacketDistributor.sendToServer(message);
     }
-
+    
     public static void sendToPlayer(CustomPacketPayload message, ServerPlayer player) {
         player.connection.send(message);
     }

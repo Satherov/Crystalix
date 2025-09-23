@@ -10,11 +10,11 @@ import com.satherov.crystalix.Crystalix;
 import com.satherov.crystalix.content.CrystalixRegistry;
 
 public class CrystalixItemModelProvider extends ItemModelProvider {
-
+    
     public CrystalixItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, Crystalix.MOD_ID, existingFileHelper);
     }
-
+    
     @Override
     protected void registerModels() {
         CrystalixRegistry.BLOCKS_MAP.forEach((color, set) -> {
@@ -22,10 +22,10 @@ public class CrystalixItemModelProvider extends ItemModelProvider {
                 withExistingParent(block.getId().toString(), modLoc("block/" + type.getSerializedName() + "/" + block.getId().getPath()));
             });
         });
-
+        
         CrystalixRegistry.ITEMS.getEntries().stream()
-                .filter(item -> !(item.get() instanceof BlockItem))
-                .forEach(item -> handheldItem(item.get()));
+                               .filter(item -> !(item.get() instanceof BlockItem))
+                               .forEach(item -> handheldItem(item.get()));
     }
-
+    
 }

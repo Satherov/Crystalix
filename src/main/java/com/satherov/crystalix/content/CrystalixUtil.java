@@ -7,11 +7,11 @@ import net.minecraft.world.item.ItemStack;
 import com.satherov.crystalix.content.item.CrystalixWand;
 
 public class CrystalixUtil {
-
+    
     public static ItemStack getWand(Player player) {
         ItemStack mainHand = player.getItemInHand(InteractionHand.MAIN_HAND);
         ItemStack offHand = player.getItemInHand(InteractionHand.OFF_HAND);
-
+        
         if (!mainHand.isEmpty() && mainHand.getItem() instanceof CrystalixWand) {
             return mainHand;
         } else if (!offHand.isEmpty() && offHand.getItem() instanceof CrystalixWand) {

@@ -9,39 +9,40 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
 import com.satherov.crystalix.Crystalix;
+import com.satherov.crystalix.content.CrystalixUtil;
 import com.satherov.crystalix.content.item.CrystalixWand;
 import com.satherov.crystalix.content.properties.BlockProperties;
 import com.satherov.crystalix.content.properties.IProperty;
 import com.satherov.crystalix.content.properties.ITranslatableProperty;
-import com.satherov.crystalix.content.CrystalixUtil;
 import com.satherov.crystalix.core.lang.CrystalixLanguage;
 
 public record CyclePropertyPayload(String key, String value) implements CustomPacketPayload {
-
+    
     public static final StreamCodec<FriendlyByteBuf, CyclePropertyPayload> STREAM_CODEC = CustomPacketPayload.codec(
             CyclePropertyPayload::encode,
-            CyclePropertyPayload::new);
-
+            CyclePropertyPayload::new
+    );
+    
     public static final Type<CyclePropertyPayload> TYPE = new Type<>(Crystalix.rl("cycle_property"));
-
+    
     private CyclePropertyPayload(FriendlyByteBuf buffer) {
         this(buffer.readUtf(100), buffer.readUtf(100));
     }
-
+    
     public CyclePropertyPayload(IProperty<?> property) {
         this(property.getKey(), property.getValueString());
     }
-
+    
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeUtf(key);
         buffer.writeUtf(value);
     }
-
+    
     @Override
     public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
-
+    
     public static class Handler {
         public static void handle(final CyclePropertyPayload message, final IPayloadContext ctx) {
             ctx.enqueueWork(() -> {
@@ -49,11 +50,11 @@ public record CyclePropertyPayload(String key, String value) implements CustomPa
                     ItemStack wand = CrystalixUtil.getWand(player);
                     if (wand.isEmpty()) return;
                     BlockProperties properties = new BlockProperties(wand);
-
+                    
                     ITranslatableProperty<?> property = properties.get(message.key);
                     if (property == null) return;
                     property.setValueString(message.value);
-
+                    
                     CrystalixWand.sendMessage(player, property);
                     player.getInventory().setChanged();
                 }

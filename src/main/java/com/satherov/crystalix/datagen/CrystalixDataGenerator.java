@@ -30,38 +30,38 @@ import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(modid = Crystalix.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class CrystalixDataGenerator {
-
+    
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
-
+        
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
         ExistingFileHelper fileHelper = event.getExistingFileHelper();
         CompletableFuture<HolderLookup.Provider> lookupProvider = CompletableFuture.supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
-
+        
         CrystalixDataProvider provider = new CrystalixDataProvider();
-
+        
         // Assets
         provider.addSubProvider(event.includeClient(), new CrystalixBlockModelProvider(packOutput, fileHelper));
         provider.addSubProvider(event.includeClient(), new CrystalixFusionModelProvider(packOutput, fileHelper));
         provider.addSubProvider(event.includeClient(), new CrystalixBlockStateProvider(packOutput, fileHelper));
         provider.addSubProvider(event.includeClient(), new CrystalixItemModelProvider(packOutput, fileHelper));
-
+        
         //Languages
         provider.addSubProvider(event.includeClient(), new EN_USProvider(packOutput));
-
+        
         // Tags
         CrystalixBlockTagProvider blockTags = new CrystalixBlockTagProvider(packOutput, lookupProvider, fileHelper);
         provider.addSubProvider(event.includeServer(), blockTags);
         provider.addSubProvider(event.includeServer(), new CrystalixItemTagProvider(packOutput, lookupProvider, blockTags.contentsGetter()));
-
+        
         // Recipes
         provider.addSubProvider(event.includeServer(), new CrystalixRecipeProvider(packOutput, lookupProvider));
-
+        
         // Loot Tables
         provider.addSubProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(), List.of(new LootTableProvider.SubProviderEntry(CrystalixLootTableProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
-
-
+        
+        
         generator.addProvider(true, provider);
     }
 }

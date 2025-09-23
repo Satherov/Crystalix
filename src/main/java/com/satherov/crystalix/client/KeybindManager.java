@@ -8,9 +8,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
+import com.satherov.crystalix.content.CrystalixUtil;
 import com.satherov.crystalix.content.item.CrystalixWand;
 import com.satherov.crystalix.content.properties.BlockProperties;
-import com.satherov.crystalix.content.CrystalixUtil;
 import com.satherov.crystalix.core.lang.CrystalixLanguage;
 import com.satherov.crystalix.core.lang.ILangEntry;
 import com.satherov.crystalix.network.CrystalixNetworking;
@@ -27,16 +27,16 @@ public class KeybindManager {
     public static final KeyMapping CYCLE_WATERLOGGABLE = register(CrystalixLanguage.KEY_WATERLOGGABLE, GLFW.GLFW_KEY_V);
     public static final KeyMapping CYCLE_LIGHT = register(CrystalixLanguage.KEY_LIGHT, GLFW.GLFW_KEY_B);
     public static final KeyMapping CYCLE_GHOST = register(CrystalixLanguage.KEY_GHOST, GLFW.GLFW_KEY_N);
-
+    
     private static KeyMapping register(ILangEntry entry, int key) {
         return new KeyMapping(entry.getTranslationKey(), key, CrystalixLanguage.KEY_CATEGORY.getTranslationKey());
     }
-
+    
     @SubscribeEvent
     public void onKeyPress(InputEvent.Key event) {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
-
+        
         ItemStack wand = CrystalixUtil.getWand(player);
         if (wand.isEmpty() || !(wand.getItem() instanceof CrystalixWand)) return;
         
