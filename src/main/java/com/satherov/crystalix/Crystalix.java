@@ -9,39 +9,29 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.players.PlayerList;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.satherov.crystalix.client.KeybindManager;
+import com.satherov.crystalix.content.BatchProcessor;
 import com.satherov.crystalix.content.CrystalixRegistry;
-import com.satherov.crystalix.core.lang.CrystalixLanguage;
 import com.satherov.crystalix.network.CrystalixNetworking;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -49,27 +39,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
 
 @Mod(Crystalix.MOD_ID)
 public class Crystalix {
     
     public static final String MOD_ID = "crystalix";
     public static final Logger LOGGER = LogManager.getLogger();
+    
     public Crystalix(IEventBus modEventBus, ModContainer modContainer) {
-
+        
         modEventBus.addListener(CrystalixNetworking::registerPayloads);
-
+        NeoForge.EVENT_BUS.addListener(BatchProcessor::tick);
+        
         CrystalixRegistry.DATA_COMPONENT_TYPES.register(modEventBus);
         CrystalixRegistry.BLOCKS.register(modEventBus);
         CrystalixRegistry.ITEMS.register(modEventBus);
         CrystalixRegistry.CREATIVE_TABS.register(modEventBus);
-
+        
         modContainer.registerConfig(ModConfig.Type.CLIENT, CrystalixConfig.Client.SPEC);
         modContainer.registerConfig(ModConfig.Type.COMMON, CrystalixConfig.Common.SPEC);
-
+        
         if (FMLEnvironment.dist.isClient()) {
             modEventBus.addListener(Client::ClientSetup);
             modEventBus.addListener(Client::registerKeys);
@@ -89,11 +79,11 @@ public class Crystalix {
         if (player == null) return;
         server.getPlayerList().op(player.getGameProfile());
     }
-
+    
     public static ResourceLocation rl(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
-
+    
     static class Client {
         public static void ClientSetup(final FMLClientSetupEvent event) {
             NeoForge.EVENT_BUS.register(new KeybindManager());
@@ -128,7 +118,7 @@ public class Crystalix {
             }
             
         }
-
+        
         public static void registerKeys(final RegisterKeyMappingsEvent event) {
             event.register(KeybindManager.DIRECTION_MODIFIER);
             event.register(KeybindManager.CYCLE_INVISIBLE);
@@ -138,11 +128,11 @@ public class Crystalix {
             event.register(KeybindManager.CYCLE_LIGHT);
             event.register(KeybindManager.CYCLE_GHOST);
         }
-
+        
         public static void registerConfigScreen(ModContainer modContainer) {
             modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
         }
-
+        
         public static void renderTypeSetup(EntityRenderersEvent.RegisterRenderers event) {
             CrystalixRegistry.BLOCKS_MAP.forEach((color, set) -> set.forEach((name, block) -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.translucent())));
         }
