@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(modid = Crystalix.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = Crystalix.MOD_ID)
 public class CrystalixDataGenerator {
     
     @SubscribeEvent

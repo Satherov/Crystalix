@@ -4,6 +4,7 @@ import net.neoforged.neoforge.client.model.generators.BlockModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
@@ -33,7 +34,7 @@ public class CrystalixBlockModelProvider extends BlockModelProvider {
                            ResourceLocation.withDefaultNamespace("block/cube_all"),
                            "all", modLoc("block/" + type.getSerializedName() + "/" + color.getName())
             )
-            .renderType("translucent");
+            .renderType(RenderType.translucent().name);
     }
     
     private void shadelessBlock(DeferredHolder<Block, ? extends Block> block, DyeColor color, CrystalixRegistry.BlockTypes type) {
@@ -41,6 +42,6 @@ public class CrystalixBlockModelProvider extends BlockModelProvider {
                            modLoc("block/no_shade_block"),
                            "all", modLoc("block/" + type.getSerializedName() + "/" + color.getName())
             )
-            .renderType("translucent");
+            .renderType(RenderType.translucent().name);
     }
 }
