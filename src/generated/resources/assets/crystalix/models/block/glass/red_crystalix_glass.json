@@ -1,7 +1,7 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "crystalix:block/block",
   "render_type": "minecraft:translucent",
   "textures": {
-    "all": "crystalix:block/glass/red"
+    "all": "crystalix:block/glass/color"
   }
 }

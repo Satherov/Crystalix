@@ -16,7 +16,6 @@ import com.satherov.crystalix.content.BatchProcessor;
 import com.satherov.crystalix.content.CrystalixRegistry;
 import com.satherov.crystalix.content.block.CrystalixGlass;
 import com.satherov.crystalix.content.properties.BlockProperties;
-import com.satherov.crystalix.content.properties.ITranslatableProperty;
 import com.satherov.crystalix.core.annotations.NothingNull;
 import com.satherov.crystalix.core.lang.CrystalixLanguage;
 
@@ -37,8 +36,10 @@ public class CrystalixWand extends Item {
                       .component(CrystalixRegistry.GHOST, BlockProperties.Ghost.BLOCK_ALL));
     }
     
-    public static void sendMessage(Player player, ITranslatableProperty<?> property) {
-        player.displayClientMessage(property.getTranslation(), true);
+    public static ItemStack find(Player player) {
+        if (player.getMainHandItem().getItem() instanceof CrystalixWand) return player.getMainHandItem();
+        if (player.getOffhandItem().getItem() instanceof CrystalixWand) return player.getOffhandItem();
+        return ItemStack.EMPTY;
     }
     
     @Override
@@ -62,7 +63,7 @@ public class CrystalixWand extends Item {
     
     public boolean applyToBlock(ServerLevel level, BlockPos pos, ServerPlayer player) {
         if (!(level.getBlockState(pos).getBlock() instanceof CrystalixGlass glass)) return false;
-        ItemStack wand = player.getMainHandItem();
+        ItemStack wand = CrystalixWand.find(player);
         
         if (player.isShiftKeyDown()) {
             BatchProcessor.schedule(BatchProcessor.Batch.of(player, pos, wand));

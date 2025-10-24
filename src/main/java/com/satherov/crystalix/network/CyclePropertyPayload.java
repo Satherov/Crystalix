@@ -55,7 +55,7 @@ public record CyclePropertyPayload(String key, String value) implements CustomPa
                     if (property == null) return;
                     property.setValueString(message.value);
                     
-                    CrystalixWand.sendMessage(player, property);
+                    player.displayClientMessage(property.getTranslation(), true);
                     player.getInventory().setChanged();
                 }
             }).exceptionally(e -> {

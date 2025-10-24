@@ -5,7 +5,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 
 import com.satherov.crystalix.Crystalix;
@@ -37,28 +36,28 @@ public class CrystalixFusionModelProvider extends FusionModelProvider {
         );
     }
     
-    private void shadedBlock(DeferredHolder<Block, ? extends Block> block, DyeColor color, CrystalixRegistry.BlockTypes type) {
+    private void shadedBlock(DeferredHolder<Block, ? extends Block> block, CrystalixRegistry.Colors color, CrystalixRegistry.BlockTypes type) {
         this.addModel(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + block.getId().getPath()),
                       ModelInstance.of(
                               DefaultModelTypes.CONNECTING,
                               ConnectingModelData.builder()
-                                                 .parent(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/block"))
-                                                 .texture("all", ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + color.getName()))
-                                                 .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(block.get(), Pair.of(CrystalixGlass.INVISIBLE, false))))
-                                                 .build()
+                                      .parent(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/block"))
+                                      .texture("all", ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + (color.getColor() < 0 ? "base" : "color")))
+                                      .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(block.get(), Pair.of(CrystalixGlass.INVISIBLE, false))))
+                                      .build()
                       )
         );
     }
     
-    private void shadelessBlock(DeferredHolder<Block, ? extends Block> block, DyeColor color, CrystalixRegistry.BlockTypes type) {
+    private void shadelessBlock(DeferredHolder<Block, ? extends Block> block, CrystalixRegistry.Colors color, CrystalixRegistry.BlockTypes type) {
         this.addModel(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + block.getId().getPath() + "_no_shade"),
                       ModelInstance.of(
                               DefaultModelTypes.CONNECTING,
                               ConnectingModelData.builder()
-                                                 .parent(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/no_shade_block"))
-                                                 .texture("all", ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + color.getName()))
-                                                 .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(block.get(), Pair.of(CrystalixGlass.INVISIBLE, false))))
-                                                 .build()
+                                      .parent(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/no_shade_block"))
+                                      .texture("all", ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + (color.getColor() < 0 ? "base" : "color")))
+                                      .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(block.get(), Pair.of(CrystalixGlass.INVISIBLE, false))))
+                                      .build()
                       )
         );
     }

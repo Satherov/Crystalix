@@ -30,10 +30,10 @@ public class CrystalixJadePlugin implements IWailaPlugin {
     
     private static Component getTranslation(ILangEntry langEntry, boolean state) {
         return langEntry.translateFormatted(ChatFormatting.GRAY)
-                        .append(Component.literal(" "))
-                        .append(state
-                                        ? CrystalixLanguage.PROPERTY_ENABLED.translateFormatted(ChatFormatting.DARK_GREEN)
-                                        : CrystalixLanguage.PROPERTY_DISABLED.translateFormatted(ChatFormatting.DARK_RED));
+                .append(Component.literal(" "))
+                .append(state
+                                ? CrystalixLanguage.PROPERTY_ENABLED.translateFormatted(ChatFormatting.DARK_GREEN)
+                                : CrystalixLanguage.PROPERTY_DISABLED.translateFormatted(ChatFormatting.DARK_RED));
     }
     
     private static <T extends ITranslatable> Component getTranslation(T state) {

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "c:gems/quartz"
+    },
+    "c": {
+      "tag": "c:nuggets/iron"
+    },
+    "g": {
+      "tag": "crystalix:glass"
+    }
+  },
+  "pattern": [
+    "gag",
+    "aca",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "id": "crystalix:clear_crystalix_glass"
+  }
+}

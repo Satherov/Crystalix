@@ -34,26 +34,26 @@ public class CrystalixRecipeProvider extends RecipeProvider implements IConditio
     
     private void tint(TagKey<Item> color, TagKey<Item> type, DeferredHolder<Block, ?> output, RecipeOutput recipeOutput) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, output.get().asItem(), 8)
-                           .pattern("aaa")
-                           .pattern("aba")
-                           .pattern("aaa")
-                           .define('a', type)
-                           .define('b', color)
-                           .unlockedBy("has_glass", has(Tags.Items.GLASS_BLOCKS))
-                           .save(recipeOutput, Crystalix.MOD_ID + ":tinted_" + output.getId().getPath());
+                .pattern("aaa")
+                .pattern("aba")
+                .pattern("aaa")
+                .define('a', type)
+                .define('b', color)
+                .unlockedBy("has_glass", has(Tags.Items.GLASS_BLOCKS))
+                .save(recipeOutput, Crystalix.MOD_ID + ":tinted_" + output.getId().getPath());
     }
     
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, CrystalixRegistry.WAND.get().asItem())
-                           .pattern(" gd")
-                           .pattern(" sg")
-                           .pattern("s  ")
-                           .define('s', Items.STICK)
-                           .define('g', CrystalixRegistry.ITEM_TAGS.get(CrystalixRegistry.BlockTypes.GLASS))
-                           .define('d', Tags.Items.GEMS_DIAMOND)
-                           .unlockedBy("has_diamond", has(Tags.Items.GEMS_DIAMOND))
-                           .save(recipeOutput);
+                .pattern(" gd")
+                .pattern(" sg")
+                .pattern("s  ")
+                .define('s', Items.STICK)
+                .define('g', CrystalixRegistry.ITEM_TAGS.get(CrystalixRegistry.BlockTypes.GLASS))
+                .define('d', Tags.Items.GEMS_DIAMOND)
+                .unlockedBy("has_diamond", has(Tags.Items.GEMS_DIAMOND))
+                .save(recipeOutput);
         
         CrystalixRegistry.BLOCKS_MAP.forEach((color, typeMap) -> {
             typeMap.forEach((type, block) -> {
@@ -61,14 +61,14 @@ public class CrystalixRecipeProvider extends RecipeProvider implements IConditio
                 tint(color.getTag(), CrystalixRegistry.ITEM_TAGS.get(type), block, recipeOutput);
                 
                 ShapedRecipeBuilder.shaped(RecipeCategory.MISC, block.get().asItem(), 4)
-                                   .pattern("gag")
-                                   .pattern("aca")
-                                   .pattern("gag")
-                                   .define('g', getGlassIngredient(type))
-                                   .define('a', type.getTag())
-                                   .define('c', color.getTag())
-                                   .unlockedBy("has_glass", has(Tags.Items.GLASS_BLOCKS))
-                                   .save(recipeOutput);
+                        .pattern("gag")
+                        .pattern("aca")
+                        .pattern("gag")
+                        .define('g', getGlassIngredient(type))
+                        .define('a', type.getTag())
+                        .define('c', color.getTag())
+                        .unlockedBy("has_glass", has(Tags.Items.GLASS_BLOCKS))
+                        .save(recipeOutput);
             });
         });
     }

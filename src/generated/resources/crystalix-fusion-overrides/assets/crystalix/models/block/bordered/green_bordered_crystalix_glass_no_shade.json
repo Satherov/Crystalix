@@ -25,6 +25,6 @@
   },
   "loader": "fusion:model",
   "textures": {
-    "all": "crystalix:block/bordered/green"
+    "all": "crystalix:block/bordered/color"
   }
 }

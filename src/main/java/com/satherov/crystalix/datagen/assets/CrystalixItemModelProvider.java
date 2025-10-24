@@ -24,8 +24,8 @@ public class CrystalixItemModelProvider extends ItemModelProvider {
         });
         
         CrystalixRegistry.ITEMS.getEntries().stream()
-                               .filter(item -> !(item.get() instanceof BlockItem))
-                               .forEach(item -> handheldItem(item.get()));
+                .filter(item -> !(item.get() instanceof BlockItem))
+                .forEach(item -> handheldItem(item.get()));
     }
     
 }

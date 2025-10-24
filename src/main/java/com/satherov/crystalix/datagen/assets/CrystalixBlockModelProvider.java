@@ -6,8 +6,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 
 import com.satherov.crystalix.Crystalix;
@@ -29,19 +27,19 @@ public class CrystalixBlockModelProvider extends BlockModelProvider {
         );
     }
     
-    private void shadedBlock(DeferredHolder<Block, ? extends Block> block, DyeColor color, CrystalixRegistry.BlockTypes type) {
+    private void shadedBlock(DeferredHolder<Block, ? extends Block> block, CrystalixRegistry.Colors color, CrystalixRegistry.BlockTypes type) {
         this.singleTexture("block/" + type.getSerializedName() + "/" + block.getId().getPath(),
-                           ResourceLocation.withDefaultNamespace("block/cube_all"),
-                           "all", modLoc("block/" + type.getSerializedName() + "/" + color.getName())
-            )
-            .renderType(RenderType.translucent().name);
+                           modLoc("block/block"),
+                           "all", modLoc("block/" + type.getSerializedName() + "/" + (color.getColor() < 0 ? "base" : "color"))
+                )
+                .renderType(RenderType.translucent().name);
     }
     
-    private void shadelessBlock(DeferredHolder<Block, ? extends Block> block, DyeColor color, CrystalixRegistry.BlockTypes type) {
+    private void shadelessBlock(DeferredHolder<Block, ? extends Block> block, CrystalixRegistry.Colors color, CrystalixRegistry.BlockTypes type) {
         this.singleTexture("block/" + type.getSerializedName() + "/" + block.getId().getPath() + "_no_shade",
                            modLoc("block/no_shade_block"),
-                           "all", modLoc("block/" + type.getSerializedName() + "/" + color.getName())
-            )
-            .renderType(RenderType.translucent().name);
+                           "all", modLoc("block/" + type.getSerializedName() + "/" + (color.getColor() < 0 ? "base" : "color"))
+                )
+                .renderType(RenderType.translucent().name);
     }
 }

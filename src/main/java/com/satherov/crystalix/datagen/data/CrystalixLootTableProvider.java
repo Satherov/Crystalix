@@ -26,8 +26,8 @@ public class CrystalixLootTableProvider extends VanillaBlockLoot {
     @Override
     protected @NotNull Iterable<Block> getKnownBlocks() {
         return CrystalixRegistry.BLOCKS.getEntries()
-                                       .stream()
-                                       .map(DeferredHolder::get)
-                                       .collect(Collectors.toList());
+                .stream()
+                .map(DeferredHolder::get)
+                .collect(Collectors.toList());
     }
 }

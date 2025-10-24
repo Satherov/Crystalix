@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
@@ -55,24 +56,33 @@ public class CrystalixGlass extends WaterloggedTransparentBlock {
     public static final BooleanProperty WATERLOGGABLE = BooleanProperty.create("waterloggable");
     public static final EnumProperty<BlockProperties.Light> LIGHT = EnumProperty.create("light", BlockProperties.Light.class);
     public static final EnumProperty<BlockProperties.Ghost> GHOST = EnumProperty.create("ghost", BlockProperties.Ghost.class);
-    private final DyeColor color;
+    private final int color;
     
+    @Deprecated
     public CrystalixGlass(DyeColor dyeColor) {
-        super(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_STAINED_GLASS).mapColor(dyeColor));
+        this(dyeColor.getMapColor(), dyeColor.getTextureDiffuseColor());
+    }
+    
+    public CrystalixGlass(CrystalixRegistry.CrystalixColor color) {
+        this(color.getMapColor(), color.getColor());
+    }
+    
+    protected CrystalixGlass(MapColor mapColor, int color) {
+        super(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_STAINED_GLASS).mapColor(mapColor));
+        this.color = color;
         this.registerDefaultState(this.stateDefinition.any()
-                                                      .setValue(WATERLOGGED, false)
-                                                      .setValue(INVISIBLE, false)
-                                                      .setValue(SHADELESS, false)
-                                                      .setValue(REINFORCED, false)
-                                                      .setValue(WATERLOGGABLE, false)
-                                                      .setValue(LIGHT, BlockProperties.Light.NONE)
-                                                      .setValue(GHOST, BlockProperties.Ghost.BLOCK_ALL));
-        this.color = dyeColor;
+                                          .setValue(WATERLOGGED, false)
+                                          .setValue(INVISIBLE, false)
+                                          .setValue(SHADELESS, false)
+                                          .setValue(REINFORCED, false)
+                                          .setValue(WATERLOGGABLE, false)
+                                          .setValue(LIGHT, BlockProperties.Light.NONE)
+                                          .setValue(GHOST, BlockProperties.Ghost.BLOCK_ALL));
     }
     
     @Override
     public Integer getBeaconColorMultiplier(BlockState state, LevelReader level, BlockPos pos, BlockPos beaconPos) {
-        return this.color.getTextureDiffuseColor();
+        return this.color;
     }
     
     @Override
@@ -87,14 +97,14 @@ public class CrystalixGlass extends WaterloggedTransparentBlock {
         if (player == null) return this.defaultBlockState();
         
         if (player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof CrystalixWand) {
-            ItemStack wand = player.getItemInHand(InteractionHand.OFF_HAND);
-            return this.modifyFromWand(this.defaultBlockState(), wand);
+            return this.modifyFromWand(this.defaultBlockState(), player.getItemInHand(InteractionHand.OFF_HAND));
         }
         
         return this.defaultBlockState();
     }
     
     public BlockState modifyFromWand(BlockState state, ItemStack wand) {
+        if (wand.isEmpty() || !(wand.getItem() instanceof CrystalixWand)) return state;
         return state
                 .setValue(INVISIBLE, Objects.requireNonNull(wand.get(CrystalixRegistry.INVISIBLE)))
                 .setValue(SHADELESS, Objects.requireNonNull(wand.get(CrystalixRegistry.SHADELESS)))
@@ -219,8 +229,9 @@ public class CrystalixGlass extends WaterloggedTransparentBlock {
         return super.getCollisionShape(state, level, pos, context);
     }
     
+    @Override
     protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
-        if (Objects.requireNonNull(pathComputationType) == PathComputationType.LAND) {
+        if (pathComputationType == PathComputationType.LAND) {
             return !(state.getValue(GHOST) == BlockProperties.Ghost.ALLOW_ALL) ||
                     !(state.getValue(GHOST) == BlockProperties.Ghost.ALLOW_MONSTER) ||
                     !(state.getValue(GHOST) == BlockProperties.Ghost.ALLOW_ANIMAL);

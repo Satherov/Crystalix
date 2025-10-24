@@ -23,13 +23,13 @@ public class CrystalixItemTagProvider extends ItemTagsProvider {
             var tagKey = CrystalixRegistry.ITEM_TAGS.get(type);
             tag(tagKey).addAll(
                     CrystalixRegistry.BLOCKS_MAP.values().stream()
-                                                .map(map -> map.get(type))
-                                                .map(holder -> CrystalixRegistry.ITEMS.getEntries().stream()
-                                                                                      .filter(item -> item.get() == holder.get().asItem())
-                                                                                      .findFirst()
-                                                                                      .map(DeferredHolder::getKey)
-                                                                                      .orElseThrow())
-                                                .toList()
+                            .map(map -> map.get(type))
+                            .map(holder -> CrystalixRegistry.ITEMS.getEntries().stream()
+                                    .filter(item -> item.get() == holder.get().asItem())
+                                    .findFirst()
+                                    .map(DeferredHolder::getKey)
+                                    .orElseThrow())
+                            .toList()
             );
             
             tag(CrystalixRegistry.ITEM_TAG).addTag(tagKey);

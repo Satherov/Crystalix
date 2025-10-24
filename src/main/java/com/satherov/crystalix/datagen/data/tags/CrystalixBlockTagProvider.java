@@ -28,9 +28,9 @@ public class CrystalixBlockTagProvider extends BlockTagsProvider {
             var tagKey = CrystalixRegistry.BLOCK_TAGS.get(type);
             tag(tagKey).addAll(
                     CrystalixRegistry.BLOCKS_MAP.values().stream()
-                                                .map(map -> map.get(type))
-                                                .map(DeferredHolder::getKey)
-                                                .toList()
+                            .map(map -> map.get(type))
+                            .map(DeferredHolder::getKey)
+                            .toList()
             );
             
             tag(CrystalixRegistry.BLOCK_TAG).addTag(tagKey);

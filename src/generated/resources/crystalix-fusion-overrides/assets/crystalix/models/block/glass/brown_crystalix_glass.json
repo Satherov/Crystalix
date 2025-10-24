@@ -25,6 +25,6 @@
   },
   "loader": "fusion:model",
   "textures": {
-    "all": "crystalix:block/glass/brown"
+    "all": "crystalix:block/glass/color"
   }
 }

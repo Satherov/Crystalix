@@ -25,6 +25,6 @@
   },
   "loader": "fusion:model",
   "textures": {
-    "all": "crystalix:block/clear/red"
+    "all": "crystalix:block/clear/color"
   }
 }

@@ -69,9 +69,9 @@ public class BooleanProperty implements ITranslatableProperty<Boolean> {
     @Override
     public MutableComponent getTranslation() {
         return this.langEntry.translateFormatted(ChatFormatting.GRAY)
-                             .append(Component.literal(" "))
-                             .append(value
-                                             ? CrystalixLanguage.PROPERTY_ENABLED.translateFormatted(ChatFormatting.DARK_GREEN)
-                                             : CrystalixLanguage.PROPERTY_DISABLED.translateFormatted(ChatFormatting.DARK_RED));
+                .append(Component.literal(" "))
+                .append(value
+                                ? CrystalixLanguage.PROPERTY_ENABLED.translateFormatted(ChatFormatting.DARK_GREEN)
+                                : CrystalixLanguage.PROPERTY_DISABLED.translateFormatted(ChatFormatting.DARK_RED));
     }
 }

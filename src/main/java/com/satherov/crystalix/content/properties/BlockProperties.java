@@ -93,12 +93,12 @@ public class BlockProperties {
         @Override
         public MutableComponent getTranslation() {
             return CrystalixLanguage.PROPERTY_GHOST.translateFormatted(ChatFormatting.GRAY)
-                                                   .append(Component.literal(" "))
-                                                   .append(this.state
-                                                                   ? CrystalixLanguage.PROPERTY_GHOST_ALLOW.translateFormatted(ChatFormatting.DARK_GREEN)
-                                                                   : CrystalixLanguage.PROPERTY_GHOST_DENY.translateFormatted(ChatFormatting.DARK_RED))
-                                                   .append(Component.literal(" "))
-                                                   .append(langEntry.translateFormatted(color));
+                    .append(Component.literal(" "))
+                    .append(this.state
+                                    ? CrystalixLanguage.PROPERTY_GHOST_ALLOW.translateFormatted(ChatFormatting.DARK_GREEN)
+                                    : CrystalixLanguage.PROPERTY_GHOST_DENY.translateFormatted(ChatFormatting.DARK_RED))
+                    .append(Component.literal(" "))
+                    .append(langEntry.translateFormatted(color));
         }
     }
     
@@ -127,8 +127,8 @@ public class BlockProperties {
         @Override
         public MutableComponent getTranslation() {
             return CrystalixLanguage.PROPERTY_LIGHT.translateFormatted(ChatFormatting.GRAY)
-                                                   .append(Component.literal(" "))
-                                                   .append(langEntry.translateFormatted(color));
+                    .append(Component.literal(" "))
+                    .append(langEntry.translateFormatted(color));
         }
     }
 }

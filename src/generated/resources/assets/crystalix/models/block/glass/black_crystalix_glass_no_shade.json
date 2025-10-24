@@ -2,6 +2,6 @@
   "parent": "crystalix:block/no_shade_block",
   "render_type": "minecraft:translucent",
   "textures": {
-    "all": "crystalix:block/glass/black"
+    "all": "crystalix:block/glass/color"
   }
 }

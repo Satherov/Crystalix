@@ -10,6 +10,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
@@ -18,6 +19,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.satherov.crystalix.client.KeybindManager;
@@ -41,12 +43,24 @@ public class CrystalixClient {
     public static final Logger LOGGER = LogManager.getLogger();
     
     public CrystalixClient(IEventBus modEventBus, ModContainer modContainer) {
-        modEventBus.addListener(CrystalixClient::onClientSetup);
-        modEventBus.addListener(CrystalixClient::registerKeys);
-        modEventBus.addListener(CrystalixClient::renderTypeSetup);
         modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
     
+    @SubscribeEvent
+    public static void onBlockColors(RegisterColorHandlersEvent.Block event) {
+        CrystalixRegistry.BLOCKS_MAP.forEach((color, map) -> {
+            if (color.getColor() < 0) return;
+            map.forEach((type, block) -> event.register((state, getter, pos, idx) -> color.getColor(), block.get()));
+        });
+    }
+    
+    @SubscribeEvent
+    public static void onItemColors(RegisterColorHandlersEvent.Item event) {
+        CrystalixRegistry.BLOCKS_MAP.forEach((color, map) -> {
+            if (color.getColor() < 0) return;
+            map.forEach((type, block) -> event.register((stack, idx) -> (color.getColor() & 0x00FFFFFF) | 0xFF000000, block.get()));
+        });
+    }
     
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onClientSetup(final FMLClientSetupEvent event) {
@@ -97,6 +111,7 @@ public class CrystalixClient {
         }
     }
     
+    @SubscribeEvent
     public static void registerKeys(final RegisterKeyMappingsEvent event) {
         event.register(KeybindManager.DIRECTION_MODIFIER);
         event.register(KeybindManager.CYCLE_INVISIBLE);
@@ -107,8 +122,10 @@ public class CrystalixClient {
         event.register(KeybindManager.CYCLE_GHOST);
     }
     
-    
+    @SubscribeEvent
     public static void renderTypeSetup(EntityRenderersEvent.RegisterRenderers event) {
-        CrystalixRegistry.BLOCKS_MAP.forEach((color, set) -> set.forEach((name, block) -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.translucent())));
+        CrystalixRegistry.BLOCKS_MAP.forEach((color, set) -> {
+            set.forEach((name, block) -> ItemBlockRenderTypes.setRenderLayer(block.get(), RenderType.translucent()));
+        });
     }
 }

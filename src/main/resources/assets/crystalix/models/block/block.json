@@ -1,5 +1,6 @@
 {
-  "parent": "block/cube",
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:translucent",
   "textures": {
     "particle": "#all"
   },
@@ -16,29 +17,71 @@
         16
       ],
       "faces": {
-        "down": {
-          "texture": "#all",
-          "cullface": "down"
-        },
-        "up": {
-          "texture": "#all",
-          "cullface": "up"
-        },
         "north": {
           "texture": "#all",
-          "cullface": "north"
+          "cullface": "north",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
         },
         "south": {
           "texture": "#all",
-          "cullface": "south"
-        },
-        "west": {
-          "texture": "#all",
-          "cullface": "west"
+          "cullface": "south",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
         },
         "east": {
           "texture": "#all",
-          "cullface": "east"
+          "cullface": "east",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "west": {
+          "texture": "#all",
+          "cullface": "west",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "up": {
+          "texture": "#all",
+          "cullface": "up",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
+        },
+        "down": {
+          "texture": "#all",
+          "cullface": "down",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "tintindex": 0
         }
       }
     }
