@@ -1,4 +1,3 @@
-
 {
   "parent": "minecraft:block/block",
   "render_type": "minecraft:translucent",

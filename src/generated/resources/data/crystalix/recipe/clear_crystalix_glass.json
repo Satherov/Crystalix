@@ -5,16 +5,13 @@
     "a": {
       "tag": "c:gems/quartz"
     },
-    "c": {
-      "tag": "c:nuggets/iron"
-    },
     "g": {
-      "tag": "crystalix:glass"
+      "tag": "c:glass_blocks"
     }
   },
   "pattern": [
     "gag",
-    "aca",
+    "a a",
     "gag"
   ],
   "result": {

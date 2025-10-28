@@ -1,0 +1,30 @@
+{
+  "type": "fusion:connecting",
+  "parent": "crystalix:block/block",
+  "connections": {
+    "type": "fusion:or",
+    "predicates": [
+      {
+        "type": "fusion:and",
+        "predicates": [
+          {
+            "type": "fusion:is_same_block"
+          },
+          {
+            "type": "fusion:match_state",
+            "block": "crystalix:tan_crystalix_glass",
+            "properties": {
+              "invisible": [
+                "false"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "loader": "fusion:model",
+  "textures": {
+    "all": "crystalix:block/glass/color"
+  }
+}

@@ -1,29 +1,16 @@
 plugins {
-    id 'idea'
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.112'
+    id 'net.neoforged.moddev' version '2.0.115'
+    id 'idea'
 }
 
 tasks.named('wrapper', Wrapper).configure {
     distributionType = Wrapper.DistributionType.BIN
 }
 
-version = mod_version + "_neoforge_" + minecraft_version
+version = mod_version
 group = mod_group_id
-
-repositories {
-    maven {
-        url "https://www.cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
-    }
-    maven {
-        name = "Jared's maven"
-        url = "https://maven.blamejared.com/"
-    }
-}
 
 base {
     archivesName = mod_id
@@ -44,6 +31,7 @@ neoForge {
     runs {
         client {
             client()
+
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
@@ -64,9 +52,6 @@ neoForge {
         }
 
         configureEach {
-            // "SCAN": For mods scan.
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRYDUMP": For getting the contents of all registries.
             systemProperty 'forge.logging.markers', 'REGISTRIES'
             logLevel = org.slf4j.event.Level.DEBUG
         }
@@ -79,33 +64,42 @@ neoForge {
     }
 }
 
-sourceSets.main.resources {
-    srcDir 'src/generated/resources'
-    exclude '.cache/'
-}
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
 
-dependencies {
-    implementation fileTree('libs') { include '*.jar'}
+repositories {
+    mavenCentral()
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    maven {
+        name "TerraformersMC Maven"
+        url "https://maven.terraformersmc.com/"
+    }
+}
 
-    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
-    runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+dependencies {
+    compileOnly "org.projectlombok:lombok:1.18.42"
+    annotationProcessor "org.projectlombok:lombok:1.18.42"
+
+    implementation "dev.emi:emi-neoforge:${emi}+1.21.1:api"
+    implementation "dev.emi:emi-neoforge:${emi}+1.21.1"
 
     implementation "curse.maven:jade-324717:${jade_version}"
     implementation "curse.maven:fusion-connected-textures-854949:${fusion_version}"
-
-    implementation "curse.maven:keybind-bundles-1172594:6896142"
 }
 
-tasks.withType(ProcessResources).configureEach {
+var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
     var replaceProperties = [
             minecraft_version      : minecraft_version,
             minecraft_version_range: minecraft_version_range,
             neo_version            : neo_version,
-            neo_version_range      : neo_version_range,
             loader_version_range   : loader_version_range,
             mod_id                 : mod_id,
             mod_name               : mod_name,
@@ -115,13 +109,13 @@ tasks.withType(ProcessResources).configureEach {
             mod_description        : mod_description
     ]
     inputs.properties replaceProperties
-
-    filesMatching(['META-INF/neoforge.mods.toml']) {
-        expand replaceProperties
-    }
-
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    expand replaceProperties
+    from "src/main/templates"
+    into "build/generated/sources/modMetadata"
 }
+
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
 
 publishing {
     publications {
@@ -137,7 +131,7 @@ publishing {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.encoding = 'UTF-8'
 }
 
 idea {
