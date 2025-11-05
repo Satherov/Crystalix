@@ -19,6 +19,7 @@ public final class CSNetwork {
         final PayloadRegistrar registrar = event.registrar(Crystalix.MOD_ID);
         
         registrar.playToServer(CyclePropertyPayload.TYPE, CyclePropertyPayload.STREAM_CODEC, CyclePropertyPayload::handle);
+        registrar.playToServer(SwapPropertiesPayload.TYPE, SwapPropertiesPayload.STREAM_CODEC, SwapPropertiesPayload::handle);
     }
     
     public static void sendToServer(CustomPacketPayload message) {

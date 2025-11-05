@@ -63,8 +63,8 @@ public class CrystalixGlass extends CSBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty REINFORCED = BooleanProperty.create("reinforced");
     public static final EnumProperty<CSProperties.Light> LIGHT = EnumProperty.create("light", CSProperties.Light.class);
     public static final EnumProperty<CSProperties.Ghost> GHOST = EnumProperty.create("ghost", CSProperties.Ghost.class);
-    private final @Getter(AccessLevel.PACKAGE) CSRegistry.Types type;
-    private final @Getter(AccessLevel.PACKAGE) CSRegistry.Colors color;
+    private final @Getter(AccessLevel.PUBLIC) CSRegistry.Types type;
+    private final @Getter(AccessLevel.PUBLIC) CSRegistry.Colors color;
     
     public CrystalixGlass(CSRegistry.Types type, CSRegistry.Colors color) {
         super(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_STAINED_GLASS).mapColor(color.map()));

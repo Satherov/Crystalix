@@ -43,7 +43,12 @@ public class CSBooleanProperty implements IProperty<Boolean> {
     
     @Override
     public Boolean next(boolean forward) {
-        this.value = !this.value;
+        return set(!this.value);
+    }
+    
+    @Override
+    public Boolean set(Boolean value) {
+        this.value = value;
         stack.set(this.type, this.value);
         return this.value;
     }

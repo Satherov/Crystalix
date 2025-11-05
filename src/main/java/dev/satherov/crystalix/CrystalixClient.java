@@ -37,6 +37,7 @@ public class CrystalixClient {
     @SubscribeEvent
     public static void registerKeys(final RegisterKeyMappingsEvent event) {
         event.register(KeybindManager.SCREEN_OPENER);
+        event.register(KeybindManager.COPY_PROPERTIES);
     }
     
     @SubscribeEvent

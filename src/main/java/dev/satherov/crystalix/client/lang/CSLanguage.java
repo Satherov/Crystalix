@@ -45,6 +45,7 @@ public enum CSLanguage implements CSTranslatable {
     
     KEY_CATEGORY("key", "category", "Crystalix"),
     KEY_WAND_CONFIG("key", "wand_config", "Open Wand Config"),
+    KEY_COPY_PROPERTIES("key", "copy_properties", "Copy Properties"),
     
     CONFIG_MAX_EDIT_OPERATION("crystalix.configuration.max_edit_operations", "Per Tick Modification Limit"),
     CONFIG_MAX_EDIT_FORCE("crystalix.configuration.max_edit_force", "Modification Hard Limit"),

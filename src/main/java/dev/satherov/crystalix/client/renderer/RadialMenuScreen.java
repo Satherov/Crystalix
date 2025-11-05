@@ -160,6 +160,17 @@ public class RadialMenuScreen extends Screen {
     }
     
     @Override
+    public boolean mouseScrolled(double mx, double my, double dx, double dy) {
+        if (hoveredIndex >= 0 && hoveredIndex < menuItems.size()) {
+            RadialMenuItem item = menuItems.get(hoveredIndex);
+            item.action().accept(dy < 0);
+            item.property().next(dy < 0);
+            return true;
+        }
+        return super.mouseScrolled(mx, my, dx, dy);
+    }
+    
+    @Override
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
         if (KeybindManager.SCREEN_OPENER.matches(keyCode, scanCode)) {
             this.onClose();

@@ -18,6 +18,8 @@ public interface IProperty<V> extends CSTranslatable {
     
     V next(boolean forward);
     
+    V set(V value);
+    
     @Override
     default MutableComponent text() {
         MutableComponent component = Component.empty();

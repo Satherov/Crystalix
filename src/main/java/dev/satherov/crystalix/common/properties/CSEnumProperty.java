@@ -45,9 +45,14 @@ public class CSEnumProperty<E extends Enum<E> & CSTranslatable> implements IProp
         E[] values = this.clazz.getEnumConstants();
         int i = value.ordinal() + (forward ? 1 : -1);
         if (i < 0) i += values.length;
-        this.value = values[i % values.length];
+        return set(values[i % values.length]);
+    }
+    
+    @Override
+    public E set(E value) {
+        this.value = value;
         stack.set(this.type, this.value);
-        return value;
+        return this.value;
     }
     
     @Override
