@@ -170,6 +170,7 @@
   "item.crystalix.crystalix_wand": "Crystalix Wand",
   "itemGroup.crystalix.default": "Crystalix",
   "key.crystalix.category": "Crystalix",
+  "key.crystalix.copy_properties": "Copy Properties",
   "key.crystalix.wand_config": "Open Wand Config",
   "message.crystalix.size": "You seem to have a large selection of blocks. This may take a few seconds",
   "network.crystalix.cycle.failed": "Error sending Crystalix property change to server: %s",
