@@ -148,7 +148,7 @@ public class BatchProcessor {
                 
                 BlockState state = level.getBlockState(pos);
                 if (state.getBlock() instanceof CrystalixGlass) {
-                    level.setBlock(pos, state, 3);
+                    level.setBlock(pos, this.state, 3);
                 }
                 operations++;
             }
