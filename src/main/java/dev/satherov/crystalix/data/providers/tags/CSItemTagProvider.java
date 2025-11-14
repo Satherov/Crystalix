@@ -27,12 +27,12 @@ public class CSItemTagProvider extends ItemTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         Arrays.stream(CSRegistry.Types.values()).forEach(type -> tag(CSRegistry.ITEM_TAGS.get(type))
                 .add(CSRegistry.ENTRIES.cellSet().stream()
-                             .filter(cell -> cell.getRowKey().equals(type))
-                             .map(Table.Cell::getValue)
-                             .filter(Objects::nonNull)
-                             .map(DeferredHolder::get)
-                             .map(Block::asItem)
-                             .toArray(Item[]::new)
+                        .filter(cell -> cell.getRowKey().equals(type))
+                        .map(Table.Cell::getValue)
+                        .filter(Objects::nonNull)
+                        .map(DeferredHolder::get)
+                        .map(Block::asItem)
+                        .toArray(Item[]::new)
                 )
         );
         CSRegistry.ITEM_TAGS.values().forEach(tag -> tag(CSRegistry.ITEM_TAG).addTag(tag));

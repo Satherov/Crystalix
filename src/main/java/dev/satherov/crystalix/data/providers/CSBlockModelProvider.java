@@ -27,16 +27,16 @@ public class CSBlockModelProvider extends BlockModelProvider {
     
     private void shadedBlock(DeferredHolder<Block, ? extends Block> block, CSRegistry.Colors color, CSRegistry.Types type) {
         this.singleTexture("block/" + type.getSerializedName() + "/" + block.getId().getPath(),
-                           modLoc("block/block"),
-                           "all", modLoc("block/" + type.getSerializedName() + "/" + (color.color() < 0 ? color.key() : "color"))
+                        modLoc("block/block"),
+                        "all", modLoc("block/" + type.getSerializedName() + "/" + (color.color() < 0 ? color.key() : "color"))
                 )
                 .renderType(RenderType.translucent().name);
     }
     
     private void shadelessBlock(DeferredHolder<Block, ? extends Block> block, CSRegistry.Colors color, CSRegistry.Types type) {
         this.singleTexture("block/" + type.getSerializedName() + "/" + block.getId().getPath() + "_no_shade",
-                           modLoc("block/no_shade_block"),
-                           "all", modLoc("block/" + type.getSerializedName() + "/" + (color.color() < 0 ? color.key() : "color"))
+                        modLoc("block/no_shade_block"),
+                        "all", modLoc("block/" + type.getSerializedName() + "/" + (color.color() < 0 ? color.key() : "color"))
                 )
                 .renderType(RenderType.translucent().name);
     }

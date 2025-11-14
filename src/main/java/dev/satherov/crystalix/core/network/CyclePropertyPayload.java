@@ -1,5 +1,7 @@
 package dev.satherov.crystalix.core.network;
 
+import lombok.extern.slf4j.Slf4j;
+
 import dev.satherov.crystalix.Crystalix;
 import dev.satherov.crystalix.client.lang.CSLanguage;
 import dev.satherov.crystalix.common.item.CrystalixWand;
@@ -15,7 +17,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 @Slf4j

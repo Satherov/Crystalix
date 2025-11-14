@@ -20,6 +20,8 @@ public final class CSNetwork {
         
         registrar.playToServer(CyclePropertyPayload.TYPE, CyclePropertyPayload.STREAM_CODEC, CyclePropertyPayload::handle);
         registrar.playToServer(SwapPropertiesPayload.TYPE, SwapPropertiesPayload.STREAM_CODEC, SwapPropertiesPayload::handle);
+        registrar.playToServer(SetColorPayload.TYPE, SetColorPayload.STREAM_CODEC, SetColorPayload::handle);
+        registrar.playToServer(ToggleColorless.TYPE, ToggleColorless.STREAM_CODEC, ToggleColorless::handle);
     }
     
     public static void sendToServer(CustomPacketPayload message) {

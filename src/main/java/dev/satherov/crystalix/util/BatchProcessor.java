@@ -72,7 +72,7 @@ public class BatchProcessor {
     public static class Batch {
         private final UUID owner;
         private final ResourceKey<Level> dimension;
-        private final ItemStack wand;
+        private final BlockState state;
         private final Set<BlockPos> visited = new LinkedHashSet<>();
         private final ArrayDeque<BlockPos> frontier = new ArrayDeque<>();
         private final int maxPerTick = CSCommonConfig.getMaxEditOperations();
@@ -81,16 +81,16 @@ public class BatchProcessor {
         private ArrayDeque<BlockPos> queue = null;
         private Phase phase = Phase.EXPLORING;
         
-        protected Batch(ServerPlayer player, BlockPos start, ItemStack wand) {
+        protected Batch(ServerPlayer player, BlockPos start, BlockState state) {
             this.owner = player.getUUID();
             this.dimension = player.level().dimension();
-            this.wand = wand;
+            this.state = state;
             frontier.add(start);
             visited.add(start);
         }
         
-        public static Batch of(ServerPlayer player, BlockPos start, ItemStack wand) {
-            return new Batch(player, start, wand);
+        public static Batch of(ServerPlayer player, BlockPos start, BlockState state) {
+            return new Batch(player, start, state);
         }
         
         protected void explore(LevelAccessor level) {
@@ -147,8 +147,8 @@ public class BatchProcessor {
                 if (level.isOutsideBuildHeight(pos) || !level.isAreaLoaded(pos, 0)) continue;
                 
                 BlockState state = level.getBlockState(pos);
-                if (state.getBlock() instanceof CrystalixGlass glass) {
-                    level.setBlock(pos, glass.fromStack(level, pos, wand), 3);
+                if (state.getBlock() instanceof CrystalixGlass) {
+                    level.setBlock(pos, state, 3);
                 }
                 operations++;
             }

@@ -1,6 +1,7 @@
 package dev.satherov.crystalix;
 
 import dev.satherov.crystalix.client.KeybindManager;
+import dev.satherov.crystalix.client.lang.CSLanguage;
 import dev.satherov.crystalix.common.item.CrystalixWand;
 import dev.satherov.crystalix.common.properties.CSProperties;
 import dev.satherov.crystalix.common.properties.IProperty;
@@ -19,12 +20,16 @@ import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Mod(value = Crystalix.MOD_ID, dist = Dist.CLIENT)
 @EventBusSubscriber(modid = Crystalix.MOD_ID, value = Dist.CLIENT)
@@ -38,6 +43,7 @@ public class CrystalixClient {
     public static void registerKeys(final RegisterKeyMappingsEvent event) {
         event.register(KeybindManager.SCREEN_OPENER);
         event.register(KeybindManager.COPY_PROPERTIES);
+        event.register(KeybindManager.APPLY_COLORLESS);
     }
     
     @SubscribeEvent
@@ -54,9 +60,11 @@ public class CrystalixClient {
         
         CSProperties properties = CSProperties.of(wand);
         
+        List<Component> lines = new ArrayList<>(properties.properties().values().stream().map(IProperty::text).toList());
+        lines.add(CSLanguage.PROPERTY_APPLY_COLORLESS.text(ChatFormatting.GRAY, wand.get(CSRegistry.APPLY_COLORLESS) ? CSLanguage.PROPERTY_ENABLED.text(ChatFormatting.DARK_GREEN) : CSLanguage.PROPERTY_DISABLED.text(ChatFormatting.DARK_RED)));
+        
         int maxTextWidth = 0;
-        for (IProperty<?> property : properties.properties().values()) {
-            Component text = property.text();
+        for (Component text : lines) {
             int textWidth = mc.font.width(text);
             if (textWidth > maxTextWidth) {
                 maxTextWidth = textWidth;
@@ -64,7 +72,7 @@ public class CrystalixClient {
         }
         
         int boxWidth = maxTextWidth + 20;
-        int boxHeight = properties.properties().size() * (mc.font.lineHeight + 1) + 20;
+        int boxHeight = (lines.size()) * (mc.font.lineHeight + 1) + 20;
         
         int boxX;
         if (CSClientConfig.getWandInfo() == CSClientConfig.AnchorPosition.TOP_LEFT) {
@@ -93,11 +101,10 @@ public class CrystalixClient {
         int textX = boxX + 10;
         int textY = boxY + 10;
         
-        for (IProperty<?> property : properties.properties().values()) {
-            Component text = property.text();
+        for (Component line : lines) {
             guiGraphics.drawString(
                     mc.font,
-                    text,
+                    line,
                     textX,
                     textY,
                     0xFF0F0F0F

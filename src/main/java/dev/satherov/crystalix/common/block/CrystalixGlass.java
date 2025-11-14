@@ -1,5 +1,9 @@
 package dev.satherov.crystalix.common.block;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.Accessors;
+
 import dev.satherov.crystalix.common.item.CrystalixWand;
 import dev.satherov.crystalix.common.properties.CSProperties;
 import dev.satherov.crystalix.core.CSRegistry;
@@ -44,16 +48,13 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import com.mojang.serialization.MapCodec;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 @NothingNull
 @Accessors(fluent = true)
-public class CrystalixGlass extends CSBlock implements SimpleWaterloggedBlock {
+public class CrystalixGlass extends SLBlock implements SimpleWaterloggedBlock {
     
     public static final MapCodec<WaterloggedTransparentBlock> CODEC = simpleCodec(WaterloggedTransparentBlock::new);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -257,7 +258,7 @@ public class CrystalixGlass extends CSBlock implements SimpleWaterloggedBlock {
         
         CSRegistry.Colors color = Objects.requireNonNull(stack.get(CSRegistry.COLOR));
         
-        if (!glass.color().equals(color)) {
+        if (!glass.color().equals(color) && stack.get(CSRegistry.APPLY_COLORLESS) == Boolean.FALSE) {
             DeferredHolder<Block, CrystalixGlass> holder = CSRegistry.ENTRIES.get(type, color);
             if (holder == null) return state;
             

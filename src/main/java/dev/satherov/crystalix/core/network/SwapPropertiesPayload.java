@@ -1,13 +1,13 @@
 package dev.satherov.crystalix.core.network;
 
+import lombok.extern.slf4j.Slf4j;
+
 import dev.satherov.crystalix.Crystalix;
-import dev.satherov.crystalix.client.lang.CSLanguage;
 import dev.satherov.crystalix.common.block.CrystalixGlass;
 import dev.satherov.crystalix.common.item.CrystalixWand;
 import dev.satherov.crystalix.common.properties.CSBooleanProperty;
 import dev.satherov.crystalix.common.properties.CSEnumProperty;
 import dev.satherov.crystalix.common.properties.CSProperties;
-import dev.satherov.crystalix.common.properties.IProperty;
 import dev.satherov.crystalix.core.CSRegistry;
 
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -20,7 +20,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 @Slf4j

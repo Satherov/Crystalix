@@ -1,11 +1,11 @@
 package dev.satherov.crystalix.config;
 
+import lombok.Getter;
+
 import dev.satherov.crystalix.config.annotation.Config;
 import dev.satherov.crystalix.config.annotation.ConfigVal;
 
 import net.neoforged.fml.config.ModConfig;
-
-import lombok.Getter;
 
 @Config(ModConfig.Type.COMMON)
 public class CSCommonConfig {

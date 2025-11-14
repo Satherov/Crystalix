@@ -1,13 +1,13 @@
 package dev.satherov.crystalix.config;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
+
 import dev.satherov.crystalix.config.annotation.Config;
 import dev.satherov.crystalix.config.annotation.ConfigVal;
 
 import net.neoforged.fml.config.ModConfig;
-
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
 
 @Config(ModConfig.Type.CLIENT)
 public class CSClientConfig {

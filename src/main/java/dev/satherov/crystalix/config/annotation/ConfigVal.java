@@ -25,11 +25,11 @@ public @interface ConfigVal {
     
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    @interface String {}
+    @interface String { }
     
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    @interface Boolean {}
+    @interface Boolean { }
     
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)

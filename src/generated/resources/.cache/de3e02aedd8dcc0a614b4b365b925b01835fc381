@@ -1,4 +1,4 @@
-// 1.21.1	2025-11-05T01:32:27.511172186	Crystalix Data Provider
+// 1.21.1	2025-11-14T08:58:38.767843705	Crystalix Data Provider
 ccbd89226327784f18b09dd8aa50e476b2221ec5 assets/crystalix/blockstates/amber_bordered_crystalix_glass.json
 08cd9b50c1ce34ca87b82db573a953b2b07f8fd9 assets/crystalix/blockstates/amber_clear_crystalix_glass.json
 e60bb7176223aff6283986be920192fc6806411a assets/crystalix/blockstates/amber_crystalix_glass.json
@@ -161,7 +161,7 @@ b1f9977a45c55075c9e1b0b4a128776496d95d1f assets/crystalix/blockstates/wine_cryst
 7a8f56034449099e7f63cc3ee732362b72f79014 assets/crystalix/blockstates/yellow_bordered_crystalix_glass.json
 0d80f3fc2602becfb12f63dc62e83b2506709b5c assets/crystalix/blockstates/yellow_clear_crystalix_glass.json
 1f9bb3675d66f4f8fa7268331262973f08f3b303 assets/crystalix/blockstates/yellow_crystalix_glass.json
-9982f16a3ffd947b98c27e51c657865c7d7dc272 assets/crystalix/lang/en_us.json
+de3031999c11fe77d6221bfa7d55661e72027fe5 assets/crystalix/lang/en_us.json
 52ae38552d3edc0323c480d7caa8c66c8a50d0cf assets/crystalix/models/block/bordered/amber_bordered_crystalix_glass.json
 5ab437abcbce02bdeab6200da6f835dbd79acbc3 assets/crystalix/models/block/bordered/amber_bordered_crystalix_glass_no_shade.json
 52ae38552d3edc0323c480d7caa8c66c8a50d0cf assets/crystalix/models/block/bordered/aquamarine_bordered_crystalix_glass.json

@@ -11,6 +11,7 @@ import dev.satherov.crystalix.util.BatchProcessor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -19,6 +20,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.state.BlockState;
+
+import com.mojang.blaze3d.platform.InputConstants;
+
+import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
@@ -27,14 +33,15 @@ public class CrystalixWand extends Item {
     
     public CrystalixWand(Properties properties) {
         super(properties
-                      .stacksTo(1)
-                      .component(CSRegistry.INVISIBLE, false)
-                      .component(CSRegistry.SHADELESS, false)
-                      .component(CSRegistry.REINFORCED, false)
-                      .component(CSRegistry.WATERLOGGABLE, false)
-                      .component(CSRegistry.LIGHT, CSProperties.Light.NONE)
-                      .component(CSRegistry.GHOST, CSProperties.Ghost.BLOCK_ALL)
-                      .component(CSRegistry.COLOR, CSRegistry.Colors.CLEAR)
+                .stacksTo(1)
+                .component(CSRegistry.INVISIBLE, false)
+                .component(CSRegistry.SHADELESS, false)
+                .component(CSRegistry.REINFORCED, false)
+                .component(CSRegistry.WATERLOGGABLE, false)
+                .component(CSRegistry.LIGHT, CSProperties.Light.NONE)
+                .component(CSRegistry.GHOST, CSProperties.Ghost.BLOCK_ALL)
+                .component(CSRegistry.COLOR, CSRegistry.Colors.CLEAR)
+                .component(CSRegistry.APPLY_COLORLESS, false)
         );
     }
     
@@ -47,6 +54,15 @@ public class CrystalixWand extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag tooltipFlag) {
         components.add(CSLanguage.TOOLTIP_BULK.text(ChatFormatting.DARK_GRAY));
+        components.add(CSLanguage.TOOLTIP_COLORLESS.text(
+                ChatFormatting.DARK_GRAY,
+                ComponentUtils.wrapInSquareBrackets(InputConstants.getKey(GLFW.GLFW_KEY_LEFT_CONTROL, -1).getDisplayName().copy().withStyle(ChatFormatting.GOLD))
+        ));
+        components.add(CSLanguage.PROPERTY_APPLY_COLORLESS.text(
+                        ChatFormatting.GRAY,
+                        stack.get(CSRegistry.APPLY_COLORLESS) ? CSLanguage.PROPERTY_ENABLED.text(ChatFormatting.DARK_GREEN) : CSLanguage.PROPERTY_DISABLED.text(ChatFormatting.DARK_RED)
+                )
+        );
         for (IProperty<?> property : CSProperties.of(stack).properties().values()) {
             components.add(property.text());
         }
@@ -68,11 +84,12 @@ public class CrystalixWand extends Item {
     public boolean applyToBlock(ServerLevel level, BlockPos pos, ServerPlayer player) {
         if (!(level.getBlockState(pos).getBlock() instanceof CrystalixGlass glass)) return false;
         ItemStack wand = CrystalixWand.find(player);
+        BlockState state = glass.fromStack(level, pos, wand);
         
         if (player.isShiftKeyDown()) {
-            BatchProcessor.schedule(BatchProcessor.Batch.of(player, pos, wand));
+            BatchProcessor.schedule(BatchProcessor.Batch.of(player, pos, state));
         } else {
-            level.setBlock(pos, glass.fromStack(level, pos, wand), 3);
+            level.setBlock(pos, state, 3);
         }
         
         return true;

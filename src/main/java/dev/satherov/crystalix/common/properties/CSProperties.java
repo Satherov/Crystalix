@@ -1,5 +1,8 @@
 package dev.satherov.crystalix.common.properties;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
+
 import dev.satherov.crystalix.Crystalix;
 import dev.satherov.crystalix.client.lang.CSLanguage;
 import dev.satherov.crystalix.client.lang.CSTranslatable;
@@ -19,10 +22,9 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 
 import com.mojang.serialization.Codec;
 
-import io.netty.buffer.ByteBuf;
-import lombok.Getter;
-import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
+
+import io.netty.buffer.ByteBuf;
 
 import java.util.LinkedHashMap;
 import java.util.Locale;

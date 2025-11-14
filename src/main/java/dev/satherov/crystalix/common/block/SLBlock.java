@@ -14,11 +14,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CSBlock extends Block {
+public class SLBlock extends Block {
     
     private StateBuilder stateBuilder;
     
-    public CSBlock(Properties properties) {
+    public SLBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(stateBuilder.defaultBlockState());
         stateBuilder.clear();
@@ -46,7 +46,7 @@ public class CSBlock extends Block {
      *
      * @param builder State builder to register properties to
      */
-    protected void registerState(StateBuilder builder) {}
+    protected void registerState(StateBuilder builder) { }
     
     @Override
     protected final void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
@@ -74,7 +74,7 @@ public class CSBlock extends Block {
      * @param newState      Block state after removal
      * @param movedByPiston Whether this block was moved by a piston
      */
-    protected void onRemoved(ServerLevel level, BlockPos pos, BlockState state, BlockState newState, boolean movedByPiston) {}
+    protected void onRemoved(ServerLevel level, BlockPos pos, BlockState state, BlockState newState, boolean movedByPiston) { }
     
     /**
      * Called when the block state changes.
@@ -85,7 +85,7 @@ public class CSBlock extends Block {
      * @param newState      Block state after change
      * @param movedByPiston Whether this block was moved by a piston
      */
-    protected void onChanged(ServerLevel level, BlockPos pos, BlockState state, BlockState newState, boolean movedByPiston) {}
+    protected void onChanged(ServerLevel level, BlockPos pos, BlockState state, BlockState newState, boolean movedByPiston) { }
     
     /**
      * Called when this block is actually placed into the world.
@@ -96,18 +96,18 @@ public class CSBlock extends Block {
      * @param oldState      Block state before placement
      * @param movedByPiston Whether this block was moved by a piston
      */
-    protected void onPlaced(ServerLevel level, BlockPos pos, BlockState state, BlockState oldState, boolean movedByPiston) {}
+    protected void onPlaced(ServerLevel level, BlockPos pos, BlockState state, BlockState oldState, boolean movedByPiston) { }
     
     public static class StateBuilder {
         
-        private final CSBlock block;
+        private final SLBlock block;
         private final Map<Property<?>, Comparable<?>> properties = new HashMap<>();
         
-        private StateBuilder(CSBlock block) {
+        private StateBuilder(SLBlock block) {
             this.block = block;
         }
         
-        protected static <B extends CSBlock> StateBuilder create(B block) {
+        protected static <B extends SLBlock> StateBuilder create(B block) {
             return new StateBuilder(block);
         }
         

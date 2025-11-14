@@ -1,5 +1,7 @@
 package dev.satherov.crystalix;
 
+import lombok.Getter;
+
 import dev.satherov.crystalix.config.ConfigLoader;
 import dev.satherov.crystalix.core.CSRegistry;
 
@@ -18,8 +20,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-
-import lombok.Getter;
 
 @Mod(Crystalix.MOD_ID)
 @EventBusSubscriber(modid = Crystalix.MOD_ID)

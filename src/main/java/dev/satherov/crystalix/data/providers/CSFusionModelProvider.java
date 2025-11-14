@@ -37,27 +37,27 @@ public class CSFusionModelProvider extends FusionModelProvider {
     
     private void shadedBlock(DeferredHolder<Block, ? extends Block> block, CSRegistry.Colors color, CSRegistry.Types type) {
         this.addModel(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + block.getId().getPath()),
-                      ModelInstance.of(
-                              DefaultModelTypes.CONNECTING,
-                              ConnectingModelData.builder()
-                                      .parent(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/block"))
-                                      .texture("all", ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + (color.color() < 0 ? color.key() : "color")))
-                                      .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(block.get(), Pair.of(CrystalixGlass.INVISIBLE, false))))
-                                      .build()
-                      )
+                ModelInstance.of(
+                        DefaultModelTypes.CONNECTING,
+                        ConnectingModelData.builder()
+                                .parent(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/block"))
+                                .texture("all", ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + (color.color() < 0 ? color.key() : "color")))
+                                .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(block.get(), Pair.of(CrystalixGlass.INVISIBLE, false))))
+                                .build()
+                )
         );
     }
     
     private void shadelessBlock(DeferredHolder<Block, ? extends Block> block, CSRegistry.Colors color, CSRegistry.Types type) {
         this.addModel(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + block.getId().getPath() + "_no_shade"),
-                      ModelInstance.of(
-                              DefaultModelTypes.CONNECTING,
-                              ConnectingModelData.builder()
-                                      .parent(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/no_shade_block"))
-                                      .texture("all", ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + (color.color() < 0 ? color.key() : "color")))
-                                      .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(block.get(), Pair.of(CrystalixGlass.INVISIBLE, false))))
-                                      .build()
-                      )
+                ModelInstance.of(
+                        DefaultModelTypes.CONNECTING,
+                        ConnectingModelData.builder()
+                                .parent(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/no_shade_block"))
+                                .texture("all", ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.getSerializedName() + "/" + (color.color() < 0 ? color.key() : "color")))
+                                .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(block.get(), Pair.of(CrystalixGlass.INVISIBLE, false))))
+                                .build()
+                )
         );
     }
 }

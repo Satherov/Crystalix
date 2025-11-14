@@ -1,5 +1,10 @@
 package dev.satherov.crystalix.core;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
+
 import dev.satherov.crystalix.Crystalix;
 import dev.satherov.crystalix.client.lang.CSLanguage;
 import dev.satherov.crystalix.client.lang.CSTranslatable;
@@ -35,13 +40,10 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mojang.serialization.Codec;
 
-import io.netty.buffer.ByteBuf;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import io.netty.buffer.ByteBuf;
 
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -109,6 +111,12 @@ public final class CSRegistry {
             DataComponentType.<CSRegistry.Colors>builder()
                     .persistent(CSRegistry.Colors.CODEC)
                     .networkSynchronized(CSRegistry.Colors.STREAM_CODEC)
+                    .build()
+    );
+    public static final Supplier<DataComponentType<Boolean>> APPLY_COLORLESS = COMPONENTS.register("apply_colorless", () ->
+            DataComponentType.<Boolean>builder()
+                    .persistent(Codec.BOOL)
+                    .networkSynchronized(ByteBufCodecs.BOOL)
                     .build()
     );
     public static final TagKey<Item> ITEM_TAG = TagKey.create(Registries.ITEM, Crystalix.rl("blocks"));

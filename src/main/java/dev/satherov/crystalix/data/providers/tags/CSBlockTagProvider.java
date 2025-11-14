@@ -31,11 +31,11 @@ public class CSBlockTagProvider extends BlockTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         Arrays.stream(CSRegistry.Types.values()).forEach(type -> tag(CSRegistry.BLOCK_TAGS.get(type))
                 .add(CSRegistry.ENTRIES.cellSet().stream()
-                             .filter(cell -> cell.getRowKey().equals(type))
-                             .map(Table.Cell::getValue)
-                             .filter(Objects::nonNull)
-                             .map(DeferredHolder::get)
-                             .toArray(CrystalixGlass[]::new)
+                        .filter(cell -> cell.getRowKey().equals(type))
+                        .map(Table.Cell::getValue)
+                        .filter(Objects::nonNull)
+                        .map(DeferredHolder::get)
+                        .toArray(CrystalixGlass[]::new)
                 )
         );
         CSRegistry.BLOCK_TAGS.values().forEach(tag -> tag(CSRegistry.BLOCK_TAG).addTag(tag));

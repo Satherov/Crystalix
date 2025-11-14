@@ -1,5 +1,10 @@
 package dev.satherov.crystalix.config;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
 import dev.satherov.crystalix.Crystalix;
 import dev.satherov.crystalix.config.annotation.Config;
 import dev.satherov.crystalix.config.annotation.ConfigVal;
@@ -11,10 +16,6 @@ import net.neoforged.fml.javafmlmod.FMLModContainer;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforgespi.language.ModFileScanData;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.objectweb.asm.Type;
 
 import java.lang.reflect.Field;
@@ -76,7 +77,7 @@ public class ConfigLoader {
         });
     }
     
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     protected void generate(Class<?> clazz, Cache cache, ModConfigSpec.Builder builder) {
         for (Class<?> c : clazz.getDeclaredClasses()) {
             if (c.isAnnotationPresent(Config.Group.class)) {

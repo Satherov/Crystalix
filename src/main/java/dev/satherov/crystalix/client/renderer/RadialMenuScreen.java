@@ -1,13 +1,19 @@
 package dev.satherov.crystalix.client.renderer;
 
 import dev.satherov.crystalix.client.KeybindManager;
+import dev.satherov.crystalix.client.lang.CSLanguage;
+import dev.satherov.crystalix.common.properties.CSProperties;
 import dev.satherov.crystalix.common.properties.IProperty;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferUploader;
@@ -17,6 +23,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +61,7 @@ public class RadialMenuScreen extends Screen {
         
         for (int i = 0; i < menuItems.size(); i++) {
             boolean isHovered = i == hoveredIndex;
-            renderSection(graphics, centerX, centerY, i, menuItems.size(), isHovered, menuItems.get(i).property());
+            renderSection(graphics, mouseX, mouseY, centerX, centerY, i, menuItems.size(), isHovered, menuItems.get(i).property());
         }
         
         RenderSystem.disableBlend();
@@ -84,7 +91,7 @@ public class RadialMenuScreen extends Screen {
         RenderSystem.disableBlend();
     }
     
-    private void renderSection(GuiGraphics graphics, int centerX, int centerY, int index, int totalSections, boolean isHovered, IProperty<?> property) {
+    private void renderSection(GuiGraphics graphics, int mouseX, int mouseY, int centerX, int centerY, int index, int totalSections, boolean isHovered, IProperty<?> property) {
         float anglePerSection = 360.0f / totalSections;
         float start = anglePerSection * index - 90;
         
@@ -103,6 +110,35 @@ public class RadialMenuScreen extends Screen {
         int valueWidth = this.font.width(property.display());
         graphics.drawString(this.font, property.name(), labelX - labelWidth / 2, labelY - 4, textColor);
         graphics.drawString(this.font, property.display(), labelX - valueWidth / 2, labelY - 4 + font.lineHeight, 0xFFFFFFFF);
+        
+        if (!isHovered) return;
+        
+        List<Component> lines = new ArrayList<>();
+        lines.add(property.name().withStyle(ChatFormatting.DARK_GRAY));
+        lines.add(CSLanguage.TOOLTIP_LMB.text(
+                ChatFormatting.DARK_GRAY,
+                ComponentUtils.wrapInSquareBrackets(InputConstants.Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_LEFT).getDisplayName().copy().withStyle(ChatFormatting.GOLD)),
+                ComponentUtils.wrapInSquareBrackets(CSLanguage.INPUT_WHEEL_DOWN.text(ChatFormatting.GOLD))
+        ));
+        lines.add(CSLanguage.TOOLTIP_RMB.text(
+                ChatFormatting.DARK_GRAY,
+                ComponentUtils.wrapInSquareBrackets(InputConstants.Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_RIGHT).getDisplayName().copy().withStyle(ChatFormatting.GOLD)),
+                ComponentUtils.wrapInSquareBrackets(CSLanguage.INPUT_WHEEL_UP.text(ChatFormatting.GOLD))
+        ));
+        
+        if (property.location().equals(CSProperties.COLOR)) {
+            lines.add(CSLanguage.TOOLTIP_MMB.text(
+                    ChatFormatting.DARK_GRAY,
+                    ComponentUtils.wrapInSquareBrackets(InputConstants.Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_MIDDLE).getDisplayName().copy().withStyle(ChatFormatting.GOLD))
+            ));
+        }
+        
+        graphics.renderComponentTooltip(
+                font,
+                lines,
+                mouseX,
+                mouseY
+        );
     }
     
     private void drawLines(GuiGraphics graphics, float centerX, float centerY, float angle) {
@@ -150,10 +186,14 @@ public class RadialMenuScreen extends Screen {
     
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if ((button == 0 || button == 1) && hoveredIndex >= 0 && hoveredIndex < menuItems.size()) {
+        if (hoveredIndex < 0 || hoveredIndex > menuItems.size()) return super.mouseClicked(mouseX, mouseY, button);
+        if (button == 0 || button == 1) {
             RadialMenuItem item = menuItems.get(hoveredIndex);
             item.action().accept(button == 0);
             item.property().next(button == 0);
+            return true;
+        } else if (button == 2 && menuItems.get(hoveredIndex).property().location().equals(CSProperties.COLOR)) {
+            Minecraft.getInstance().setScreen(new ColorPickerScreen());
             return true;
         }
         return super.mouseClicked(mouseX, mouseY, button);
@@ -188,5 +228,5 @@ public class RadialMenuScreen extends Screen {
         // No blur
     }
     
-    private record RadialMenuItem(IProperty<?> property, Consumer<Boolean> action) {}
+    private record RadialMenuItem(IProperty<?> property, Consumer<Boolean> action) { }
 }

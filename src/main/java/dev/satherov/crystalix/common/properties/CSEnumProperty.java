@@ -1,5 +1,8 @@
 package dev.satherov.crystalix.common.properties;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
+
 import dev.satherov.crystalix.client.lang.CSTranslatable;
 
 import net.minecraft.core.component.DataComponentType;
@@ -9,9 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import com.google.common.base.Suppliers;
-
-import lombok.Getter;
-import lombok.experimental.Accessors;
 
 import java.util.function.Supplier;
 
