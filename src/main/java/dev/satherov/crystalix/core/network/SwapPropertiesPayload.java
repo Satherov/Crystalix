@@ -4,26 +4,29 @@ import lombok.extern.slf4j.Slf4j;
 
 import dev.satherov.crystalix.Crystalix;
 import dev.satherov.crystalix.common.block.CrystalixGlass;
+import dev.satherov.crystalix.common.block.CrystalixGlassTile;
 import dev.satherov.crystalix.common.item.CrystalixWand;
 import dev.satherov.crystalix.common.properties.CSBooleanProperty;
 import dev.satherov.crystalix.common.properties.CSEnumProperty;
+import dev.satherov.crystalix.common.properties.CSIntegerProperty;
 import dev.satherov.crystalix.common.properties.CSProperties;
-import dev.satherov.crystalix.core.CSRegistry;
 
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.jetbrains.annotations.NotNull;
 
 @Slf4j
-public record SwapPropertiesPayload(BlockState state) implements CustomPacketPayload {
+public record SwapPropertiesPayload(BlockPos pos) implements CustomPacketPayload {
     
     public static final StreamCodec<RegistryFriendlyByteBuf, SwapPropertiesPayload> STREAM_CODEC = CustomPacketPayload.codec(
             SwapPropertiesPayload::encode,
@@ -38,21 +41,24 @@ public record SwapPropertiesPayload(BlockState state) implements CustomPacketPay
     }
     
     public void encode(RegistryFriendlyByteBuf buffer) {
-        buffer.writeVarInt(Block.getId(state));
+        buffer.writeBlockPos(pos);
     }
     
     private SwapPropertiesPayload(RegistryFriendlyByteBuf buffer) {
-        this(Block.stateById(buffer.readVarInt()));
+        this(buffer.readBlockPos());
     }
     
     @SuppressWarnings("unchecked")
     public static void handle(final SwapPropertiesPayload message, final IPayloadContext ctx) {
         ctx.enqueueWork(() -> {
             if (ctx.flow().isServerbound() && ctx.player() instanceof ServerPlayer player) {
+                ServerLevel level = player.serverLevel();
                 ItemStack wand = CrystalixWand.find(player);
                 if (wand.isEmpty()) return;
-                BlockState state = message.state();
-                if (!(state.getBlock() instanceof CrystalixGlass glass)) return;
+                BlockPos pos = message.pos();
+                BlockState state = level.getBlockState(pos);
+                if (!(state.getBlock() instanceof CrystalixGlass)) return;
+                BlockEntity entity = level.getBlockEntity(pos);
                 CSProperties properties = CSProperties.of(wand);
                 
                 ((CSBooleanProperty) properties.properties().get(CSProperties.WATERLOGGABLE)).set(state.getValue(CrystalixGlass.WATERLOGGABLE));
@@ -61,7 +67,10 @@ public record SwapPropertiesPayload(BlockState state) implements CustomPacketPay
                 ((CSBooleanProperty) properties.properties().get(CSProperties.REINFORCED)).set(state.getValue(CrystalixGlass.REINFORCED));
                 ((CSEnumProperty<CSProperties.Light>) properties.properties().get(CSProperties.LIGHT)).set(state.getValue(CrystalixGlass.LIGHT));
                 ((CSEnumProperty<CSProperties.Ghost>) properties.properties().get(CSProperties.GHOST)).set(state.getValue(CrystalixGlass.GHOST));
-                ((CSEnumProperty<CSRegistry.Colors>) properties.properties().get(CSProperties.COLOR)).set(glass.color());
+                
+                if (entity instanceof CrystalixGlassTile tile) {
+                    ((CSIntegerProperty) properties.properties().get(CSProperties.COLOR)).set(tile.getColor());
+                }
                 
                 player.getInventory().setChanged();
             }

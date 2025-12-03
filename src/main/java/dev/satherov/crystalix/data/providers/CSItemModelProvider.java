@@ -17,8 +17,8 @@ public class CSItemModelProvider extends ItemModelProvider {
     
     @Override
     protected void registerModels() {
-        CSRegistry.ENTRIES.cellSet().forEach((cell) -> {
-            withExistingParent(cell.getValue().getId().toString(), modLoc("block/" + cell.getRowKey().getSerializedName() + "/" + cell.getValue().getId().getPath()));
+        CSRegistry.ENTRIES.forEach((type, holder) -> {
+            withExistingParent(holder.getId().toString(), modLoc("block/" + holder.getId().getPath()));
         });
         
         CSRegistry.ITEMS.getEntries().stream()

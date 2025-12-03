@@ -179,6 +179,7 @@
   "network.crystalix.cycle.failed": "Error sending Crystalix property change to server: %s",
   "property.crystalix.allow": "Allow",
   "property.crystalix.apply_colorless": "Apply Colorless: %s",
+  "property.crystalix.clear": "Clear",
   "property.crystalix.color": "Color",
   "property.crystalix.deny": "Deny",
   "property.crystalix.disabled": "Disabled",

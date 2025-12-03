@@ -13,12 +13,10 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 
-import com.google.common.collect.Table;
-
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class CSBlockTagProvider extends BlockTagsProvider {
@@ -30,10 +28,9 @@ public class CSBlockTagProvider extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         Arrays.stream(CSRegistry.Types.values()).forEach(type -> tag(CSRegistry.BLOCK_TAGS.get(type))
-                .add(CSRegistry.ENTRIES.cellSet().stream()
-                        .filter(cell -> cell.getRowKey().equals(type))
-                        .map(Table.Cell::getValue)
-                        .filter(Objects::nonNull)
+                .add(CSRegistry.ENTRIES.entrySet().stream()
+                        .filter(cell -> cell.getKey().equals(type))
+                        .map(Map.Entry::getValue)
                         .map(DeferredHolder::get)
                         .toArray(CrystalixGlass[]::new)
                 )

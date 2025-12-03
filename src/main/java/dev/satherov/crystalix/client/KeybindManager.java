@@ -21,6 +21,7 @@ import net.neoforged.neoforge.client.event.InputEvent;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -65,9 +66,10 @@ public class KeybindManager {
         if (KeybindManager.COPY_PROPERTIES.matches(event.getKey(), event.getScanCode())) {
             if (mc.hitResult == null || mc.hitResult.getType() != HitResult.Type.BLOCK) return;
             BlockHitResult hit = (BlockHitResult) mc.hitResult;
-            BlockState state = mc.level.getBlockState(hit.getBlockPos());
+            BlockPos pos = hit.getBlockPos();
+            BlockState state = mc.level.getBlockState(pos);
             if (!(state.getBlock() instanceof CrystalixGlass)) return;
-            CSNetwork.sendToServer(new SwapPropertiesPayload(state));
+            CSNetwork.sendToServer(new SwapPropertiesPayload(pos));
         }
         
         if (KeybindManager.APPLY_COLORLESS.consumeClick()) {

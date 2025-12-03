@@ -9,14 +9,17 @@ import dev.satherov.crystalix.Crystalix;
 import dev.satherov.crystalix.client.lang.CSLanguage;
 import dev.satherov.crystalix.client.lang.CSTranslatable;
 import dev.satherov.crystalix.common.block.CrystalixGlass;
+import dev.satherov.crystalix.common.block.CrystalixGlassTile;
 import dev.satherov.crystalix.common.item.CrystalixWand;
 import dev.satherov.crystalix.common.properties.CSProperties;
 import dev.satherov.crystalix.common.properties.EnumCodecs;
 
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -33,6 +36,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 
@@ -47,12 +51,14 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 public final class CSRegistry {
@@ -61,13 +67,17 @@ public final class CSRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, Crystalix.MOD_ID);
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Crystalix.MOD_ID);
     public static final DeferredRegister<DataComponentType<?>> COMPONENTS = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, Crystalix.MOD_ID);
+    public static final DeferredRegister<AttachmentType<?>> ATTACHMENTS = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, Crystalix.MOD_ID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, Crystalix.MOD_ID);
     
-    public static final DeferredHolder<Item, CrystalixWand> WAND = ITEMS.register("crystalix_wand", () -> new CrystalixWand(new Item.Properties()));
+    public static final Map<Types, DeferredHolder<Block, CrystalixGlass>> ENTRIES = CSRegistry.create();
     
-    public static final Table<Types, Colors, DeferredHolder<Block, CrystalixGlass>> ENTRIES = CSRegistry.create();
+    @Deprecated(forRemoval = true)
+    public static final Table<Types, Colors, DeferredHolder<Block, CrystalixGlass>> OLD_ENTRIES = CSRegistry.old();
+    
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = TABS.register("creative_tab", () -> CreativeModeTab.builder()
             .title(CSLanguage.CREATIVE_TAB_DEFAULT.text())
-            .icon(() -> Objects.requireNonNull(ENTRIES.get(Types.GLASS, Colors.WHITE)).get().asItem().getDefaultInstance())
+            .icon(() -> Objects.requireNonNull(ENTRIES.get(Types.GLASS)).get().asItem().getDefaultInstance())
             .displayItems((param, out) -> ITEMS.getEntries().stream().map(DeferredHolder::get).map(Item::getDefaultInstance).forEach(out::accept))
             .build()
     );
@@ -107,16 +117,22 @@ public final class CSRegistry {
                     .networkSynchronized(CSProperties.Light.STREAM_CODEC)
                     .build()
     );
-    public static final Supplier<DataComponentType<CSRegistry.Colors>> COLOR = COMPONENTS.register("color", () ->
-            DataComponentType.<CSRegistry.Colors>builder()
-                    .persistent(CSRegistry.Colors.CODEC)
-                    .networkSynchronized(CSRegistry.Colors.STREAM_CODEC)
+    public static final Supplier<DataComponentType<Integer>> COLOR = COMPONENTS.register("color", () ->
+            DataComponentType.<Integer>builder()
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.INT)
                     .build()
     );
     public static final Supplier<DataComponentType<Boolean>> APPLY_COLORLESS = COMPONENTS.register("apply_colorless", () ->
             DataComponentType.<Boolean>builder()
                     .persistent(Codec.BOOL)
                     .networkSynchronized(ByteBufCodecs.BOOL)
+                    .build()
+    );
+    public static final Supplier<AttachmentType<Boolean>> MIGRATED = ATTACHMENTS.register("migrated", () ->
+            AttachmentType.builder(() -> Boolean.FALSE)
+                    .serialize(Codec.BOOL)
+                    .sync(ByteBufCodecs.BOOL)
                     .build()
     );
     public static final TagKey<Item> ITEM_TAG = TagKey.create(Registries.ITEM, Crystalix.rl("blocks"));
@@ -136,15 +152,35 @@ public final class CSRegistry {
                     () -> new EnumMap<>(Types.class)
             ));
     
-    private static Table<Types, Colors, DeferredHolder<Block, CrystalixGlass>> create() {
+    public static final DeferredHolder<Item, CrystalixWand> WAND = ITEMS.register("crystalix_wand", () -> new CrystalixWand(new Item.Properties()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CrystalixGlassTile>> GLASS_TILE = BLOCK_ENTITIES.register("glass_tile", () ->
+            BlockEntityType.Builder.of(CrystalixGlassTile::new,
+                    Stream.concat(ENTRIES.values().stream(), OLD_ENTRIES.cellSet().stream().map(Table.Cell::getValue))
+                            .filter(Objects::nonNull)
+                            .map(DeferredHolder::get)
+                            .toArray(Block[]::new)
+            ).build(null));
+    
+    private static Map<Types, DeferredHolder<Block, CrystalixGlass>> create() {
+        Map<Types, DeferredHolder<Block, CrystalixGlass>> map = new HashMap<>();
+        for (Types type : Types.values()) {
+            String name = type.format();
+            DeferredHolder<Block, CrystalixGlass> holder = BLOCKS.register(name, () -> new CrystalixGlass(type, null));
+            ITEMS.register(name, () -> new BlockItem(holder.get(), new Item.Properties()));
+            map.put(type, holder);
+        }
+        return map;
+    }
+    
+    @Deprecated(forRemoval = true)
+    private static Table<Types, Colors, DeferredHolder<Block, CrystalixGlass>> old() {
         Table<Types, Colors, DeferredHolder<Block, CrystalixGlass>> table = HashBasedTable.create();
         for (Colors color : Colors.values()) {
             for (Types type : Types.values()) {
                 String name = color.format(type);
+                if (name.equalsIgnoreCase(type.format())) continue;
                 DeferredHolder<Block, CrystalixGlass> holder = BLOCKS.register(name, () -> new CrystalixGlass(type, color));
-                ITEMS.register(name, () -> new BlockItem(holder.get(), new Item.Properties()));
                 table.put(type, color, holder);
-                
             }
         }
         return table;
@@ -155,6 +191,8 @@ public final class CSRegistry {
         ITEMS.register(bus);
         TABS.register(bus);
         COMPONENTS.register(bus);
+        ATTACHMENTS.register(bus);
+        BLOCK_ENTITIES.register(bus);
     }
     
     @RequiredArgsConstructor
@@ -169,6 +207,10 @@ public final class CSRegistry {
         @Override
         public @NotNull String getSerializedName() {
             return name().toLowerCase(Locale.ROOT);
+        }
+        
+        public String format() {
+            return (this.equals(GLASS) ? "" : this.getSerializedName() + "_") + "crystalix_glass";
         }
     }
     

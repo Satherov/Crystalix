@@ -5,11 +5,9 @@ import dev.satherov.crystalix.core.CSRegistry;
 
 import net.neoforged.neoforge.client.model.generators.BlockModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.DeferredHolder;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.PackOutput;
-import net.minecraft.world.level.block.Block;
 
 public class CSBlockModelProvider extends BlockModelProvider {
     
@@ -19,25 +17,30 @@ public class CSBlockModelProvider extends BlockModelProvider {
     
     @Override
     protected void registerModels() {
-        CSRegistry.ENTRIES.cellSet().forEach((cell) -> {
-            shadedBlock(cell.getValue(), cell.getColumnKey(), cell.getRowKey());
-            shadelessBlock(cell.getValue(), cell.getColumnKey(), cell.getRowKey());
+        CSRegistry.ENTRIES.forEach((type, holder) -> {
+            this.singleTexture("block/" + holder.getId().getPath() + "_colored",
+                            modLoc("block/block"),
+                            "all", modLoc("block/colored_" + type.format())
+                    )
+                    .renderType(RenderType.translucent().name);
+            
+            this.singleTexture("block/" + holder.getId().getPath() + "_no_shade_colored",
+                            modLoc("block/no_shade_block"),
+                            "all", modLoc("block/colored_" + type.format())
+                    )
+                    .renderType(RenderType.translucent().name);
+            
+            this.singleTexture("block/" + holder.getId().getPath(),
+                            modLoc("block/block"),
+                            "all", modLoc("block/" + type.format())
+                    )
+                    .renderType(RenderType.translucent().name);
+            
+            this.singleTexture("block/" + holder.getId().getPath() + "_no_shade",
+                            modLoc("block/no_shade_block"),
+                            "all", modLoc("block/" + type.format())
+                    )
+                    .renderType(RenderType.translucent().name);
         });
-    }
-    
-    private void shadedBlock(DeferredHolder<Block, ? extends Block> block, CSRegistry.Colors color, CSRegistry.Types type) {
-        this.singleTexture("block/" + type.getSerializedName() + "/" + block.getId().getPath(),
-                        modLoc("block/block"),
-                        "all", modLoc("block/" + type.getSerializedName() + "/" + (color.color() < 0 ? color.key() : "color"))
-                )
-                .renderType(RenderType.translucent().name);
-    }
-    
-    private void shadelessBlock(DeferredHolder<Block, ? extends Block> block, CSRegistry.Colors color, CSRegistry.Types type) {
-        this.singleTexture("block/" + type.getSerializedName() + "/" + block.getId().getPath() + "_no_shade",
-                        modLoc("block/no_shade_block"),
-                        "all", modLoc("block/" + type.getSerializedName() + "/" + (color.color() < 0 ? color.key() : "color"))
-                )
-                .renderType(RenderType.translucent().name);
     }
 }

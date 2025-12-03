@@ -2,6 +2,7 @@ package dev.satherov.crystalix;
 
 import dev.satherov.crystalix.client.KeybindManager;
 import dev.satherov.crystalix.client.lang.CSLanguage;
+import dev.satherov.crystalix.common.block.CrystalixGlassTile;
 import dev.satherov.crystalix.common.item.CrystalixWand;
 import dev.satherov.crystalix.common.properties.CSProperties;
 import dev.satherov.crystalix.common.properties.IProperty;
@@ -116,24 +117,22 @@ public class CrystalixClient {
     @SubscribeEvent
     @SuppressWarnings("deprecation")
     public static void renderTypeSetup(final EntityRenderersEvent.RegisterRenderers event) {
-        CSRegistry.ENTRIES.cellSet().forEach((cell) -> {
-            ItemBlockRenderTypes.setRenderLayer(cell.getValue().get(), RenderType.translucent());
-        });
-    }
-    
-    @SubscribeEvent
-    public static void onItemColors(final RegisterColorHandlersEvent.Item event) {
-        CSRegistry.ENTRIES.cellSet().forEach((cell) -> {
-            if (cell.getColumnKey().color() < 0) return;
-            event.register((stack, idx) -> (cell.getColumnKey().color() & 0x00FFFFFF) | 0xFF000000, cell.getValue().get());
+        CSRegistry.ENTRIES.forEach((types, holder) -> {
+            ItemBlockRenderTypes.setRenderLayer(holder.get(), RenderType.translucent());
         });
     }
     
     @SubscribeEvent
     public static void onBlockColors(final RegisterColorHandlersEvent.Block event) {
-        CSRegistry.ENTRIES.cellSet().forEach((cell) -> {
-            if (cell.getColumnKey().color() < 0) return;
-            event.register((state, getter, pos, idx) -> cell.getColumnKey().color(), cell.getValue().get());
+        CSRegistry.ENTRIES.forEach((type, holder) -> {
+            event.register((state, getter, pos, idx) -> {
+                if (getter != null && pos != null) {
+                    if (getter.getBlockEntity(pos) instanceof CrystalixGlassTile tile) {
+                        return tile.getColor();
+                    }
+                }
+                return 0xFFFFFF;
+            }, holder.get());
         });
     }
 }

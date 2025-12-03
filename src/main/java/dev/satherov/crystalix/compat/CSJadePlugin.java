@@ -4,14 +4,13 @@ import dev.satherov.crystalix.Crystalix;
 import dev.satherov.crystalix.client.lang.CSLanguage;
 import dev.satherov.crystalix.client.lang.CSTranslatable;
 import dev.satherov.crystalix.common.block.CrystalixGlass;
+import dev.satherov.crystalix.common.block.CrystalixGlassTile;
 import dev.satherov.crystalix.common.item.CrystalixWand;
 import dev.satherov.crystalix.config.CSClientConfig;
-import dev.satherov.crystalix.core.CSRegistry;
 import dev.satherov.crystalix.core.annotations.NothingNull;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 
@@ -41,10 +40,10 @@ public class CSJadePlugin implements IWailaPlugin {
                 .append(state.text());
     }
     
-    private static Component getTranslation(CSLanguage language, MutableComponent component) {
+    private static Component getTranslation(CSLanguage language, int color) {
         return language.text(ChatFormatting.GRAY)
                 .append(Component.literal(": "))
-                .append(component);
+                .append(Component.literal("#" + Integer.toHexString(color).toUpperCase()).withColor(color));
     }
     
     private static void showTooltips(ITooltip tooltip, BlockAccessor accessor) {
@@ -54,7 +53,7 @@ public class CSJadePlugin implements IWailaPlugin {
         tooltip.add(getTranslation(CSLanguage.PROPERTY_WATERLOGGABLE, accessor.getBlockState().getValue(CrystalixGlass.WATERLOGGABLE)));
         tooltip.add(getTranslation(CSLanguage.PROPERTY_LIGHT, accessor.getBlockState().getValue(CrystalixGlass.LIGHT)));
         tooltip.add(getTranslation(CSLanguage.PROPERTY_GHOST, accessor.getBlockState().getValue(CrystalixGlass.GHOST)));
-        tooltip.add(getTranslation(CSLanguage.PROPERTY_COLOR, CSRegistry.Colors.fromState(accessor.getBlockState()).text()));
+        tooltip.add(getTranslation(CSLanguage.PROPERTY_COLOR, accessor.getBlockEntity() instanceof CrystalixGlassTile tile ? tile.getColor() : 0xFFFFFF));
     }
     
     @Override

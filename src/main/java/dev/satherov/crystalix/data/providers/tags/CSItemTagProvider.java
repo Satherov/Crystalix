@@ -11,10 +11,8 @@ import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
-import com.google.common.collect.Table;
-
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class CSItemTagProvider extends ItemTagsProvider {
@@ -26,10 +24,9 @@ public class CSItemTagProvider extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         Arrays.stream(CSRegistry.Types.values()).forEach(type -> tag(CSRegistry.ITEM_TAGS.get(type))
-                .add(CSRegistry.ENTRIES.cellSet().stream()
-                        .filter(cell -> cell.getRowKey().equals(type))
-                        .map(Table.Cell::getValue)
-                        .filter(Objects::nonNull)
+                .add(CSRegistry.ENTRIES.entrySet().stream()
+                        .filter(cell -> cell.getKey().equals(type))
+                        .map(Map.Entry::getValue)
                         .map(DeferredHolder::get)
                         .map(Block::asItem)
                         .toArray(Item[]::new)

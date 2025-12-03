@@ -115,21 +115,22 @@ public class RadialMenuScreen extends Screen {
         
         List<Component> lines = new ArrayList<>();
         lines.add(property.name().withStyle(ChatFormatting.DARK_GRAY));
-        lines.add(CSLanguage.TOOLTIP_LMB.text(
-                ChatFormatting.DARK_GRAY,
-                ComponentUtils.wrapInSquareBrackets(InputConstants.Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_LEFT).getDisplayName().copy().withStyle(ChatFormatting.GOLD)),
-                ComponentUtils.wrapInSquareBrackets(CSLanguage.INPUT_WHEEL_DOWN.text(ChatFormatting.GOLD))
-        ));
-        lines.add(CSLanguage.TOOLTIP_RMB.text(
-                ChatFormatting.DARK_GRAY,
-                ComponentUtils.wrapInSquareBrackets(InputConstants.Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_RIGHT).getDisplayName().copy().withStyle(ChatFormatting.GOLD)),
-                ComponentUtils.wrapInSquareBrackets(CSLanguage.INPUT_WHEEL_UP.text(ChatFormatting.GOLD))
-        ));
         
         if (property.location().equals(CSProperties.COLOR)) {
             lines.add(CSLanguage.TOOLTIP_MMB.text(
                     ChatFormatting.DARK_GRAY,
                     ComponentUtils.wrapInSquareBrackets(InputConstants.Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_MIDDLE).getDisplayName().copy().withStyle(ChatFormatting.GOLD))
+            ));
+        } else {
+            lines.add(CSLanguage.TOOLTIP_LMB.text(
+                    ChatFormatting.DARK_GRAY,
+                    ComponentUtils.wrapInSquareBrackets(InputConstants.Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_LEFT).getDisplayName().copy().withStyle(ChatFormatting.GOLD)),
+                    ComponentUtils.wrapInSquareBrackets(CSLanguage.INPUT_WHEEL_DOWN.text(ChatFormatting.GOLD))
+            ));
+            lines.add(CSLanguage.TOOLTIP_RMB.text(
+                    ChatFormatting.DARK_GRAY,
+                    ComponentUtils.wrapInSquareBrackets(InputConstants.Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_RIGHT).getDisplayName().copy().withStyle(ChatFormatting.GOLD)),
+                    ComponentUtils.wrapInSquareBrackets(CSLanguage.INPUT_WHEEL_UP.text(ChatFormatting.GOLD))
             ));
         }
         

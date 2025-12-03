@@ -3,9 +3,8 @@ package dev.satherov.crystalix.core.network;
 import dev.satherov.crystalix.Crystalix;
 import dev.satherov.crystalix.client.lang.CSLanguage;
 import dev.satherov.crystalix.common.item.CrystalixWand;
-import dev.satherov.crystalix.common.properties.CSEnumProperty;
+import dev.satherov.crystalix.common.properties.CSIntegerProperty;
 import dev.satherov.crystalix.common.properties.CSProperties;
-import dev.satherov.crystalix.core.CSRegistry;
 
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -17,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 
 import org.jetbrains.annotations.NotNull;
 
-public record SetColorPayload(CSRegistry.Colors color) implements CustomPacketPayload {
+public record SetColorPayload(int color) implements CustomPacketPayload {
     
     public static final StreamCodec<FriendlyByteBuf, SetColorPayload> STREAM_CODEC = CustomPacketPayload.codec(
             SetColorPayload::encode,
@@ -32,11 +31,11 @@ public record SetColorPayload(CSRegistry.Colors color) implements CustomPacketPa
     }
     
     public void encode(FriendlyByteBuf buf) {
-        buf.writeVarInt(color.ordinal());
+        buf.writeVarInt(color);
     }
     
     private SetColorPayload(FriendlyByteBuf buf) {
-        this(CSRegistry.Colors.values()[buf.readVarInt()]);
+        this(buf.readVarInt());
     }
     
     public static void handle(final SetColorPayload message, final IPayloadContext ctx) {
@@ -46,10 +45,9 @@ public record SetColorPayload(CSRegistry.Colors color) implements CustomPacketPa
                 if (wand.isEmpty()) return;
                 
                 CSProperties properties = CSProperties.of(wand);
-                @SuppressWarnings("unchecked")
-                CSEnumProperty<CSRegistry.Colors> prop = (CSEnumProperty<CSRegistry.Colors>) properties.properties().get(CSProperties.COLOR);
+                CSIntegerProperty prop = (CSIntegerProperty) properties.properties().get(CSProperties.COLOR);
                 if (prop == null) return;
-                prop.set(message.color);
+                prop.set(message.color());
                 player.getInventory().setChanged();
             }
         }).exceptionally(e -> {

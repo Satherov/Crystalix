@@ -25,7 +25,7 @@ public class CSBlockLootProvider extends VanillaBlockLoot {
     
     @Override
     protected @NotNull Iterable<Block> getKnownBlocks() {
-        return CSRegistry.BLOCKS.getEntries()
+        return CSRegistry.ENTRIES.values()
                 .stream()
                 .map(DeferredHolder::get)
                 .collect(Collectors.toList());

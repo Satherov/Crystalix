@@ -3,6 +3,7 @@ package dev.satherov.crystalix.util;
 import dev.satherov.crystalix.Crystalix;
 import dev.satherov.crystalix.client.lang.CSLanguage;
 import dev.satherov.crystalix.common.block.CrystalixGlass;
+import dev.satherov.crystalix.common.block.CrystalixGlassTile;
 import dev.satherov.crystalix.config.CSCommonConfig;
 
 import net.neoforged.bus.api.SubscribeEvent;
@@ -14,7 +15,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
@@ -73,33 +73,38 @@ public class BatchProcessor {
         private final UUID owner;
         private final ResourceKey<Level> dimension;
         private final BlockState state;
-        private final Set<BlockPos> visited = new LinkedHashSet<>();
+        private final int color;
+        
+        private final Set<BlockPos> observed = new LinkedHashSet<>();
         private final ArrayDeque<BlockPos> frontier = new ArrayDeque<>();
+        
         private final int maxPerTick = CSCommonConfig.getMaxEditOperations();
         private final int maxTotal = CSCommonConfig.getMaxEditForce();
+        
         private int tick = Integer.MIN_VALUE;
         private ArrayDeque<BlockPos> queue = null;
         private Phase phase = Phase.EXPLORING;
         
-        protected Batch(ServerPlayer player, BlockPos start, BlockState state) {
+        protected Batch(ServerPlayer player, BlockPos start, BlockState state, int color) {
             this.owner = player.getUUID();
             this.dimension = player.level().dimension();
             this.state = state;
+            this.color = color;
             frontier.add(start);
-            visited.add(start);
+            observed.add(start);
         }
         
-        public static Batch of(ServerPlayer player, BlockPos start, BlockState state) {
-            return new Batch(player, start, state);
+        public static Batch of(ServerPlayer player, BlockPos start, BlockState state, int color) {
+            return new Batch(player, start, state, color);
         }
         
         protected void explore(LevelAccessor level) {
-            if (visited.size() >= maxTotal) return;
+            if (observed.size() >= maxTotal) return;
             
             int operations = 0;
             while (!frontier.isEmpty() &&
                     operations < maxPerTick &&
-                    visited.size() < maxTotal
+                    observed.size() < maxTotal
             ) {
                 BlockPos pos = frontier.pollFirst();
                 if (!(level.getBlockState(pos).getBlock() instanceof CrystalixGlass)) continue;
@@ -110,17 +115,18 @@ public class BatchProcessor {
                             if (dx == 0 && dy == 0 && dz == 0) continue;
                             BlockPos n = pos.offset(dx, dy, dz);
                             if (level.isOutsideBuildHeight(n) || !level.isAreaLoaded(n, 0)) continue;
-                            if (visited.contains(n)) continue;
-                            if (level.getBlockState(n).getBlock() instanceof CrystalixGlass) {
-                                visited.add(n);
+                            if (observed.contains(n)) continue;
+                            BlockState visited = level.getBlockState(n);
+                            if (visited.getBlock() instanceof CrystalixGlass && visited.getBlock().equals(this.state.getBlock())) {
+                                this.observed.add(n);
                                 frontier.addLast(n);
                                 operations++;
-                                if (visited.size() >= maxTotal) break;
+                                if (this.observed.size() >= maxTotal) break;
                             }
                         }
-                        if (visited.size() >= maxTotal) break;
+                        if (observed.size() >= maxTotal) break;
                     }
-                    if (visited.size() >= maxTotal) break;
+                    if (observed.size() >= maxTotal) break;
                 }
             }
         }
@@ -130,15 +136,15 @@ public class BatchProcessor {
         }
         
         protected boolean shouldBeginProcessing() {
-            return phase == Phase.EXPLORING && (frontier.isEmpty() || visited.size() >= maxTotal);
+            return phase == Phase.EXPLORING && (frontier.isEmpty() || observed.size() >= maxTotal);
         }
         
         protected void beginProcessing() {
             phase = Phase.PROCESSING;
-            queue = new ArrayDeque<>(visited);
+            queue = new ArrayDeque<>(observed);
         }
         
-        protected void process(LevelAccessor level) {
+        protected void process(ServerLevel level) {
             if (phase != Phase.PROCESSING || queue == null) return;
             
             int operations = 0;
@@ -146,9 +152,15 @@ public class BatchProcessor {
                 BlockPos pos = queue.pollFirst();
                 if (level.isOutsideBuildHeight(pos) || !level.isAreaLoaded(pos, 0)) continue;
                 
-                BlockState state = level.getBlockState(pos);
-                if (state.getBlock() instanceof CrystalixGlass) {
-                    level.setBlock(pos, this.state, 3);
+                BlockState visited = level.getBlockState(pos);
+                if (visited.getBlock() instanceof CrystalixGlass && visited.getBlock().equals(this.state.getBlock())) {
+                    BlockState apply = this.state.setValue(CrystalixGlass.COLORED, visited.getValue(CrystalixGlass.COLORED)).setValue(CrystalixGlass.WATERLOGGED, visited.getValue(CrystalixGlass.WATERLOGGED));
+                    
+                    if (color != Integer.MIN_VALUE && level.getBlockEntity(pos) instanceof CrystalixGlassTile tile && tile.getColor() != color) {
+                        tile.setColor(apply, color);
+                    } else {
+                        level.setBlockAndUpdate(pos, apply);
+                    }
                 }
                 operations++;
             }
@@ -160,7 +172,7 @@ public class BatchProcessor {
         
         protected void clear() {
             frontier.clear();
-            visited.clear();
+            observed.clear();
             if (queue != null) queue.clear();
         }
         

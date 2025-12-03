@@ -33,6 +33,7 @@ public enum CSLanguage implements CSTranslatable {
     PROPERTY_LIGHT("property", "light", "Light"),
     PROPERTY_COLOR("property", "color", "Color"),
     PROPERTY_APPLY_COLORLESS("property", "apply_colorless", "Apply Colorless: %s"),
+    PROPERTY_CLEAR("property", "clear", "Clear"),
     
     PROPERTY_ENABLED("property", "enabled", "Enabled"),
     PROPERTY_DISABLED("property", "disabled", "Disabled"),

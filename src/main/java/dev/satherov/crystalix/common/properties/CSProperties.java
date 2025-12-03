@@ -50,7 +50,7 @@ public final class CSProperties {
     private final @Getter CSBooleanProperty reinforced;
     private final @Getter CSEnumProperty<Ghost> ghost;
     private final @Getter CSEnumProperty<Light> light;
-    private final @Getter CSEnumProperty<CSRegistry.Colors> color;
+    private final @Getter CSIntegerProperty color;
     
     private CSProperties(ItemStack stack) {
         invisible = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_INVISIBLE, CSProperties.INVISIBLE, false, CSRegistry.INVISIBLE);
@@ -59,7 +59,7 @@ public final class CSProperties {
         reinforced = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_REINFORCED, CSProperties.REINFORCED, false, CSRegistry.REINFORCED);
         ghost = CSEnumProperty.create(stack, CSLanguage.PROPERTY_GHOST, CSProperties.GHOST, Ghost.class, Ghost.BLOCK_ALL, CSRegistry.GHOST);
         light = CSEnumProperty.create(stack, CSLanguage.PROPERTY_LIGHT, CSProperties.LIGHT, Light.class, Light.NONE, CSRegistry.LIGHT);
-        color = CSEnumProperty.create(stack, CSLanguage.PROPERTY_COLOR, CSProperties.COLOR, CSRegistry.Colors.class, CSRegistry.Colors.CLEAR, CSRegistry.COLOR);
+        color = CSIntegerProperty.create(stack, CSLanguage.PROPERTY_COLOR, CSProperties.COLOR, 0xFFFFFF, CSRegistry.COLOR);
         
         properties = new LinkedHashMap<>() {{
             put(CSProperties.INVISIBLE, invisible);
@@ -77,7 +77,7 @@ public final class CSProperties {
     }
     
     public IProperty<?> get(int index) {
-        return properties.values().toArray(new IProperty[0])[index];
+        return properties.values().toArray(IProperty<?>[]::new)[index];
     }
     
     @Accessors(fluent = true)

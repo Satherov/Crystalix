@@ -33,7 +33,7 @@ public class CSRecipeProvider extends RecipeProvider implements IConditionBuilde
                 .unlockedBy("has_diamond", has(Tags.Items.GEMS_DIAMOND))
                 .save(output);
         
-        CSRegistry.ENTRIES.column(CSRegistry.Colors.CLEAR).forEach((type, holder) -> {
+        CSRegistry.ENTRIES.forEach((type, holder) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, holder.get().asItem(), 4)
                     .pattern("gag")
                     .pattern("a a")
