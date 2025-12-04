@@ -14,8 +14,8 @@
             "type": "fusion:match_state",
             "block": "crystalix:bordered_crystalix_glass",
             "properties": {
-              "colored": [
-                "false"
+              "clear": [
+                "true"
               ],
               "invisible": [
                 "false"

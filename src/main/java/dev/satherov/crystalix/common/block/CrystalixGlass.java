@@ -63,7 +63,7 @@ public class CrystalixGlass extends SLBlock implements EntityBlock, SimpleWaterl
     public static final BooleanProperty INVISIBLE = BooleanProperty.create("invisible");
     public static final BooleanProperty SHADELESS = BooleanProperty.create("shadeless");
     public static final BooleanProperty REINFORCED = BooleanProperty.create("reinforced");
-    public static final BooleanProperty COLORED = BooleanProperty.create("colored");
+    public static final BooleanProperty CLEAR = BooleanProperty.create("clear");
     public static final EnumProperty<CSProperties.Light> LIGHT = EnumProperty.create("light", CSProperties.Light.class);
     public static final EnumProperty<CSProperties.Ghost> GHOST = EnumProperty.create("ghost", CSProperties.Ghost.class);
     private final @Getter CSRegistry.Types type;
@@ -88,7 +88,7 @@ public class CrystalixGlass extends SLBlock implements EntityBlock, SimpleWaterl
         builder.addValue(INVISIBLE, false);
         builder.addValue(SHADELESS, false);
         builder.addValue(REINFORCED, false);
-        builder.addValue(COLORED, false);
+        builder.addValue(CLEAR, true);
         builder.addValue(LIGHT, CSProperties.Light.NONE);
         builder.addValue(GHOST, CSProperties.Ghost.BLOCK_ALL);
     }
@@ -258,6 +258,7 @@ public class CrystalixGlass extends SLBlock implements EntityBlock, SimpleWaterl
                 .setValue(SHADELESS, Objects.requireNonNull(stack.get(CSRegistry.SHADELESS)))
                 .setValue(REINFORCED, Objects.requireNonNull(stack.get(CSRegistry.REINFORCED)))
                 .setValue(WATERLOGGABLE, Objects.requireNonNull(stack.get(CSRegistry.WATERLOGGABLE)))
+                .setValue(CLEAR, Objects.requireNonNull(stack.get(CSRegistry.CLEAR)))
                 .setValue(LIGHT, Objects.requireNonNull(stack.get(CSRegistry.LIGHT)))
                 .setValue(GHOST, Objects.requireNonNull(stack.get(CSRegistry.GHOST)));
         

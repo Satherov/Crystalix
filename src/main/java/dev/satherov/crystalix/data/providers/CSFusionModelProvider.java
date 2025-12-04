@@ -34,7 +34,7 @@ public class CSFusionModelProvider extends FusionModelProvider {
                             ConnectingModelData.builder()
                                     .parent(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/block"))
                                     .texture("all", ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.format()))
-                                    .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(holder.get(), Pair.of(CrystalixGlass.COLORED, false), Pair.of(CrystalixGlass.INVISIBLE, false))))
+                                    .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(holder.get(), Pair.of(CrystalixGlass.CLEAR, true), Pair.of(CrystalixGlass.INVISIBLE, false))))
                                     .build()
                     )
             );
@@ -44,7 +44,7 @@ public class CSFusionModelProvider extends FusionModelProvider {
                             ConnectingModelData.builder()
                                     .parent(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/no_shade_block"))
                                     .texture("all", ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/" + type.format()))
-                                    .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(holder.get(), Pair.of(CrystalixGlass.COLORED, false), Pair.of(CrystalixGlass.INVISIBLE, false))))
+                                    .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(holder.get(), Pair.of(CrystalixGlass.CLEAR, true), Pair.of(CrystalixGlass.INVISIBLE, false))))
                                     .build()
                     )
             );
@@ -54,7 +54,7 @@ public class CSFusionModelProvider extends FusionModelProvider {
                             ConnectingModelData.builder()
                                     .parent(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/block"))
                                     .texture("all", ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/colored_" + type.format()))
-                                    .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(holder.get(), Pair.of(CrystalixGlass.COLORED, true), Pair.of(CrystalixGlass.INVISIBLE, false))))
+                                    .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(holder.get(), Pair.of(CrystalixGlass.CLEAR, false), Pair.of(CrystalixGlass.INVISIBLE, false))))
                                     .build()
                     )
             );
@@ -64,7 +64,7 @@ public class CSFusionModelProvider extends FusionModelProvider {
                             ConnectingModelData.builder()
                                     .parent(ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/no_shade_block"))
                                     .texture("all", ResourceLocation.fromNamespaceAndPath(Crystalix.MOD_ID, "block/colored_" + type.format()))
-                                    .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(holder.get(), Pair.of(CrystalixGlass.COLORED, true), Pair.of(CrystalixGlass.INVISIBLE, false))))
+                                    .connection(DefaultConnectionPredicates.isSameBlock().and(DefaultConnectionPredicates.matchState(holder.get(), Pair.of(CrystalixGlass.CLEAR, false), Pair.of(CrystalixGlass.INVISIBLE, false))))
                                     .build()
                     )
             );

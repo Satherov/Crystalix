@@ -40,9 +40,10 @@ public class CrystalixWand extends Item {
                 .component(CSRegistry.SHADELESS, false)
                 .component(CSRegistry.REINFORCED, false)
                 .component(CSRegistry.WATERLOGGABLE, false)
+                .component(CSRegistry.CLEAR, false)
                 .component(CSRegistry.LIGHT, CSProperties.Light.NONE)
                 .component(CSRegistry.GHOST, CSProperties.Ghost.BLOCK_ALL)
-                .component(CSRegistry.COLOR, -1)
+                .component(CSRegistry.COLOR, 0xFFFFFF)
                 .component(CSRegistry.APPLY_COLORLESS, false)
         );
     }

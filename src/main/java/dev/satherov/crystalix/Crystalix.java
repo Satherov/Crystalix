@@ -112,6 +112,8 @@ public class Crystalix {
                         .setValue(CrystalixGlass.SHADELESS, state.getValue(CrystalixGlass.SHADELESS))
                         .setValue(CrystalixGlass.REINFORCED, state.getValue(CrystalixGlass.REINFORCED))
                         .setValue(CrystalixGlass.WATERLOGGABLE, state.getValue(CrystalixGlass.WATERLOGGABLE))
+                        .setValue(CrystalixGlass.WATERLOGGED, state.getValue(CrystalixGlass.WATERLOGGED))
+                        .setValue(CrystalixGlass.CLEAR, false)
                         .setValue(CrystalixGlass.LIGHT, state.getValue(CrystalixGlass.LIGHT))
                         .setValue(CrystalixGlass.GHOST, state.getValue(CrystalixGlass.GHOST));
                 

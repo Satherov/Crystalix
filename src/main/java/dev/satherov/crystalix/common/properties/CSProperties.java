@@ -38,6 +38,7 @@ public final class CSProperties {
     public static final ResourceLocation WATERLOGGABLE = Crystalix.rl("waterloggable");
     public static final ResourceLocation SHADELESS = Crystalix.rl("shadeless");
     public static final ResourceLocation REINFORCED = Crystalix.rl("reinforced");
+    public static final ResourceLocation CLEAR = Crystalix.rl("clear");
     public static final ResourceLocation GHOST = Crystalix.rl("ghost");
     public static final ResourceLocation LIGHT = Crystalix.rl("light");
     public static final ResourceLocation COLOR = Crystalix.rl("color");
@@ -48,6 +49,7 @@ public final class CSProperties {
     private final @Getter CSBooleanProperty invisible;
     private final @Getter CSBooleanProperty shadeless;
     private final @Getter CSBooleanProperty reinforced;
+    private final @Getter CSBooleanProperty clear;
     private final @Getter CSEnumProperty<Ghost> ghost;
     private final @Getter CSEnumProperty<Light> light;
     private final @Getter CSIntegerProperty color;
@@ -57,6 +59,7 @@ public final class CSProperties {
         waterloggable = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_WATERLOGGABLE, CSProperties.WATERLOGGABLE, false, CSRegistry.WATERLOGGABLE);
         shadeless = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_SHADELESS, CSProperties.SHADELESS, false, CSRegistry.SHADELESS);
         reinforced = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_REINFORCED, CSProperties.REINFORCED, false, CSRegistry.REINFORCED);
+        clear = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_CLEAR, CSProperties.CLEAR, true, CSRegistry.CLEAR);
         ghost = CSEnumProperty.create(stack, CSLanguage.PROPERTY_GHOST, CSProperties.GHOST, Ghost.class, Ghost.BLOCK_ALL, CSRegistry.GHOST);
         light = CSEnumProperty.create(stack, CSLanguage.PROPERTY_LIGHT, CSProperties.LIGHT, Light.class, Light.NONE, CSRegistry.LIGHT);
         color = CSIntegerProperty.create(stack, CSLanguage.PROPERTY_COLOR, CSProperties.COLOR, 0xFFFFFF, CSRegistry.COLOR);
@@ -66,6 +69,7 @@ public final class CSProperties {
             put(CSProperties.WATERLOGGABLE, waterloggable);
             put(CSProperties.REINFORCED, reinforced);
             put(CSProperties.SHADELESS, shadeless);
+            put(CSProperties.CLEAR, clear);
             put(CSProperties.GHOST, ghost);
             put(CSProperties.LIGHT, light);
             put(CSProperties.COLOR, color);

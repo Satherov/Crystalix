@@ -154,7 +154,7 @@ public class BatchProcessor {
                 
                 BlockState visited = level.getBlockState(pos);
                 if (visited.getBlock() instanceof CrystalixGlass && visited.getBlock().equals(this.state.getBlock())) {
-                    BlockState apply = this.state.setValue(CrystalixGlass.COLORED, visited.getValue(CrystalixGlass.COLORED)).setValue(CrystalixGlass.WATERLOGGED, visited.getValue(CrystalixGlass.WATERLOGGED));
+                    BlockState apply = this.state.setValue(CrystalixGlass.WATERLOGGED, visited.getValue(CrystalixGlass.WATERLOGGED));
                     
                     if (color != Integer.MIN_VALUE && level.getBlockEntity(pos) instanceof CrystalixGlassTile tile && tile.getColor() != color) {
                         tile.setColor(apply, color);

@@ -31,7 +31,7 @@ public class CrystalixGlassTile extends BlockEntity {
     
     private static final ModelProperty<Integer> COLOR = new ModelProperty<>();
     
-    private @Getter int color = -1;
+    private @Getter int color = 0xFFFFFF;
     
     public CrystalixGlassTile(BlockPos pos, BlockState blockState) {
         super(CSRegistry.GLASS_TILE.get(), pos, blockState);
@@ -45,7 +45,7 @@ public class CrystalixGlassTile extends BlockEntity {
                 if (this.level.isClientSide()) {
                     requestModelDataUpdate();
                 } else {
-                    this.level.setBlock(worldPosition, state.setValue(CrystalixGlass.COLORED, color != -1), Block.UPDATE_ALL_IMMEDIATE);
+                    this.level.setBlock(worldPosition, state, Block.UPDATE_ALL_IMMEDIATE);
                     this.level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
                 }
             }

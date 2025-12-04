@@ -36,13 +36,13 @@ public class CSBlockStateProvider extends BlockStateProvider {
         ModelFile model = models().getExistingFile(modLoc(path));
         ModelFile modelNoShade = models().getExistingFile(modLoc(path + "_no_shade"));
         
-        builder.partialState().with(CrystalixGlass.COLORED, true).with(CrystalixGlass.SHADELESS, false)
+        builder.partialState().with(CrystalixGlass.CLEAR, false).with(CrystalixGlass.SHADELESS, false)
                 .modelForState().modelFile(modelColor).addModel()
-                .partialState().with(CrystalixGlass.COLORED, true).with(CrystalixGlass.SHADELESS, true)
+                .partialState().with(CrystalixGlass.CLEAR, false).with(CrystalixGlass.SHADELESS, true)
                 .modelForState().modelFile(modelColorNoShade).addModel()
-                .partialState().with(CrystalixGlass.COLORED, false).with(CrystalixGlass.SHADELESS, false)
+                .partialState().with(CrystalixGlass.CLEAR, true).with(CrystalixGlass.SHADELESS, false)
                 .modelForState().modelFile(model).addModel()
-                .partialState().with(CrystalixGlass.COLORED, false).with(CrystalixGlass.SHADELESS, true)
+                .partialState().with(CrystalixGlass.CLEAR, true).with(CrystalixGlass.SHADELESS, true)
                 .modelForState().modelFile(modelNoShade).addModel();
     }
     

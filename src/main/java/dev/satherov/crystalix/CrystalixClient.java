@@ -102,7 +102,8 @@ public class CrystalixClient {
         int textX = boxX + 10;
         int textY = boxY + 10;
         
-        for (Component line : lines) {
+        for (int i = 0; i < lines.size(); i++) {
+            Component line = lines.get(i);
             guiGraphics.drawString(
                     mc.font,
                     line,
@@ -110,7 +111,7 @@ public class CrystalixClient {
                     textY,
                     0xFF0F0F0F
             );
-            textY += mc.font.lineHeight + 1;
+            if (i < lines.size() - 1) textY += mc.font.lineHeight + 1;
         }
     }
     

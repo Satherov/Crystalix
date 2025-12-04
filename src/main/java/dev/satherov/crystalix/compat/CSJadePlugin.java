@@ -43,7 +43,7 @@ public class CSJadePlugin implements IWailaPlugin {
     private static Component getTranslation(CSLanguage language, int color) {
         return language.text(ChatFormatting.GRAY)
                 .append(Component.literal(": "))
-                .append(Component.literal("#" + Integer.toHexString(color).toUpperCase()).withColor(color));
+                .append(Component.literal(String.format("#%06X", (0xFFFFFF & color)).toUpperCase()).withColor(color));
     }
     
     private static void showTooltips(ITooltip tooltip, BlockAccessor accessor) {
@@ -51,6 +51,7 @@ public class CSJadePlugin implements IWailaPlugin {
         tooltip.add(getTranslation(CSLanguage.PROPERTY_SHADELESS, accessor.getBlockState().getValue(CrystalixGlass.SHADELESS)));
         tooltip.add(getTranslation(CSLanguage.PROPERTY_REINFORCED, accessor.getBlockState().getValue(CrystalixGlass.REINFORCED)));
         tooltip.add(getTranslation(CSLanguage.PROPERTY_WATERLOGGABLE, accessor.getBlockState().getValue(CrystalixGlass.WATERLOGGABLE)));
+        tooltip.add(getTranslation(CSLanguage.PROPERTY_CLEAR, accessor.getBlockState().getValue(CrystalixGlass.CLEAR)));
         tooltip.add(getTranslation(CSLanguage.PROPERTY_LIGHT, accessor.getBlockState().getValue(CrystalixGlass.LIGHT)));
         tooltip.add(getTranslation(CSLanguage.PROPERTY_GHOST, accessor.getBlockState().getValue(CrystalixGlass.GHOST)));
         tooltip.add(getTranslation(CSLanguage.PROPERTY_COLOR, accessor.getBlockEntity() instanceof CrystalixGlassTile tile ? tile.getColor() : 0xFFFFFF));

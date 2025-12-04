@@ -14,7 +14,7 @@ public class CSClientConfig {
     
     @ConfigVal(name = "jade_mode", comment = "Defines when Jade should be displayed")
     @ConfigVal.Enum(Jade.class)
-    private static @Getter Jade JadeMode = Jade.ALWAYS;
+    private static @Getter Jade JadeMode = Jade.WAND;
     
     @ConfigVal(name = "wand_info", comment = "Defines whether wand information should be displayed and where")
     @ConfigVal.Enum(AnchorPosition.class)

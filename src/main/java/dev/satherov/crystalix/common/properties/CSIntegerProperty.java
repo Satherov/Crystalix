@@ -62,6 +62,6 @@ public class CSIntegerProperty implements IProperty<Integer> {
     
     @Override
     public MutableComponent display() {
-        return Component.literal("#" + Integer.toHexString(this.value).toUpperCase()).withColor(this.value);
+        return Component.literal(String.format("#%06X", (0xFFFFFF & this.value)).toUpperCase()).withColor(this.value);
     }
 }

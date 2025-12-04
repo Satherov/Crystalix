@@ -105,6 +105,12 @@ public final class CSRegistry {
                     .networkSynchronized(ByteBufCodecs.BOOL)
                     .build()
     );
+    public static final Supplier<DataComponentType<Boolean>> CLEAR = COMPONENTS.register("clear", () ->
+            DataComponentType.<Boolean>builder()
+                    .persistent(Codec.BOOL)
+                    .networkSynchronized(ByteBufCodecs.BOOL)
+                    .build()
+    );
     public static final Supplier<DataComponentType<CSProperties.Ghost>> GHOST = COMPONENTS.register("ghost", () ->
             DataComponentType.<CSProperties.Ghost>builder()
                     .persistent(CSProperties.Ghost.CODEC)
