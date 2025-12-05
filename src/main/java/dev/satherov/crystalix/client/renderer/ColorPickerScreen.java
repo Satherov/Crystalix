@@ -8,6 +8,7 @@ import dev.satherov.crystalix.core.network.SetColorPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
@@ -18,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import com.mojang.blaze3d.platform.NativeImage;
 
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
 
 public class ColorPickerScreen extends Screen {
     
@@ -104,7 +106,10 @@ public class ColorPickerScreen extends Screen {
             public void setFocused(boolean focused) {
                 boolean old = this.isFocused();
                 super.setFocused(focused);
-                if (old && !focused) ColorPickerScreen.this.updateTextbox();
+                if (old && !focused) {
+                    ColorPickerScreen.this.updateTextbox();
+                    CSNetwork.sendToServer(new SetColorPayload(ColorPickerScreen.this.rgb()));
+                }
             }
         };
         
@@ -117,12 +122,10 @@ public class ColorPickerScreen extends Screen {
     }
     
     @Override
-    protected void renderBlurredBackground(float partialTick) { }
-    
-    @Override
     @SuppressWarnings("UnnecessaryLocalVariable")
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partial) {
         graphics.fill(0, 0, this.width, this.height, 0x88000000);
+        super.render(graphics, mouseX, mouseY, partial);
         
         int x0 = (this.width - this.width()) / 2;
         int y0 = (this.height - this.height()) / 2;
@@ -176,8 +179,6 @@ public class ColorPickerScreen extends Screen {
             textbox.setY(textY);
             textbox.setWidth(fieldW - 2);
         }
-        
-        super.render(graphics, mouseX, mouseY, partial);
     }
     
     @Override
@@ -186,6 +187,8 @@ public class ColorPickerScreen extends Screen {
         int svY = this.svY();
         int hueX = this.hueX();
         int hueY = this.hueY();
+        
+        this.textbox.setFocused(textbox.isHovered());
         
         if (mouseX >= svX && mouseX <= svX + SV_SIZE && mouseY >= svY && mouseY <= svY + SV_SIZE) {
             this.isDraggingColor = true;
@@ -233,6 +236,18 @@ public class ColorPickerScreen extends Screen {
         }
         
         return super.mouseReleased(mouseX, mouseY, button);
+    }
+    
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_ENTER && this.textbox.isFocused()) {
+            String value = this.textbox.getValue();
+            this.textBoxResponder(value);
+            CSNetwork.sendToServer(new SetColorPayload(this.rgb()));
+            return true;
+        }
+        
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
     
     private void textBoxResponder(String content) {

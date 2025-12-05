@@ -30,10 +30,12 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class RadialMenuScreen extends Screen {
-    private static final int INNER_RADIUS = 40;
-    private static final int OUTER_RADIUS = 100;
-    private static final int HOVER_EXTEND = 15;
+    
+    private static final int INNER_RADIUS = 50;
+    private static final int OUTER_RADIUS = 125;
+    private static final int HOVER_EXTEND = 20;
     private static final int CENTER_DEAD_ZONE = 20;
+    
     private final List<RadialMenuItem> menuItems = new ArrayList<>();
     private int hoveredIndex = -1;
     
@@ -100,16 +102,25 @@ public class RadialMenuScreen extends Screen {
         drawLines(graphics, centerX, centerY, start);
         
         int outerRadius = isHovered ? OUTER_RADIUS + HOVER_EXTEND : OUTER_RADIUS;
-        float labelRadius = (INNER_RADIUS + outerRadius) / 2.0f;
-        int labelX = centerX + (int) (Math.cos(midRad) * labelRadius);
-        int labelY = centerY + (int) (Math.sin(midRad) * labelRadius);
         
-        int textColor = isHovered ? 0xFFFFFFFF : 0xFFCCCCCC;
+        float labelRadius = INNER_RADIUS + (outerRadius - INNER_RADIUS) * 0.6f;
+        
+        float labelCenterX = centerX + (float) (Math.cos(midRad) * labelRadius);
+        float labelCenterY = centerY + (float) (Math.sin(midRad) * labelRadius);
+        
+        int textColor = isHovered ? 0xFFFFFFFF : 0xFFAAAAAA;
         
         int labelWidth = this.font.width(property.name());
         int valueWidth = this.font.width(property.display());
-        graphics.drawString(this.font, property.name(), labelX - labelWidth / 2, labelY - 4, textColor);
-        graphics.drawString(this.font, property.display(), labelX - valueWidth / 2, labelY - 4 + font.lineHeight, 0xFFFFFFFF);
+        
+        int totalTextHeight = font.lineHeight * 2;
+        
+        int textX1 = (int) (labelCenterX - labelWidth / 2.0f);
+        int textX2 = (int) (labelCenterX - valueWidth / 2.0f);
+        int textY = (int) (labelCenterY - totalTextHeight / 2.0f);
+        
+        graphics.drawString(this.font, property.name(), textX1, textY, textColor);
+        graphics.drawString(this.font, property.display(), textX2, textY + font.lineHeight, 0xFFFFFFFF);
         
         if (!isHovered) return;
         
@@ -145,10 +156,7 @@ public class RadialMenuScreen extends Screen {
     private void drawLines(GuiGraphics graphics, float centerX, float centerY, float angle) {
         Matrix4f matrix = graphics.pose().last().pose();
         
-        float r = 0.53f;
-        float g = 0.53f;
-        float b = 0.53f;
-        float a = 1.0f;
+        int argb = 0xFF878787;
         
         BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
         
@@ -158,11 +166,11 @@ public class RadialMenuScreen extends Screen {
         float x2 = centerX + (float) (Math.cos(rad) * OUTER_RADIUS);
         float y2 = centerY + (float) (Math.sin(rad) * OUTER_RADIUS);
         
-        buffer.addVertex(matrix, x1, y1, 0).setColor(r, g, b, a);
-        buffer.addVertex(matrix, x2, y2, 0).setColor(r, g, b, a);
+        buffer.addVertex(matrix, x1, y1, 0).setColor(argb);
+        buffer.addVertex(matrix, x2, y2, 0).setColor(argb);
         
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        RenderSystem.lineWidth(1.5f);
+        RenderSystem.lineWidth(2.5f);
         BufferUploader.drawWithShader(buffer.buildOrThrow());
         RenderSystem.lineWidth(1.0f);
     }
@@ -224,10 +232,8 @@ public class RadialMenuScreen extends Screen {
         return false;
     }
     
-    @Override
-    protected void renderBlurredBackground(float partialTick) {
-        // No blur
-    }
+//    @Override
+//    protected void renderBlurredBackground(float partialTick) { }
     
     private record RadialMenuItem(IProperty<?> property, Consumer<Boolean> action) { }
 }
