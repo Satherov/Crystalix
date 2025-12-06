@@ -81,7 +81,7 @@ public final class CSRegistry {
             .displayItems((param, out) -> CSRegistry.ITEMS.getEntries().stream().map(DeferredHolder::get).map(Item::getDefaultInstance).forEach(out::accept))
             .build()
     );
-    public static final Supplier<DataComponentType<Boolean>> FLUIDLOGGABLE = CSRegistry.COMPONENTS.register("fluidloggable", () ->
+    public static final Supplier<DataComponentType<Boolean>> WATERLOGGABLE = CSRegistry.COMPONENTS.register("waterloggable", () ->
             DataComponentType.<Boolean>builder()
                     .persistent(Codec.BOOL)
                     .networkSynchronized(ByteBufCodecs.BOOL)

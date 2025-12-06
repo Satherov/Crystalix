@@ -61,10 +61,11 @@ public record SwapPropertiesPayload(BlockPos pos) implements CustomPacketPayload
                 BlockEntity entity = level.getBlockEntity(pos);
                 CSProperties properties = CSProperties.of(wand);
                 
-                ((CSBooleanProperty) properties.properties().get(CSProperties.FLUIDLOGGABLE)).set(state.getValue(CrystalixGlass.FLUIDLOGGABLE));
+                ((CSBooleanProperty) properties.properties().get(CSProperties.WATERLOGGABLE)).set(state.getValue(CrystalixGlass.WATERLOGGABLE));
                 ((CSBooleanProperty) properties.properties().get(CSProperties.SHADELESS)).set(state.getValue(CrystalixGlass.SHADELESS));
                 ((CSBooleanProperty) properties.properties().get(CSProperties.INVISIBLE)).set(state.getValue(CrystalixGlass.INVISIBLE));
                 ((CSBooleanProperty) properties.properties().get(CSProperties.CLEAR)).set(state.getValue(CrystalixGlass.TRANSPARENT));
+                ((CSBooleanProperty) properties.properties().get(CSProperties.REDSTONE)).set(state.getValue(CrystalixGlass.REDSTONE));
                 ((CSEnumProperty<CSProperties.Light>) properties.properties().get(CSProperties.LIGHT)).set(state.getValue(CrystalixGlass.LIGHT));
                 ((CSEnumProperty<CSProperties.Ghost>) properties.properties().get(CSProperties.GHOST)).set(state.getValue(CrystalixGlass.GHOST));
                 

@@ -28,7 +28,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunkSection;
@@ -77,9 +77,9 @@ public class Crystalix {
     
     @SubscribeEvent
     private static void registerAliases(final FMLLoadCompleteEvent event) {
-        CSRegistry.OLD_ENTRIES.cellSet().forEach(cell -> {
-            BuiltInRegistries.ITEM.addAlias(cell.getValue().getId(), Crystalix.rl(cell.getRowKey().format()));
-        });
+        CSRegistry.OLD_ENTRIES.cellSet().forEach(cell -> 
+            BuiltInRegistries.ITEM.addAlias(cell.getValue().getId(), Crystalix.rl(cell.getRowKey().format()))
+        );
     }
     
     @SubscribeEvent
@@ -88,6 +88,7 @@ public class Crystalix {
         
         ChunkAccess chunk = event.getChunk();
         if (chunk.getData(CSRegistry.MIGRATED)) return;
+        Level level = event.getChunk().getLevel();
         
         chunk.setData(CSRegistry.MIGRATED, Boolean.TRUE);
         List<LevelChunkSection> sections = Arrays.stream(chunk.getSections())
@@ -105,26 +106,25 @@ public class Crystalix {
         LogicalSidedProvider.WORKQUEUE.get(LogicalSide.SERVER).tell(new TickTask(1, () -> {
             map.forEach((pos, state) -> {
                 CrystalixGlass glass = (CrystalixGlass) state.getBlock();
+                int color = Objects.requireNonNull(glass.color()).color();
                 
                 BlockState migrated = CSRegistry.ENTRIES.get(glass.type())
                         .get().defaultBlockState()
                         .setValue(CrystalixGlass.INVISIBLE, state.getValue(CrystalixGlass.INVISIBLE))
                         .setValue(CrystalixGlass.SHADELESS, state.getValue(CrystalixGlass.SHADELESS))
-                        .setValue(CrystalixGlass.FLUIDLOGGABLE, state.getValue(CrystalixGlass.FLUIDLOGGABLE))
+                        .setValue(CrystalixGlass.WATERLOGGABLE, state.getValue(CrystalixGlass.WATERLOGGABLE))
                         .setValue(CrystalixGlass.WATERLOGGED, state.getValue(CrystalixGlass.WATERLOGGED))
-                        .setValue(CrystalixGlass.TRANSPARENT, false)
+                        .setValue(CrystalixGlass.TRANSPARENT, color < 0)
                         .setValue(CrystalixGlass.LIGHT, state.getValue(CrystalixGlass.LIGHT))
                         .setValue(CrystalixGlass.GHOST, state.getValue(CrystalixGlass.GHOST));
                 
                 chunk.setBlockState(pos, migrated, false);
                 CrystalixGlassTile tile = new CrystalixGlassTile(pos, Objects.requireNonNull(migrated));
+                tile.setColor(state, color);
+                tile.setReinforced(state.getValue(CrystalixGlass.REINFORCED));
+                
                 chunk.setBlockEntity(tile);
-                
-                ItemStack mock = new ItemStack(CSRegistry.WAND);
-                mock.set(CSRegistry.COLOR, Objects.requireNonNull(glass.color()).color());
-                mock.set(CSRegistry.REINFORCED, tile.isReinforced());
-                
-                glass.setEntityProperties(chunk, pos, migrated, mock);
+                if (level != null) level.updateNeighborsAt(pos, migrated.getBlock());
             });
         }));
     }

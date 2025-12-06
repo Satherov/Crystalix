@@ -50,7 +50,7 @@ public class CSJadePlugin implements IWailaPlugin {
         tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_INVISIBLE, accessor.getBlockState().getValue(CrystalixGlass.INVISIBLE)));
         tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_SHADELESS, accessor.getBlockState().getValue(CrystalixGlass.SHADELESS)));
         tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_REINFORCED, accessor.getBlockEntity() instanceof CrystalixGlassTile tile && tile.isReinforced()));
-        tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_FLUIDLOGGABLE, accessor.getBlockState().getValue(CrystalixGlass.FLUIDLOGGABLE)));
+        tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_WATERLOGGABLE, accessor.getBlockState().getValue(CrystalixGlass.WATERLOGGABLE)));
         tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_TRANSPARENT, accessor.getBlockState().getValue(CrystalixGlass.TRANSPARENT)));
         tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_REDSTONE, accessor.getBlockState().getValue(CrystalixGlass.REDSTONE)));
         tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_CONDUCTOR, accessor.getBlockEntity() instanceof CrystalixGlassTile tile && tile.isConductor()));

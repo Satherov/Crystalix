@@ -37,7 +37,7 @@ public class CrystalixWand extends Item {
                 .component(CSRegistry.INVISIBLE, false)
                 .component(CSRegistry.SHADELESS, false)
                 .component(CSRegistry.REINFORCED, false)
-                .component(CSRegistry.FLUIDLOGGABLE, false)
+                .component(CSRegistry.WATERLOGGABLE, false)
                 .component(CSRegistry.TRANSPARENT, false)
                 .component(CSRegistry.REDSTONE, false)
                 .component(CSRegistry.CONDUCTOR, false)

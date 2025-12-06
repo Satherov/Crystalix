@@ -36,7 +36,7 @@ public final class CSProperties {
     
     public static final ResourceLocation INVISIBLE = Crystalix.rl("invisible");
     public static final ResourceLocation CLEAR = Crystalix.rl("clear");
-    public static final ResourceLocation FLUIDLOGGABLE = Crystalix.rl("fluidloggable");
+    public static final ResourceLocation WATERLOGGABLE = Crystalix.rl("waterloggable");
     public static final ResourceLocation REINFORCED = Crystalix.rl("reinforced");
     public static final ResourceLocation SHADELESS = Crystalix.rl("shadeless");
     public static final ResourceLocation REDSTONE = Crystalix.rl("redstone");
@@ -47,7 +47,7 @@ public final class CSProperties {
     
     private final @Getter Map<ResourceLocation, IProperty<?>> properties;
     
-    private final @Getter CSBooleanProperty fluidloggable;
+    private final @Getter CSBooleanProperty waterloggable;
     private final @Getter CSBooleanProperty invisible;
     private final @Getter CSBooleanProperty shadeless;
     private final @Getter CSBooleanProperty redstone;
@@ -60,7 +60,7 @@ public final class CSProperties {
     
     private CSProperties(ItemStack stack) {
         this.invisible = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_INVISIBLE, CSLanguage.PROPERTY_INVISIBLE_TOOLTIP, CSProperties.INVISIBLE, false, CSRegistry.INVISIBLE);
-        this.fluidloggable = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_FLUIDLOGGABLE, CSLanguage.PROPERTY_FLUIDLOGGABLE_TOOLTIP, CSProperties.FLUIDLOGGABLE, false, CSRegistry.FLUIDLOGGABLE);
+        this.waterloggable = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_WATERLOGGABLE, CSLanguage.PROPERTY_WATERLOGGABLE_TOOLTIP, CSProperties.WATERLOGGABLE, false, CSRegistry.WATERLOGGABLE);
         this.clear = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_TRANSPARENT, CSLanguage.PROPERTY_TRANSPARENT_TOOLTIP, CSProperties.CLEAR, true, CSRegistry.TRANSPARENT);
         this.shadeless = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_SHADELESS, CSLanguage.PROPERTY_SHADELESS_TOOLTIP, CSProperties.SHADELESS, false, CSRegistry.SHADELESS);
         this.reinforced = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_REINFORCED, CSLanguage.PROPERTY_REINFORCED_TOOLTIP, CSProperties.REINFORCED, false, CSRegistry.REINFORCED);
@@ -73,7 +73,7 @@ public final class CSProperties {
         this.properties = new LinkedHashMap<>() {{
             this.put(CSProperties.INVISIBLE, CSProperties.this.invisible);
             this.put(CSProperties.CLEAR, CSProperties.this.clear);
-            this.put(CSProperties.FLUIDLOGGABLE, CSProperties.this.fluidloggable);
+            this.put(CSProperties.WATERLOGGABLE, CSProperties.this.waterloggable);
             this.put(CSProperties.REINFORCED, CSProperties.this.reinforced);
             this.put(CSProperties.SHADELESS, CSProperties.this.shadeless);
             this.put(CSProperties.REDSTONE, CSProperties.this.redstone);

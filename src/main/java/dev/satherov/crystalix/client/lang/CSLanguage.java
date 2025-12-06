@@ -28,8 +28,8 @@ public enum CSLanguage implements CSTranslatable {
     PROPERTY_INVISIBLE("property", "invisible", "Invisible"),
     PROPERTY_INVISIBLE_TOOLTIP("property", "invisible.tooltip", "Will not be rendered at all"),
     
-    PROPERTY_FLUIDLOGGABLE("property", "fluidloggable", "Fluidloggable"),
-    PROPERTY_FLUIDLOGGABLE_TOOLTIP("property", "fluidloggable.tooltip", "Allows you to place any fluid in the same block as this one"),
+    PROPERTY_WATERLOGGABLE("property", "waterloggable", "Waterloggable"),
+    PROPERTY_WATERLOGGABLE_TOOLTIP("property", "waterloggable.tooltip", "Allows you to place water in the same block as this one"),
     
     PROPERTY_SHADELESS("property", "shadeless", "Shadeless"),
     PROPERTY_SHADELESS_TOOLTIP("property", "shadeless.tooltip", "Will not display a shade thrown by other blocks"),
