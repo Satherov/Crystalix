@@ -27,11 +27,11 @@ public record SetColorPayload(int color) implements CustomPacketPayload {
     
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+        return SetColorPayload.TYPE;
     }
     
     public void encode(FriendlyByteBuf buf) {
-        buf.writeVarInt(color);
+        buf.writeVarInt(this.color);
     }
     
     private SetColorPayload(FriendlyByteBuf buf) {

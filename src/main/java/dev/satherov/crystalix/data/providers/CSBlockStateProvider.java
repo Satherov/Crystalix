@@ -28,21 +28,21 @@ public class CSBlockStateProvider extends BlockStateProvider {
     
     private void registerCrystalixBlock(@Nullable CSRegistry.Types type, @Nullable DeferredHolder<Block, ? extends Block> block) {
         if (type == null || block == null) return;
-        VariantBlockStateBuilder builder = getVariantBuilder(block.get());
+        VariantBlockStateBuilder builder = this.getVariantBuilder(block.get());
         
         String path = "block/" + block.getId().getPath();
-        ModelFile modelColor = models().getExistingFile(modLoc(path + "_colored"));
-        ModelFile modelColorNoShade = models().getExistingFile(modLoc(path + "_no_shade_colored"));
-        ModelFile model = models().getExistingFile(modLoc(path));
-        ModelFile modelNoShade = models().getExistingFile(modLoc(path + "_no_shade"));
+        ModelFile modelColor = this.models().getExistingFile(this.modLoc(path + "_colored"));
+        ModelFile modelColorNoShade = this.models().getExistingFile(this.modLoc(path + "_no_shade_colored"));
+        ModelFile model = this.models().getExistingFile(this.modLoc(path));
+        ModelFile modelNoShade = this.models().getExistingFile(this.modLoc(path + "_no_shade"));
         
-        builder.partialState().with(CrystalixGlass.CLEAR, false).with(CrystalixGlass.SHADELESS, false)
+        builder.partialState().with(CrystalixGlass.TRANSPARENT, false).with(CrystalixGlass.SHADELESS, false)
                 .modelForState().modelFile(modelColor).addModel()
-                .partialState().with(CrystalixGlass.CLEAR, false).with(CrystalixGlass.SHADELESS, true)
+                .partialState().with(CrystalixGlass.TRANSPARENT, false).with(CrystalixGlass.SHADELESS, true)
                 .modelForState().modelFile(modelColorNoShade).addModel()
-                .partialState().with(CrystalixGlass.CLEAR, true).with(CrystalixGlass.SHADELESS, false)
+                .partialState().with(CrystalixGlass.TRANSPARENT, true).with(CrystalixGlass.SHADELESS, false)
                 .modelForState().modelFile(model).addModel()
-                .partialState().with(CrystalixGlass.CLEAR, true).with(CrystalixGlass.SHADELESS, true)
+                .partialState().with(CrystalixGlass.TRANSPARENT, true).with(CrystalixGlass.SHADELESS, true)
                 .modelForState().modelFile(modelNoShade).addModel();
     }
     

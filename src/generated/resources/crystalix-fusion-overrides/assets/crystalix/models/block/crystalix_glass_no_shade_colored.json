@@ -14,10 +14,10 @@
             "type": "fusion:match_state",
             "block": "crystalix:crystalix_glass",
             "properties": {
-              "clear": [
+              "invisible": [
                 "false"
               ],
-              "invisible": [
+              "transparent": [
                 "false"
               ]
             }

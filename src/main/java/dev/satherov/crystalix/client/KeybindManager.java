@@ -32,9 +32,9 @@ import org.lwjgl.glfw.GLFW;
 @EventBusSubscriber(modid = Crystalix.MOD_ID, value = Dist.CLIENT)
 public class KeybindManager {
     
-    public static final KeyMapping SCREEN_OPENER = register(CSLanguage.KEY_WAND_CONFIG, GLFW.GLFW_KEY_V);
-    public static final KeyMapping COPY_PROPERTIES = register(CSLanguage.KEY_COPY_PROPERTIES, GLFW.GLFW_KEY_X);
-    public static final KeyMapping APPLY_COLORLESS = register(CSLanguage.KEY_APPLY_COLORLESS, GLFW.GLFW_KEY_LEFT_CONTROL);
+    public static final KeyMapping SCREEN_OPENER = KeybindManager.register(CSLanguage.KEY_WAND_CONFIG, GLFW.GLFW_KEY_V);
+    public static final KeyMapping COPY_PROPERTIES = KeybindManager.register(CSLanguage.KEY_COPY_PROPERTIES, GLFW.GLFW_KEY_X);
+    public static final KeyMapping APPLY_COLORLESS = KeybindManager.register(CSLanguage.KEY_APPLY_COLORLESS, GLFW.GLFW_KEY_LEFT_CONTROL);
     
     private static KeyMapping register(CSLanguage entry, int key) {
         return new KeyMapping(entry.key(), key, CSLanguage.KEY_CATEGORY.key());

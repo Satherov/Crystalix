@@ -20,7 +20,7 @@ public class CSBlockLootProvider extends VanillaBlockLoot {
     
     @Override
     public void generate() {
-        getKnownBlocks().forEach(this::dropSelf);
+        this.getKnownBlocks().forEach(this::dropSelf);
     }
     
     @Override

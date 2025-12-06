@@ -18,7 +18,7 @@ public class EnumCodecs {
     }
     
     public static <E extends Enum<E> & StringRepresentable> StreamCodec<ByteBuf, E> makeStreamCodec(Class<E> enumClass) {
-        return ByteBufCodecs.idMapper(makeById(enumClass), E::ordinal);
+        return ByteBufCodecs.idMapper(EnumCodecs.makeById(enumClass), E::ordinal);
     }
     
     private static <E extends Enum<E> & StringRepresentable> IntFunction<E> makeById(Class<E> enumClass) {

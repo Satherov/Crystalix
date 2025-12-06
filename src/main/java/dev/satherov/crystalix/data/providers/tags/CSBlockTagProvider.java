@@ -27,7 +27,7 @@ public class CSBlockTagProvider extends BlockTagsProvider {
     
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        Arrays.stream(CSRegistry.Types.values()).forEach(type -> tag(CSRegistry.BLOCK_TAGS.get(type))
+        Arrays.stream(CSRegistry.Types.values()).forEach(type -> this.tag(CSRegistry.BLOCK_TAGS.get(type))
                 .add(CSRegistry.ENTRIES.entrySet().stream()
                         .filter(cell -> cell.getKey().equals(type))
                         .map(Map.Entry::getValue)
@@ -35,8 +35,8 @@ public class CSBlockTagProvider extends BlockTagsProvider {
                         .toArray(CrystalixGlass[]::new)
                 )
         );
-        CSRegistry.BLOCK_TAGS.values().forEach(tag -> tag(CSRegistry.BLOCK_TAG).addTag(tag));
-        tag(BlockTags.MINEABLE_WITH_PICKAXE).addTag(CSRegistry.BLOCK_TAG);
-        tag(Tags.Blocks.GLASS_BLOCKS).addTag(CSRegistry.BLOCK_TAG);
+        CSRegistry.BLOCK_TAGS.values().forEach(tag -> this.tag(CSRegistry.BLOCK_TAG).addTag(tag));
+        this.tag(BlockTags.MINEABLE_WITH_PICKAXE).addTag(CSRegistry.BLOCK_TAG);
+        this.tag(Tags.Blocks.GLASS_BLOCKS).addTag(CSRegistry.BLOCK_TAG);
     }
 }

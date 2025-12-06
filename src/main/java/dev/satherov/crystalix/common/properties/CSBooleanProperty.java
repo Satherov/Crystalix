@@ -24,32 +24,34 @@ public class CSBooleanProperty implements IProperty<Boolean> {
     private final ItemStack stack;
     private final @Getter ResourceLocation location;
     private final @Getter String translation;
+    private final CSTranslatable description;
     private final @Getter String key;
     private final Supplier<DataComponentType<Boolean>> type;
     private @Getter Boolean value;
     
-    protected CSBooleanProperty(ItemStack stack, CSTranslatable translation, ResourceLocation location, boolean defaultValue, Supplier<DataComponentType<Boolean>> supplier) {
+    protected CSBooleanProperty(ItemStack stack, CSTranslatable translation, CSTranslatable description, ResourceLocation location, boolean defaultValue, Supplier<DataComponentType<Boolean>> supplier) {
         this.stack = stack;
         this.location = location;
         this.translation = translation.translation();
+        this.description = description;
         this.key = translation.key();
         this.type = Suppliers.memoize(supplier::get);
         this.value = stack.getOrDefault(this.type, defaultValue);
     }
     
-    public static CSBooleanProperty create(ItemStack stack, CSTranslatable translation, ResourceLocation location, boolean defaultValue, Supplier<DataComponentType<Boolean>> supplier) {
-        return new CSBooleanProperty(stack, translation, location, defaultValue, supplier);
+    public static CSBooleanProperty create(ItemStack stack, CSTranslatable translation, CSTranslatable description, ResourceLocation location, boolean defaultValue, Supplier<DataComponentType<Boolean>> supplier) {
+        return new CSBooleanProperty(stack, translation, description, location, defaultValue, supplier);
     }
     
     @Override
     public Boolean next(boolean forward) {
-        return set(!this.value);
+        return this.set(!this.value);
     }
     
     @Override
     public Boolean set(Boolean value) {
         this.value = value;
-        stack.set(this.type, this.value);
+        this.stack.set(this.type, this.value);
         return this.value;
     }
     
@@ -65,5 +67,10 @@ public class CSBooleanProperty implements IProperty<Boolean> {
     
     public MutableComponent display() {
         return this.value ? CSLanguage.PROPERTY_ENABLED.text(ChatFormatting.DARK_GREEN) : CSLanguage.PROPERTY_DISABLED.text(ChatFormatting.DARK_RED);
+    }
+    
+    @Override
+    public MutableComponent tooltip() {
+        return this.description.text();
     }
 }

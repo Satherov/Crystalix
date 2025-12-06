@@ -25,11 +25,11 @@ public abstract class ModelBakeryMixin {
     
     @Unique
     private static Set<ResourceLocation> crystalix$getDeprecated() {
-        if (crystalix$deprecated == null) {
-            crystalix$deprecated = CSRegistry.OLD_ENTRIES.values().stream()
+        if (ModelBakeryMixin.crystalix$deprecated == null) {
+            ModelBakeryMixin.crystalix$deprecated = CSRegistry.OLD_ENTRIES.values().stream()
                     .filter(Objects::nonNull).map(DeferredHolder::getId).collect(Collectors.toSet());
         }
-        return crystalix$deprecated;
+        return ModelBakeryMixin.crystalix$deprecated;
     }
     
     @Inject(
@@ -38,7 +38,7 @@ public abstract class ModelBakeryMixin {
             cancellable = true
     )
     private void crystalix$skipSomeItems(ResourceLocation id, CallbackInfo ci) {
-        if (crystalix$getDeprecated().contains(id)) {
+        if (ModelBakeryMixin.crystalix$getDeprecated().contains(id)) {
             ci.cancel();
         }
     }

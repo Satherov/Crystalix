@@ -23,7 +23,7 @@ public class CSItemTagProvider extends ItemTagsProvider {
     
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        Arrays.stream(CSRegistry.Types.values()).forEach(type -> tag(CSRegistry.ITEM_TAGS.get(type))
+        Arrays.stream(CSRegistry.Types.values()).forEach(type -> this.tag(CSRegistry.ITEM_TAGS.get(type))
                 .add(CSRegistry.ENTRIES.entrySet().stream()
                         .filter(cell -> cell.getKey().equals(type))
                         .map(Map.Entry::getValue)
@@ -32,8 +32,8 @@ public class CSItemTagProvider extends ItemTagsProvider {
                         .toArray(Item[]::new)
                 )
         );
-        CSRegistry.ITEM_TAGS.values().forEach(tag -> tag(CSRegistry.ITEM_TAG).addTag(tag));
+        CSRegistry.ITEM_TAGS.values().forEach(tag -> this.tag(CSRegistry.ITEM_TAG).addTag(tag));
         
-        tag(Tags.Items.GLASS_BLOCKS).addTag(CSRegistry.ITEM_TAG);
+        this.tag(Tags.Items.GLASS_BLOCKS).addTag(CSRegistry.ITEM_TAG);
     }
 }

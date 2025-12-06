@@ -44,7 +44,7 @@ public class ConfigLoader {
                         Config config = clazz.getAnnotation(Config.class);
                         configs.computeIfAbsent(config.value(), type -> new ArrayList<>()).add(clazz);
                     } catch (ClassNotFoundException e) {
-                        log.error("Failed to load config class {}", annotation.clazz().getClassName(), e);
+                        ConfigLoader.log.error("Failed to load config class {}", annotation.clazz().getClassName(), e);
                     }
                 }
             }
@@ -53,24 +53,24 @@ public class ConfigLoader {
             list.forEach(clazz -> {
                 Cache cache = new Cache();
                 ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
-                generate(clazz, cache, builder);
+                this.generate(clazz, cache, builder);
                 ModConfigSpec spec = builder.build();
                 cache.setSpec(spec);
-                caches.add(cache);
+                this.caches.add(cache);
                 container.registerConfig(type, spec, Crystalix.MOD_ID + "/" + Crystalix.MOD_ID + "-" + type.extension() + ".toml");
             });
         });
     }
     
     public void update(IConfigSpec spec) {
-        caches.forEach(cache -> {
+        this.caches.forEach(cache -> {
             if (cache.getSpec() == spec) {
                 cache.getValues().forEach((field, value) -> {
                     try {
                         field.setAccessible(true);
                         field.set(null, value.get());
                     } catch (IllegalAccessException e) {
-                        log.error("Failed to update config field {}", field.getName(), e);
+                        ConfigLoader.log.error("Failed to update config field {}", field.getName(), e);
                     }
                 });
             }
@@ -84,7 +84,7 @@ public class ConfigLoader {
                 Config.Group group = c.getAnnotation(Config.Group.class);
                 String name = group.value().isEmpty() ? c.getSimpleName() : group.value();
                 builder.push(name);
-                generate(c, cache, builder);
+                this.generate(c, cache, builder);
                 builder.pop();
             }
         }
@@ -149,17 +149,16 @@ public class ConfigLoader {
                 cache.values.put(field, spec);
                 
             } catch (IllegalAccessException e) {
-                log.error("Failed to access field {}", field.getName(), e);
+                ConfigLoader.log.error("Failed to access field {}", field.getName(), e);
             } catch (NullPointerException e) {
-                log.error("Config Field value {} is null or not static", field.getName(), e);
+                ConfigLoader.log.error("Config Field value {} is null or not static", field.getName(), e);
             }
         }
     }
     
     @NoArgsConstructor
     protected static class Cache {
-        public @Getter
-        @Setter ModConfigSpec spec;
+        public @Getter @Setter ModConfigSpec spec;
         public @Getter Map<Field, ModConfigSpec.ConfigValue<?>> values = new HashMap<>();
     }
 }

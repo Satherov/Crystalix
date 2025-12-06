@@ -26,14 +26,36 @@ public enum CSLanguage implements CSTranslatable {
     TOOLTIP_RMB("tooltip", "rmb", "%s or %s to cycle backward"),
     
     PROPERTY_INVISIBLE("property", "invisible", "Invisible"),
-    PROPERTY_WATERLOGGABLE("property", "waterloggable", "Waterloggable"),
+    PROPERTY_INVISIBLE_TOOLTIP("property", "invisible.tooltip", "Will not be rendered at all"),
+    
+    PROPERTY_FLUIDLOGGABLE("property", "fluidloggable", "Fluidloggable"),
+    PROPERTY_FLUIDLOGGABLE_TOOLTIP("property", "fluidloggable.tooltip", "Allows you to place any fluid in the same block as this one"),
+    
     PROPERTY_SHADELESS("property", "shadeless", "Shadeless"),
+    PROPERTY_SHADELESS_TOOLTIP("property", "shadeless.tooltip", "Will not display a shade thrown by other blocks"),
+    
     PROPERTY_REINFORCED("property", "reinforced", "Reinforced"),
+    PROPERTY_REINFORCED_TOOLTIP("property", "reinforced.tooltip", "Fully indestructible and increased mining time"),
+    
     PROPERTY_GHOST("property", "ghost", "Ghost"),
+    PROPERTY_GHOST_TOOLTIP("property", "ghost.tooltip", "Allows certain mobs to pass through this block"),
+    
     PROPERTY_LIGHT("property", "light", "Light"),
+    PROPERTY_LIGHT_TOOLTIP("property", "light.tooltip", "Block will emit or block light"),
+    
     PROPERTY_COLOR("property", "color", "Color"),
+    PROPERTY_COLOR_TOOLTIP("property", "color.tooltip", "Changes the color of the glass"),
+    
+    PROPERTY_TRANSPARENT("property", "transparent", "Transparent"),
+    PROPERTY_TRANSPARENT_TOOLTIP("property", "transparent.tooltip", "Makes the texture fully transparent"),
+    
+    PROPERTY_REDSTONE("property", "redstone", "Redstone"),
+    PROPERTY_REDSTONE_TOOLTIP("property", "redstone.tooltip", "Emits a redstone level of 15"),
+    
+    PROPERTY_CONDUCTOR("property", "conductor", "Conductor"),
+    PROPERTY_CONDUCTOR_TOOLTIP("property", "conductor.tooltip", "Redstone will be conducted through this block"),
+    
     PROPERTY_APPLY_COLORLESS("property", "apply_colorless", "Apply Colorless: %s"),
-    PROPERTY_CLEAR("property", "clear", "Clear"),
     
     PROPERTY_ENABLED("property", "enabled", "Enabled"),
     PROPERTY_DISABLED("property", "disabled", "Disabled"),
@@ -74,7 +96,7 @@ public enum CSLanguage implements CSTranslatable {
     }
     
     public static void translate(BiConsumer<String, String> consumer) {
-        for (CSLanguage lang : values()) {
+        for (CSLanguage lang : CSLanguage.values()) {
             consumer.accept(lang.key(), lang.translation());
         }
     }

@@ -30,11 +30,11 @@ public record ToggleColorless(boolean enabled) implements CustomPacketPayload {
     
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+        return ToggleColorless.TYPE;
     }
     
     public void encode(RegistryFriendlyByteBuf buffer) {
-        buffer.writeBoolean(enabled);
+        buffer.writeBoolean(this.enabled);
     }
     
     private ToggleColorless(RegistryFriendlyByteBuf buffer) {
@@ -54,7 +54,7 @@ public record ToggleColorless(boolean enabled) implements CustomPacketPayload {
                 player.getInventory().setChanged();
             }
         }).exceptionally(e -> {
-            log.error("Failed to pick wand properties from BlockState", e);
+            ToggleColorless.log.error("Failed to pick wand properties from BlockState", e);
             return null;
         });
     }

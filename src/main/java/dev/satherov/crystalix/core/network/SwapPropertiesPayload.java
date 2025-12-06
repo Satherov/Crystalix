@@ -37,11 +37,11 @@ public record SwapPropertiesPayload(BlockPos pos) implements CustomPacketPayload
     
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+        return SwapPropertiesPayload.TYPE;
     }
     
     public void encode(RegistryFriendlyByteBuf buffer) {
-        buffer.writeBlockPos(pos);
+        buffer.writeBlockPos(this.pos);
     }
     
     private SwapPropertiesPayload(RegistryFriendlyByteBuf buffer) {
@@ -61,21 +61,23 @@ public record SwapPropertiesPayload(BlockPos pos) implements CustomPacketPayload
                 BlockEntity entity = level.getBlockEntity(pos);
                 CSProperties properties = CSProperties.of(wand);
                 
-                ((CSBooleanProperty) properties.properties().get(CSProperties.WATERLOGGABLE)).set(state.getValue(CrystalixGlass.WATERLOGGABLE));
+                ((CSBooleanProperty) properties.properties().get(CSProperties.FLUIDLOGGABLE)).set(state.getValue(CrystalixGlass.FLUIDLOGGABLE));
                 ((CSBooleanProperty) properties.properties().get(CSProperties.SHADELESS)).set(state.getValue(CrystalixGlass.SHADELESS));
                 ((CSBooleanProperty) properties.properties().get(CSProperties.INVISIBLE)).set(state.getValue(CrystalixGlass.INVISIBLE));
-                ((CSBooleanProperty) properties.properties().get(CSProperties.REINFORCED)).set(state.getValue(CrystalixGlass.REINFORCED));
+                ((CSBooleanProperty) properties.properties().get(CSProperties.CLEAR)).set(state.getValue(CrystalixGlass.TRANSPARENT));
                 ((CSEnumProperty<CSProperties.Light>) properties.properties().get(CSProperties.LIGHT)).set(state.getValue(CrystalixGlass.LIGHT));
                 ((CSEnumProperty<CSProperties.Ghost>) properties.properties().get(CSProperties.GHOST)).set(state.getValue(CrystalixGlass.GHOST));
                 
                 if (entity instanceof CrystalixGlassTile tile) {
+                    ((CSBooleanProperty) properties.properties().get(CSProperties.CONDUCTOR)).set(tile.isConductor());
+                    ((CSBooleanProperty) properties.properties().get(CSProperties.REINFORCED)).set(tile.isReinforced());
                     ((CSIntegerProperty) properties.properties().get(CSProperties.COLOR)).set(tile.getColor());
                 }
                 
                 player.getInventory().setChanged();
             }
         }).exceptionally(e -> {
-            log.error("Failed to pick wand properties from BlockState", e);
+            SwapPropertiesPayload.log.error("Failed to pick wand properties from BlockState", e);
             return null;
         });
     }

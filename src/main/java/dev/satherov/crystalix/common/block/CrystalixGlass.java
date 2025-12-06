@@ -20,7 +20,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
@@ -57,40 +59,42 @@ import java.util.Objects;
 @Accessors(fluent = true)
 public class CrystalixGlass extends SLBlock implements EntityBlock, SimpleWaterloggedBlock {
     
-    public static final MapCodec<WaterloggedTransparentBlock> CODEC = simpleCodec(WaterloggedTransparentBlock::new);
+    public static final MapCodec<WaterloggedTransparentBlock> CODEC = BlockBehaviour.simpleCodec(WaterloggedTransparentBlock::new);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final BooleanProperty WATERLOGGABLE = BooleanProperty.create("waterloggable");
+    
+    public static final BooleanProperty FLUIDLOGGABLE = BooleanProperty.create("fluidloggable");
     public static final BooleanProperty INVISIBLE = BooleanProperty.create("invisible");
     public static final BooleanProperty SHADELESS = BooleanProperty.create("shadeless");
-    public static final BooleanProperty REINFORCED = BooleanProperty.create("reinforced");
-    public static final BooleanProperty CLEAR = BooleanProperty.create("clear");
+    public static final BooleanProperty TRANSPARENT = BooleanProperty.create("transparent");
+    public static final BooleanProperty REDSTONE = BooleanProperty.create("redstone");
+    
     public static final EnumProperty<CSProperties.Light> LIGHT = EnumProperty.create("light", CSProperties.Light.class);
     public static final EnumProperty<CSProperties.Ghost> GHOST = EnumProperty.create("ghost", CSProperties.Ghost.class);
+    
     private final @Getter CSRegistry.Types type;
-    private final @Getter
-    @Nullable CSRegistry.Colors color;
+    private final @Getter @Nullable CSRegistry.Colors color;
     
     public CrystalixGlass(CSRegistry.Types type, @Nullable CSRegistry.Colors color) {
-        super(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_STAINED_GLASS));
+        super(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_STAINED_GLASS).isRedstoneConductor(CrystalixGlassTile.isRedstoneConductor()));
         this.type = type;
         this.color = color;
     }
     
     @Override
     protected MapCodec<? extends WaterloggedTransparentBlock> codec() {
-        return CODEC;
+        return CrystalixGlass.CODEC;
     }
     
     @Override
     protected void registerState(StateBuilder builder) {
-        builder.addValue(WATERLOGGED, false);
-        builder.addValue(WATERLOGGABLE, false);
-        builder.addValue(INVISIBLE, false);
-        builder.addValue(SHADELESS, false);
-        builder.addValue(REINFORCED, false);
-        builder.addValue(CLEAR, true);
-        builder.addValue(LIGHT, CSProperties.Light.NONE);
-        builder.addValue(GHOST, CSProperties.Ghost.BLOCK_ALL);
+        builder.addValue(CrystalixGlass.WATERLOGGED, false);
+        builder.addValue(CrystalixGlass.FLUIDLOGGABLE, false);
+        builder.addValue(CrystalixGlass.INVISIBLE, false);
+        builder.addValue(CrystalixGlass.SHADELESS, false);
+        builder.addValue(CrystalixGlass.REDSTONE, false);
+        builder.addValue(CrystalixGlass.TRANSPARENT, true);
+        builder.addValue(CrystalixGlass.LIGHT, CSProperties.Light.NONE);
+        builder.addValue(CrystalixGlass.GHOST, CSProperties.Ghost.BLOCK_ALL);
     }
     
     @Override
@@ -104,7 +108,7 @@ public class CrystalixGlass extends SLBlock implements EntityBlock, SimpleWaterl
         if (player == null) return state;
         
         FluidState fluidState = level.getFluidState(pos);
-        state.setValue(WATERLOGGED, fluidState.is(Fluids.WATER));
+        state.setValue(CrystalixGlass.WATERLOGGED, !fluidState.is(Fluids.EMPTY));
         
         ItemStack stack = player.getItemInHand(InteractionHand.OFF_HAND);
         
@@ -122,21 +126,20 @@ public class CrystalixGlass extends SLBlock implements EntityBlock, SimpleWaterl
     
     @Override
     protected FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(true) : super.getFluidState(state);
+        return state.getValue(CrystalixGlass.WATERLOGGED) ? state.getFluidState() : super.getFluidState(state);
     }
     
     @Override
-    public boolean canPlaceLiquid(@javax.annotation.Nullable Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
-        return state.getValue(WATERLOGGABLE) && fluid == Fluids.WATER;
+    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
+        return state.getValue(CrystalixGlass.FLUIDLOGGABLE);
     }
     
     @Override
     public boolean placeLiquid(LevelAccessor level, BlockPos pos, BlockState state, FluidState fluidState) {
-        if (!state.getValue(WATERLOGGABLE)) return false;
-        if (state.getValue(BlockStateProperties.WATERLOGGED) || fluidState.getType() != Fluids.WATER) return false;
+        if (!state.getValue(CrystalixGlass.FLUIDLOGGABLE) || state.getValue(CrystalixGlass.WATERLOGGED)) return false;
         
         if (!level.isClientSide()) {
-            level.setBlock(pos, state.setValue(BlockStateProperties.WATERLOGGED, Boolean.TRUE), 3);
+            level.setBlock(pos, state.setValue(CrystalixGlass.WATERLOGGED, Boolean.TRUE), 3);
             level.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(level));
         }
         
@@ -144,80 +147,91 @@ public class CrystalixGlass extends SLBlock implements EntityBlock, SimpleWaterl
     }
     
     @Override
-    protected VoxelShape getVisualShape(BlockState p_309057_, BlockGetter p_308936_, BlockPos p_308956_, CollisionContext p_309006_) {
+    public ItemStack pickupBlock(@javax.annotation.Nullable Player player, LevelAccessor level, BlockPos pos, BlockState state) {
+        if (!state.getValue(CrystalixGlass.WATERLOGGED)) return ItemStack.EMPTY;
+        
+        FluidState fluidState = level.getFluidState(pos);
+        level.setBlock(pos, state.setValue(CrystalixGlass.WATERLOGGED, Boolean.FALSE), 3);
+        if (!state.canSurvive(level, pos)) level.destroyBlock(pos, true);
+        
+        Item bucket = fluidState.getType().getBucket();
+        
+        return new ItemStack(bucket.equals(Items.AIR) ? Items.BUCKET : bucket);
+    }
+    
+    @Override
+    protected VoxelShape getVisualShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         return Shapes.empty();
     }
     
     @Override
-    protected float getShadeBrightness(BlockState p_308911_, BlockGetter p_308952_, BlockPos p_308918_) {
+    protected float getShadeBrightness(BlockState state, BlockGetter getter, BlockPos pos) {
         return 1.0F;
     }
     
     @Override
     protected RenderShape getRenderShape(BlockState state) {
-        return state.getValue(INVISIBLE) ? RenderShape.INVISIBLE : super.getRenderShape(state);
+        return state.getValue(CrystalixGlass.INVISIBLE) ? RenderShape.INVISIBLE : super.getRenderShape(state);
     }
     
     @Override
     protected boolean skipRendering(BlockState state, BlockState adjacent, Direction side) {
-        return adjacent.is(this) && !adjacent.getValue(INVISIBLE);
+        return adjacent.is(this) && !adjacent.getValue(CrystalixGlass.INVISIBLE);
     }
     
     @Override
     public boolean canDropFromExplosion(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
-        return !state.getValue(REINFORCED) && super.canDropFromExplosion(state, level, pos, explosion);
+        return CrystalixGlassTile.isReinforced(level, pos) && super.canDropFromExplosion(state, level, pos, explosion);
     }
     
     @Override
     public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
-        return !state.getValue(REINFORCED) && super.canBeReplaced(state, context);
+        return CrystalixGlassTile.isReinforced(context.getLevel(), context.getClickedPos()) && super.canBeReplaced(state, context);
     }
     
     @Override
     public void onBlockExploded(BlockState state, Level level, BlockPos pos, Explosion explosion) {
-        if (!state.getValue(REINFORCED)) {
-            super.onBlockExploded(state, level, pos, explosion);
-        }
+        if (!CrystalixGlassTile.isReinforced(level, pos)) super.onBlockExploded(state, level, pos, explosion);
     }
     
     @Override
-    public boolean canEntityDestroy(BlockState state, BlockGetter world, BlockPos pos, Entity entity) {
-        return !state.getValue(REINFORCED);
+    public boolean canEntityDestroy(BlockState state, BlockGetter getter, BlockPos pos, Entity entity) {
+        return !CrystalixGlassTile.isReinforced(getter, pos);
     }
     
     @Override
     @SuppressWarnings("deprecation")
-    public float getExplosionResistance(BlockState state, BlockGetter world, BlockPos pos, Explosion explosion) {
-        return state.getValue(REINFORCED) ? Float.MAX_VALUE : super.getExplosionResistance();
+    public float getExplosionResistance(BlockState state, BlockGetter getter, BlockPos pos, Explosion explosion) {
+        return CrystalixGlassTile.isReinforced(getter, pos) ? Float.MAX_VALUE : super.getExplosionResistance();
     }
     
     @Override
-    public float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
-        float progress = super.getDestroyProgress(state, player, level, pos);
-        if (state.getValue(REINFORCED)) progress *= 0.1f;
+    public float getDestroyProgress(BlockState state, Player player, BlockGetter getter, BlockPos pos) {
+        float progress = super.getDestroyProgress(state, player, getter, pos);
+        if (CrystalixGlassTile.isReinforced(getter, pos)) progress *= 0.1f;
         return progress;
     }
     
     @Override
     protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.getValue(LIGHT) != CSProperties.Light.DARK;
+        return state.getValue(CrystalixGlass.LIGHT) != CSProperties.Light.DARK;
     }
     
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         if (level instanceof ServerLevel) return;
-        if (!((state.getValue(LIGHT) == CSProperties.Light.FAKE_LIGHT))) return;
+        if (!((state.getValue(CrystalixGlass.LIGHT) == CSProperties.Light.FAKE_LIGHT))) return;
         level.getLightEngine().checkBlock(pos);
     }
     
     @Override
     protected int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.getValue(LIGHT) == CSProperties.Light.DARK ? level.getMaxLightLevel() : 0;
+        return state.getValue(CrystalixGlass.LIGHT) == CSProperties.Light.DARK ? level.getMaxLightLevel() : 0;
     }
     
     @Override
     public int getLightEmission(BlockState state, BlockGetter blockGetter, BlockPos pos) {
-        var light = state.getValue(LIGHT);
+        var light = state.getValue(CrystalixGlass.LIGHT);
         
         if (light == CSProperties.Light.FAKE_LIGHT)
             return FMLLoader.getDist() == Dist.CLIENT ? 15 : 0;
@@ -231,7 +245,7 @@ public class CrystalixGlass extends SLBlock implements EntityBlock, SimpleWaterl
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         if (context instanceof EntityCollisionContext entityCollisionContext && entityCollisionContext != CollisionContext.empty()) {
-            if (state.getValue(GHOST).canCollide(entityCollisionContext)) {
+            if (state.getValue(CrystalixGlass.GHOST).canCollide(entityCollisionContext)) {
                 return Shapes.empty();
             }
         }
@@ -241,7 +255,7 @@ public class CrystalixGlass extends SLBlock implements EntityBlock, SimpleWaterl
     @Override
     protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         if (pathComputationType == PathComputationType.LAND) {
-            return switch (state.getValue(GHOST)) {
+            return switch (state.getValue(CrystalixGlass.GHOST)) {
                 case ALLOW_ALL, ALLOW_ANIMAL, ALLOW_MONSTER -> true;
                 default -> false;
             };
@@ -249,20 +263,46 @@ public class CrystalixGlass extends SLBlock implements EntityBlock, SimpleWaterl
         return false;
     }
     
+    @Override
+    protected boolean isSignalSource(BlockState state) {
+        return state.getValue(CrystalixGlass.REDSTONE);
+    }
+    
+    @Override
+    protected int getSignal(BlockState state, BlockGetter getter, BlockPos pos, Direction side) {
+        return state.getValue(CrystalixGlass.REDSTONE) ? 15 : 0;
+    }
+    
     public BlockState fromStack(BlockState state, ItemStack stack) {
         if (stack.isEmpty() || !(stack.getItem() instanceof CrystalixWand)) return state;
         if (!(state.getBlock() instanceof CrystalixGlass)) return state;
         
         state = state
-                .setValue(INVISIBLE, Objects.requireNonNull(stack.get(CSRegistry.INVISIBLE)))
-                .setValue(SHADELESS, Objects.requireNonNull(stack.get(CSRegistry.SHADELESS)))
-                .setValue(REINFORCED, Objects.requireNonNull(stack.get(CSRegistry.REINFORCED)))
-                .setValue(WATERLOGGABLE, Objects.requireNonNull(stack.get(CSRegistry.WATERLOGGABLE)))
-                .setValue(CLEAR, Objects.requireNonNull(stack.get(CSRegistry.CLEAR)))
-                .setValue(LIGHT, Objects.requireNonNull(stack.get(CSRegistry.LIGHT)))
-                .setValue(GHOST, Objects.requireNonNull(stack.get(CSRegistry.GHOST)));
+                .setValue(CrystalixGlass.INVISIBLE, Objects.requireNonNull(stack.get(CSRegistry.INVISIBLE)))
+                .setValue(CrystalixGlass.SHADELESS, Objects.requireNonNull(stack.get(CSRegistry.SHADELESS)))
+                .setValue(CrystalixGlass.FLUIDLOGGABLE, Objects.requireNonNull(stack.get(CSRegistry.FLUIDLOGGABLE)))
+                .setValue(CrystalixGlass.TRANSPARENT, Objects.requireNonNull(stack.get(CSRegistry.TRANSPARENT)))
+                .setValue(CrystalixGlass.REDSTONE, Objects.requireNonNull(stack.get(CSRegistry.REDSTONE)))
+                .setValue(CrystalixGlass.LIGHT, Objects.requireNonNull(stack.get(CSRegistry.LIGHT)))
+                .setValue(CrystalixGlass.GHOST, Objects.requireNonNull(stack.get(CSRegistry.GHOST)));
         
         return state;
+    }
+    
+    public boolean setEntityProperties(BlockGetter getter, BlockPos pos, BlockState state, ItemStack stack) {
+        BlockEntity be = getter.getBlockEntity(pos);
+        if (!(be instanceof CrystalixGlassTile tile) || !(getter instanceof Level level)) return false;
+        
+        if (!stack.getOrDefault(CSRegistry.APPLY_COLORLESS, false)) {
+            tile.setColor(state, stack.getOrDefault(CSRegistry.COLOR, 0xFFFFFF));
+        }
+        
+        tile.setReinforced(stack.getOrDefault(CSRegistry.REINFORCED, false));
+        tile.setConductor(stack.getOrDefault(CSRegistry.CONDUCTOR, false));
+        
+        level.setBlockAndUpdate(pos, state);
+        level.updateNeighborsAt(pos, this);
+        return true;
     }
     
     @Override
@@ -276,10 +316,7 @@ public class CrystalixGlass extends SLBlock implements EntityBlock, SimpleWaterl
         if (!(placer instanceof ServerPlayer player)) return;
         
         ItemStack wand = CrystalixWand.find(player);
-        if (level.getBlockEntity(pos) instanceof CrystalixGlassTile tile) {
-            int rgb = wand.getOrDefault(CSRegistry.COLOR, -1);
-            tile.setColor(state, rgb);
-        }
+        this.setEntityProperties(world, pos, state, wand);
         
         super.setPlacedBy(level, pos, state, placer, stack);
     }

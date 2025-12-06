@@ -36,18 +36,22 @@ public final class CSProperties {
     
     public static final ResourceLocation INVISIBLE = Crystalix.rl("invisible");
     public static final ResourceLocation CLEAR = Crystalix.rl("clear");
-    public static final ResourceLocation WATERLOGGABLE = Crystalix.rl("waterloggable");
+    public static final ResourceLocation FLUIDLOGGABLE = Crystalix.rl("fluidloggable");
     public static final ResourceLocation REINFORCED = Crystalix.rl("reinforced");
     public static final ResourceLocation SHADELESS = Crystalix.rl("shadeless");
+    public static final ResourceLocation REDSTONE = Crystalix.rl("redstone");
+    public static final ResourceLocation CONDUCTOR = Crystalix.rl("conductor");
     public static final ResourceLocation GHOST = Crystalix.rl("ghost");
     public static final ResourceLocation LIGHT = Crystalix.rl("light");
     public static final ResourceLocation COLOR = Crystalix.rl("color");
     
     private final @Getter Map<ResourceLocation, IProperty<?>> properties;
     
-    private final @Getter CSBooleanProperty waterloggable;
+    private final @Getter CSBooleanProperty fluidloggable;
     private final @Getter CSBooleanProperty invisible;
     private final @Getter CSBooleanProperty shadeless;
+    private final @Getter CSBooleanProperty redstone;
+    private final @Getter CSBooleanProperty conductor;
     private final @Getter CSBooleanProperty reinforced;
     private final @Getter CSBooleanProperty clear;
     private final @Getter CSEnumProperty<Ghost> ghost;
@@ -55,24 +59,28 @@ public final class CSProperties {
     private final @Getter CSIntegerProperty color;
     
     private CSProperties(ItemStack stack) {
-        invisible = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_INVISIBLE, CSProperties.INVISIBLE, false, CSRegistry.INVISIBLE);
-        waterloggable = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_WATERLOGGABLE, CSProperties.WATERLOGGABLE, false, CSRegistry.WATERLOGGABLE);
-        clear = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_CLEAR, CSProperties.CLEAR, true, CSRegistry.CLEAR);
-        shadeless = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_SHADELESS, CSProperties.SHADELESS, false, CSRegistry.SHADELESS);
-        reinforced = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_REINFORCED, CSProperties.REINFORCED, false, CSRegistry.REINFORCED);
-        ghost = CSEnumProperty.create(stack, CSLanguage.PROPERTY_GHOST, CSProperties.GHOST, Ghost.class, Ghost.BLOCK_ALL, CSRegistry.GHOST);
-        light = CSEnumProperty.create(stack, CSLanguage.PROPERTY_LIGHT, CSProperties.LIGHT, Light.class, Light.NONE, CSRegistry.LIGHT);
-        color = CSIntegerProperty.create(stack, CSLanguage.PROPERTY_COLOR, CSProperties.COLOR, 0xFFFFFF, CSRegistry.COLOR);
+        this.invisible = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_INVISIBLE, CSLanguage.PROPERTY_INVISIBLE_TOOLTIP, CSProperties.INVISIBLE, false, CSRegistry.INVISIBLE);
+        this.fluidloggable = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_FLUIDLOGGABLE, CSLanguage.PROPERTY_FLUIDLOGGABLE_TOOLTIP, CSProperties.FLUIDLOGGABLE, false, CSRegistry.FLUIDLOGGABLE);
+        this.clear = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_TRANSPARENT, CSLanguage.PROPERTY_TRANSPARENT_TOOLTIP, CSProperties.CLEAR, true, CSRegistry.TRANSPARENT);
+        this.shadeless = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_SHADELESS, CSLanguage.PROPERTY_SHADELESS_TOOLTIP, CSProperties.SHADELESS, false, CSRegistry.SHADELESS);
+        this.reinforced = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_REINFORCED, CSLanguage.PROPERTY_REINFORCED_TOOLTIP, CSProperties.REINFORCED, false, CSRegistry.REINFORCED);
+        this.redstone = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_REDSTONE, CSLanguage.PROPERTY_REDSTONE_TOOLTIP, CSProperties.REDSTONE, false, CSRegistry.REDSTONE);
+        this.conductor = CSBooleanProperty.create(stack, CSLanguage.PROPERTY_CONDUCTOR, CSLanguage.PROPERTY_CONDUCTOR_TOOLTIP, CSProperties.CONDUCTOR, false, CSRegistry.CONDUCTOR);
+        this.ghost = CSEnumProperty.create(stack, CSLanguage.PROPERTY_GHOST, CSLanguage.PROPERTY_GHOST_TOOLTIP, CSProperties.GHOST, Ghost.class, Ghost.BLOCK_ALL, CSRegistry.GHOST);
+        this.light = CSEnumProperty.create(stack, CSLanguage.PROPERTY_LIGHT, CSLanguage.PROPERTY_LIGHT_TOOLTIP, CSProperties.LIGHT, Light.class, Light.NONE, CSRegistry.LIGHT);
+        this.color = CSIntegerProperty.create(stack, CSLanguage.PROPERTY_COLOR, CSLanguage.PROPERTY_COLOR_TOOLTIP, CSProperties.COLOR, 0xFFFFFF, CSRegistry.COLOR);
         
-        properties = new LinkedHashMap<>() {{
-            put(CSProperties.INVISIBLE, invisible);
-            put(CSProperties.CLEAR, clear);
-            put(CSProperties.WATERLOGGABLE, waterloggable);
-            put(CSProperties.REINFORCED, reinforced);
-            put(CSProperties.SHADELESS, shadeless);
-            put(CSProperties.GHOST, ghost);
-            put(CSProperties.LIGHT, light);
-            put(CSProperties.COLOR, color);
+        this.properties = new LinkedHashMap<>() {{
+            this.put(CSProperties.INVISIBLE, CSProperties.this.invisible);
+            this.put(CSProperties.CLEAR, CSProperties.this.clear);
+            this.put(CSProperties.FLUIDLOGGABLE, CSProperties.this.fluidloggable);
+            this.put(CSProperties.REINFORCED, CSProperties.this.reinforced);
+            this.put(CSProperties.SHADELESS, CSProperties.this.shadeless);
+            this.put(CSProperties.REDSTONE, CSProperties.this.redstone);
+            this.put(CSProperties.CONDUCTOR, CSProperties.this.conductor);
+            this.put(CSProperties.GHOST, CSProperties.this.ghost);
+            this.put(CSProperties.LIGHT, CSProperties.this.light);
+            this.put(CSProperties.COLOR, CSProperties.this.color);
         }};
     }
     
@@ -81,7 +89,7 @@ public final class CSProperties {
     }
     
     public IProperty<?> get(int index) {
-        return properties.values().toArray(IProperty<?>[]::new)[index];
+        return this.properties.values().toArray(IProperty<?>[]::new)[index];
     }
     
     @Accessors(fluent = true)

@@ -23,13 +23,15 @@ public interface IProperty<V> extends CSTranslatable {
     @Override
     default MutableComponent text() {
         MutableComponent component = Component.empty();
-        component.append(name().withStyle(ChatFormatting.GRAY));
+        component.append(this.name().withStyle(ChatFormatting.GRAY));
         component.append(Component.literal(": ").withStyle(ChatFormatting.GRAY));
-        component.append(display());
+        component.append(this.display());
         return component;
     }
     
     MutableComponent name();
     
     MutableComponent display();
+    
+    MutableComponent tooltip();
 }

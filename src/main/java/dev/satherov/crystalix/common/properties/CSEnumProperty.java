@@ -21,37 +21,39 @@ public class CSEnumProperty<E extends Enum<E> & CSTranslatable> implements IProp
     private final ItemStack stack;
     private final @Getter ResourceLocation location;
     private final @Getter String translation;
+    private final @Getter CSTranslatable description;
     private final @Getter String key;
     private final Supplier<DataComponentType<E>> type;
     private final Class<E> clazz;
     private @Getter E value;
     
-    protected CSEnumProperty(ItemStack stack, CSTranslatable translation, ResourceLocation location, Class<E> clazz, E defaultValue, Supplier<DataComponentType<E>> supplier) {
+    protected CSEnumProperty(ItemStack stack, CSTranslatable translation, CSTranslatable tooltip, ResourceLocation location, Class<E> clazz, E defaultValue, Supplier<DataComponentType<E>> supplier) {
         this.stack = stack;
         this.location = location;
         this.clazz = clazz;
         this.translation = translation.translation();
+        this.description = tooltip;
         this.key = translation.key();
         this.type = Suppliers.memoize(supplier::get);
         this.value = stack.getOrDefault(this.type, defaultValue);
     }
     
-    public static <E extends Enum<E> & CSTranslatable> CSEnumProperty<E> create(ItemStack stack, CSTranslatable translation, ResourceLocation location, Class<E> clazz, E defaultValue, Supplier<DataComponentType<E>> supplier) {
-        return new CSEnumProperty<>(stack, translation, location, clazz, defaultValue, supplier);
+    public static <E extends Enum<E> & CSTranslatable> CSEnumProperty<E> create(ItemStack stack, CSTranslatable translation, CSTranslatable tooltip, ResourceLocation location, Class<E> clazz, E defaultValue, Supplier<DataComponentType<E>> supplier) {
+        return new CSEnumProperty<>(stack, translation, tooltip, location, clazz, defaultValue, supplier);
     }
     
     @Override
     public E next(boolean forward) {
         E[] values = this.clazz.getEnumConstants();
-        int i = value.ordinal() + (forward ? 1 : -1);
+        int i = this.value.ordinal() + (forward ? 1 : -1);
         if (i < 0) i += values.length;
-        return set(values[i % values.length]);
+        return this.set(values[i % values.length]);
     }
     
     @Override
     public E set(E value) {
         this.value = value;
-        stack.set(this.type, this.value);
+        this.stack.set(this.type, this.value);
         return this.value;
     }
     
@@ -68,5 +70,9 @@ public class CSEnumProperty<E extends Enum<E> & CSTranslatable> implements IProp
     @Override
     public MutableComponent display() {
         return this.value.text();
+    }
+    
+    public MutableComponent tooltip() {
+        return this.description.text();
     }
 }

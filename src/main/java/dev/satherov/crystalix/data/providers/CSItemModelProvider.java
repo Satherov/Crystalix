@@ -18,12 +18,12 @@ public class CSItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         CSRegistry.ENTRIES.forEach((type, holder) -> {
-            withExistingParent(holder.getId().toString(), modLoc("block/" + holder.getId().getPath()));
+            this.withExistingParent(holder.getId().toString(), this.modLoc("block/" + holder.getId().getPath()));
         });
         
         CSRegistry.ITEMS.getEntries().stream()
                 .filter(item -> !(item.get() instanceof BlockItem))
-                .forEach(item -> handheldItem(item.get()));
+                .forEach(item -> this.handheldItem(item.get()));
     }
     
 }

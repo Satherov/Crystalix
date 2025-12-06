@@ -24,12 +24,12 @@ public class CSLootTableProvider extends LootTableProvider {
         
         public ProviderList add(Function<HolderLookup.Provider, LootTableSubProvider> provider, LootContextParamSet paramSet) {
             SubProviderEntry entry = new SubProviderEntry(provider, paramSet);
-            providers.add(entry);
+            this.providers.add(entry);
             return this;
         }
         
         public List<SubProviderEntry> entries() {
-            return providers;
+            return this.providers;
         }
     }
 }

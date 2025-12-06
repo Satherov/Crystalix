@@ -30,7 +30,7 @@ public class CSRecipeProvider extends RecipeProvider implements IConditionBuilde
                 .define('s', Items.STICK)
                 .define('g', CSRegistry.ITEM_TAG)
                 .define('d', Tags.Items.GEMS_DIAMOND)
-                .unlockedBy("has_diamond", has(Tags.Items.GEMS_DIAMOND))
+                .unlockedBy("has_diamond", RecipeProvider.has(Tags.Items.GEMS_DIAMOND))
                 .save(output);
         
         CSRegistry.ENTRIES.forEach((type, holder) -> {
@@ -40,7 +40,7 @@ public class CSRecipeProvider extends RecipeProvider implements IConditionBuilde
                     .pattern("gag")
                     .define('g', Tags.Items.GLASS_BLOCKS)
                     .define('a', type.tag())
-                    .unlockedBy("has_glass", has(Tags.Items.GLASS_BLOCKS))
+                    .unlockedBy("has_glass", RecipeProvider.has(Tags.Items.GLASS_BLOCKS))
                     .save(output);
         });
     }

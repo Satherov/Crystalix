@@ -31,12 +31,12 @@ public record CyclePropertyPayload(ResourceLocation key, boolean dir) implements
     
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+        return CyclePropertyPayload.TYPE;
     }
     
     public void encode(FriendlyByteBuf buffer) {
-        buffer.writeUtf(key.toString());
-        buffer.writeBoolean(dir);
+        buffer.writeUtf(this.key.toString());
+        buffer.writeBoolean(this.dir);
     }
     
     private CyclePropertyPayload(FriendlyByteBuf buffer) {
@@ -52,7 +52,7 @@ public record CyclePropertyPayload(ResourceLocation key, boolean dir) implements
                 
                 IProperty<?> property = properties.properties().get(message.key());
                 if (property == null) {
-                    log.warn("Unknown property: {}", message.key());
+                    CyclePropertyPayload.log.warn("Unknown property: {}", message.key());
                     return;
                 }
                 

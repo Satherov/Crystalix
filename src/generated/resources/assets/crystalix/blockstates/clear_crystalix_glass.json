@@ -1,15 +1,15 @@
 {
   "variants": {
-    "clear=false,shadeless=false": {
+    "shadeless=false,transparent=false": {
       "model": "crystalix:block/clear_crystalix_glass_colored"
     },
-    "clear=false,shadeless=true": {
-      "model": "crystalix:block/clear_crystalix_glass_no_shade_colored"
-    },
-    "clear=true,shadeless=false": {
+    "shadeless=false,transparent=true": {
       "model": "crystalix:block/clear_crystalix_glass"
     },
-    "clear=true,shadeless=true": {
+    "shadeless=true,transparent=false": {
+      "model": "crystalix:block/clear_crystalix_glass_no_shade_colored"
+    },
+    "shadeless=true,transparent=true": {
       "model": "crystalix:block/clear_crystalix_glass_no_shade"
     }
   }

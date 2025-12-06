@@ -36,7 +36,7 @@ public class CSDataProvider implements DataProvider {
     private CSDataProvider(GatherDataEvent event) {
         this.generator = event.getGenerator();
         this.fileHelper = event.getExistingFileHelper();
-        this.output = generator.getPackOutput();
+        this.output = this.generator.getPackOutput();
         this.lookup = event.getLookupProvider();
         this.builder = new RegistrySetBuilder();
         this.server = event.includeServer();
@@ -47,23 +47,23 @@ public class CSDataProvider implements DataProvider {
     }
     
     public void add(boolean include, Provider provider) {
-        if (include) providers.add(provider);
+        if (include) this.providers.add(provider);
     }
     
     public <T> void add(ResourceKey<? extends Registry<T>> key, RegistrySetBuilder.RegistryBootstrap<T> bootstrap) {
-        builder.add(key, bootstrap);
+        this.builder.add(key, bootstrap);
     }
     
     public void generate() {
         this.generator.addProvider(true, this);
-        this.generator.addProvider(server, (Factory<DatapackBuiltinEntriesProvider>) output -> new DatapackBuiltinEntriesProvider(output, lookup, builder, Set.of(Crystalix.MOD_ID)));
+        this.generator.addProvider(this.server, (Factory<DatapackBuiltinEntriesProvider>) output -> new DatapackBuiltinEntriesProvider(output, this.lookup, this.builder, Set.of(Crystalix.MOD_ID)));
     }
     
     @Override
     public CompletableFuture<?> run(CachedOutput cachedOutput) {
         List<CompletableFuture<?>> list = new ArrayList<>();
-        for (Provider provider : providers) {
-            list.add(provider.create(generator, output, fileHelper, lookup).run(cachedOutput));
+        for (Provider provider : this.providers) {
+            list.add(provider.create(this.generator, this.output, this.fileHelper, this.lookup).run(cachedOutput));
         }
         return CompletableFuture.allOf(list.toArray(CompletableFuture[]::new));
     }

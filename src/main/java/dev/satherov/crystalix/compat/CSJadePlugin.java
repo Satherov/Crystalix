@@ -12,7 +12,7 @@ import dev.satherov.crystalix.core.annotations.NothingNull;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
@@ -47,14 +47,16 @@ public class CSJadePlugin implements IWailaPlugin {
     }
     
     private static void showTooltips(ITooltip tooltip, BlockAccessor accessor) {
-        tooltip.add(getTranslation(CSLanguage.PROPERTY_INVISIBLE, accessor.getBlockState().getValue(CrystalixGlass.INVISIBLE)));
-        tooltip.add(getTranslation(CSLanguage.PROPERTY_SHADELESS, accessor.getBlockState().getValue(CrystalixGlass.SHADELESS)));
-        tooltip.add(getTranslation(CSLanguage.PROPERTY_REINFORCED, accessor.getBlockState().getValue(CrystalixGlass.REINFORCED)));
-        tooltip.add(getTranslation(CSLanguage.PROPERTY_WATERLOGGABLE, accessor.getBlockState().getValue(CrystalixGlass.WATERLOGGABLE)));
-        tooltip.add(getTranslation(CSLanguage.PROPERTY_CLEAR, accessor.getBlockState().getValue(CrystalixGlass.CLEAR)));
-        tooltip.add(getTranslation(CSLanguage.PROPERTY_LIGHT, accessor.getBlockState().getValue(CrystalixGlass.LIGHT)));
-        tooltip.add(getTranslation(CSLanguage.PROPERTY_GHOST, accessor.getBlockState().getValue(CrystalixGlass.GHOST)));
-        tooltip.add(getTranslation(CSLanguage.PROPERTY_COLOR, accessor.getBlockEntity() instanceof CrystalixGlassTile tile ? tile.getColor() : 0xFFFFFF));
+        tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_INVISIBLE, accessor.getBlockState().getValue(CrystalixGlass.INVISIBLE)));
+        tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_SHADELESS, accessor.getBlockState().getValue(CrystalixGlass.SHADELESS)));
+        tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_REINFORCED, accessor.getBlockEntity() instanceof CrystalixGlassTile tile && tile.isReinforced()));
+        tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_FLUIDLOGGABLE, accessor.getBlockState().getValue(CrystalixGlass.FLUIDLOGGABLE)));
+        tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_TRANSPARENT, accessor.getBlockState().getValue(CrystalixGlass.TRANSPARENT)));
+        tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_REDSTONE, accessor.getBlockState().getValue(CrystalixGlass.REDSTONE)));
+        tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_CONDUCTOR, accessor.getBlockEntity() instanceof CrystalixGlassTile tile && tile.isConductor()));
+        tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_LIGHT, accessor.getBlockState().getValue(CrystalixGlass.LIGHT)));
+        tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_GHOST, accessor.getBlockState().getValue(CrystalixGlass.GHOST)));
+        tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_COLOR, accessor.getBlockEntity() instanceof CrystalixGlassTile tile ? tile.getColor() : 0xFFFFFF));
     }
     
     @Override
@@ -72,13 +74,9 @@ public class CSJadePlugin implements IWailaPlugin {
                 IPluginConfig config
         ) {
             switch (CSClientConfig.getJadeMode()) {
-                case ALWAYS -> showTooltips(tooltip, accessor);
+                case ALWAYS -> CSJadePlugin.showTooltips(tooltip, accessor);
                 case WAND -> {
-                    if (accessor.getPlayer().getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof CrystalixWand ||
-                            accessor.getPlayer().getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof CrystalixWand
-                    ) {
-                        showTooltips(tooltip, accessor);
-                    }
+                    if (!CrystalixWand.find(accessor.getPlayer()).equals(ItemStack.EMPTY)) CSJadePlugin.showTooltips(tooltip, accessor);
                 }
                 case NEVER -> { /* ignored */ }
             }

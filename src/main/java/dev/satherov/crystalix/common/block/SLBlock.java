@@ -20,24 +20,24 @@ public class SLBlock extends Block {
     
     public SLBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(stateBuilder.defaultBlockState());
-        stateBuilder.clear();
+        this.registerDefaultState(this.stateBuilder.defaultBlockState());
+        this.stateBuilder.clear();
     }
     
     public static VoxelShape column(double size, double y1, double y2) {
-        return column(size, size, y1, y2);
+        return SLBlock.column(size, size, y1, y2);
     }
     
     public static VoxelShape column(double xSize, double zSize, double y1, double y2) {
         double dx = xSize / 2.0;
         double dz = zSize / 2.0;
-        return box(8.0 - dx, y1, 8.0 - dz, 8.0 + dx, y2, 8.0 + dz);
+        return Block.box(8.0 - dx, y1, 8.0 - dz, 8.0 + dx, y2, 8.0 + dz);
     }
     
     @Override
     protected final void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         this.stateBuilder = StateBuilder.create(this);
-        this.registerState(stateBuilder);
+        this.registerState(this.stateBuilder);
         this.stateBuilder.createDefinition(builder);
     }
     
@@ -51,17 +51,17 @@ public class SLBlock extends Block {
     @Override
     protected final void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!newState.is(state.getBlock())) {
-            onRemoved((ServerLevel) level, pos, state, newState, movedByPiston);
+            this.onRemoved((ServerLevel) level, pos, state, newState, movedByPiston);
             if (state.hasBlockEntity()) level.removeBlockEntity(pos);
         } else {
-            onChanged((ServerLevel) level, pos, state, newState, movedByPiston);
+            this.onChanged((ServerLevel) level, pos, state, newState, movedByPiston);
         }
     }
     
     @Override
     protected final void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         if (!state.is(oldState.getBlock())) {
-            onPlaced((ServerLevel) level, pos, state, oldState, movedByPiston);
+            this.onPlaced((ServerLevel) level, pos, state, oldState, movedByPiston);
         }
     }
     
@@ -127,27 +127,27 @@ public class SLBlock extends Block {
          * @return This builder
          */
         public <T extends Comparable<T>, V extends T> StateBuilder addValue(Property<T> property, V defaultValue) {
-            properties.put(property, defaultValue);
+            this.properties.put(property, defaultValue);
             return this;
         }
         
         private void createDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-            for (Property<?> property : properties.keySet()) {
+            for (Property<?> property : this.properties.keySet()) {
                 builder.add(property);
             }
         }
         
         private BlockState defaultBlockState() {
-            BlockState state = block.defaultBlockState();
-            for (Map.Entry<Property<?>, Comparable<?>> entry : properties.entrySet()) {
-                state = setUnchecked(state, entry.getKey(), entry.getValue());
+            BlockState state = this.block.defaultBlockState();
+            for (Map.Entry<Property<?>, Comparable<?>> entry : this.properties.entrySet()) {
+                state = StateBuilder.setUnchecked(state, entry.getKey(), entry.getValue());
             }
             return state;
         }
         
         private void clear() {
-            properties.clear();
-            block.stateBuilder = null;
+            this.properties.clear();
+            this.block.stateBuilder = null;
         }
     }
 }

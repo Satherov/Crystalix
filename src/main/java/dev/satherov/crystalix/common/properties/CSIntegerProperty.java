@@ -21,21 +21,23 @@ public class CSIntegerProperty implements IProperty<Integer> {
     private final ItemStack stack;
     private final @Getter ResourceLocation location;
     private final @Getter String translation;
+    private final @Getter CSTranslatable description;
     private final @Getter String key;
     private final Supplier<DataComponentType<Integer>> type;
     private @Getter Integer value;
     
-    protected CSIntegerProperty(ItemStack stack, CSTranslatable translation, ResourceLocation location, int defaultValue, Supplier<DataComponentType<Integer>> supplier) {
+    protected CSIntegerProperty(ItemStack stack, CSTranslatable translation, CSTranslatable description, ResourceLocation location, int defaultValue, Supplier<DataComponentType<Integer>> supplier) {
         this.stack = stack;
         this.location = location;
         this.translation = translation.translation();
+        this.description = description;
         this.key = translation.key();
         this.type = Suppliers.memoize(supplier::get);
         this.value = stack.getOrDefault(this.type, defaultValue);
     }
     
-    public static CSIntegerProperty create(ItemStack stack, CSTranslatable translation, ResourceLocation location, int defaultValue, Supplier<DataComponentType<Integer>> supplier) {
-        return new CSIntegerProperty(stack, translation, location, defaultValue, supplier);
+    public static CSIntegerProperty create(ItemStack stack, CSTranslatable translation, CSTranslatable description, ResourceLocation location, int defaultValue, Supplier<DataComponentType<Integer>> supplier) {
+        return new CSIntegerProperty(stack, translation, description, location, defaultValue, supplier);
     }
     
     @Override
@@ -51,7 +53,7 @@ public class CSIntegerProperty implements IProperty<Integer> {
     @Override
     public Integer set(Integer value) {
         this.value = value;
-        stack.set(this.type, this.value);
+        this.stack.set(this.type, this.value);
         return this.value;
     }
     
@@ -63,5 +65,10 @@ public class CSIntegerProperty implements IProperty<Integer> {
     @Override
     public MutableComponent display() {
         return Component.literal(String.format("#%06X", (0xFFFFFF & this.value)).toUpperCase()).withColor(this.value);
+    }
+    
+    @Override
+    public MutableComponent tooltip() {
+        return this.description.text();
     }
 }

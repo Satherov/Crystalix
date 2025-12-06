@@ -2,7 +2,6 @@ package dev.satherov.crystalix.common.item;
 
 import dev.satherov.crystalix.client.lang.CSLanguage;
 import dev.satherov.crystalix.common.block.CrystalixGlass;
-import dev.satherov.crystalix.common.block.CrystalixGlassTile;
 import dev.satherov.crystalix.common.properties.CSProperties;
 import dev.satherov.crystalix.common.properties.IProperty;
 import dev.satherov.crystalix.core.CSRegistry;
@@ -28,7 +27,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
-import java.util.Objects;
 
 @NothingNull
 public class CrystalixWand extends Item {
@@ -39,8 +37,10 @@ public class CrystalixWand extends Item {
                 .component(CSRegistry.INVISIBLE, false)
                 .component(CSRegistry.SHADELESS, false)
                 .component(CSRegistry.REINFORCED, false)
-                .component(CSRegistry.WATERLOGGABLE, false)
-                .component(CSRegistry.CLEAR, false)
+                .component(CSRegistry.FLUIDLOGGABLE, false)
+                .component(CSRegistry.TRANSPARENT, false)
+                .component(CSRegistry.REDSTONE, false)
+                .component(CSRegistry.CONDUCTOR, false)
                 .component(CSRegistry.LIGHT, CSProperties.Light.NONE)
                 .component(CSRegistry.GHOST, CSProperties.Ghost.BLOCK_ALL)
                 .component(CSRegistry.COLOR, 0xFFFFFF)
@@ -63,7 +63,7 @@ public class CrystalixWand extends Item {
         ));
         components.add(CSLanguage.PROPERTY_APPLY_COLORLESS.text(
                 ChatFormatting.GRAY,
-                stack.get(CSRegistry.APPLY_COLORLESS) ? CSLanguage.PROPERTY_ENABLED.text(ChatFormatting.DARK_GREEN) : CSLanguage.PROPERTY_DISABLED.text(ChatFormatting.DARK_RED)
+                stack.getOrDefault(CSRegistry.APPLY_COLORLESS, false) ? CSLanguage.PROPERTY_ENABLED.text(ChatFormatting.DARK_GREEN) : CSLanguage.PROPERTY_DISABLED.text(ChatFormatting.DARK_RED)
         ));
         for (IProperty<?> property : CSProperties.of(stack).properties().values()) {
             components.add(property.text());
@@ -76,7 +76,7 @@ public class CrystalixWand extends Item {
         if (!(context.getPlayer() instanceof ServerPlayer player)) return InteractionResult.FAIL;
         
         BlockPos blockpos = context.getClickedPos();
-        if (!applyToBlock(level, blockpos, player)) {
+        if (!this.applyToBlock(level, blockpos, player)) {
             return InteractionResult.FAIL;
         }
         
@@ -88,16 +88,11 @@ public class CrystalixWand extends Item {
         if (!(state.getBlock() instanceof CrystalixGlass glass)) return false;
         ItemStack wand = CrystalixWand.find(player);
         state = glass.fromStack(state, wand);
-        int color = Objects.requireNonNull(wand.get(CSRegistry.COLOR));
         
         if (player.isShiftKeyDown()) {
-            BatchProcessor.schedule(BatchProcessor.Batch.of(player, pos, state, wand.get(CSRegistry.APPLY_COLORLESS) == Boolean.FALSE ? color : Integer.MIN_VALUE));
-        } else {
-            if (level.getBlockEntity(pos) instanceof CrystalixGlassTile tile && tile.getColor() != color && wand.get(CSRegistry.APPLY_COLORLESS) == Boolean.FALSE) {
-                tile.setColor(state, color);
-            } else {
-                level.setBlockAndUpdate(pos, state);
-            }
+            BatchProcessor.schedule(BatchProcessor.Batch.of(player, pos, state, wand));
+        } else if (!glass.setEntityProperties(level, pos, state, wand)) {
+            level.setBlockAndUpdate(pos, state);
         }
         
         return true;

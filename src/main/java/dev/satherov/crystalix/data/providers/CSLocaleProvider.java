@@ -19,8 +19,8 @@ public class CSLocaleProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         CSLanguage.translate(this::add);
-        CSRegistry.BLOCKS.getEntries().forEach(entry -> add(entry.get(), format(entry.getId().getPath())));
-        CSRegistry.ITEMS.getEntries().stream().filter(item -> !(item.get() instanceof BlockItem)).forEach(entry -> add(entry.get(), format(entry.getId().getPath())));
+        CSRegistry.BLOCKS.getEntries().forEach(entry -> this.add(entry.get(), this.format(entry.getId().getPath())));
+        CSRegistry.ITEMS.getEntries().stream().filter(item -> !(item.get() instanceof BlockItem)).forEach(entry -> this.add(entry.get(), this.format(entry.getId().getPath())));
     }
     
     protected String format(String string) {

@@ -19,26 +19,26 @@ public class CSBlockModelProvider extends BlockModelProvider {
     protected void registerModels() {
         CSRegistry.ENTRIES.forEach((type, holder) -> {
             this.singleTexture("block/" + holder.getId().getPath() + "_colored",
-                            modLoc("block/block"),
-                            "all", modLoc("block/colored_" + type.format())
+                            this.modLoc("block/block"),
+                            "all", this.modLoc("block/colored_" + type.format())
                     )
                     .renderType(RenderType.translucent().name);
             
             this.singleTexture("block/" + holder.getId().getPath() + "_no_shade_colored",
-                            modLoc("block/no_shade_block"),
-                            "all", modLoc("block/colored_" + type.format())
+                            this.modLoc("block/no_shade_block"),
+                            "all", this.modLoc("block/colored_" + type.format())
                     )
                     .renderType(RenderType.translucent().name);
             
             this.singleTexture("block/" + holder.getId().getPath(),
-                            modLoc("block/block"),
-                            "all", modLoc("block/" + type.format())
+                            this.modLoc("block/block"),
+                            "all", this.modLoc("block/" + type.format())
                     )
                     .renderType(RenderType.translucent().name);
             
             this.singleTexture("block/" + holder.getId().getPath() + "_no_shade",
-                            modLoc("block/no_shade_block"),
-                            "all", modLoc("block/" + type.format())
+                            this.modLoc("block/no_shade_block"),
+                            "all", this.modLoc("block/" + type.format())
                     )
                     .renderType(RenderType.translucent().name);
         });

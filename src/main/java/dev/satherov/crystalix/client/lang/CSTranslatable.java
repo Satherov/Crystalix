@@ -29,7 +29,7 @@ public interface CSTranslatable {
      * @return Translatable component
      */
     default MutableComponent text() {
-        return Component.translatable(key());
+        return Component.translatable(this.key());
     }
     
     /**
@@ -55,10 +55,10 @@ public interface CSTranslatable {
             }
         }
         
-        MutableComponent component = Component.translatable(key());
+        MutableComponent component = Component.translatable(this.key());
         
         if (!filtered.isEmpty()) {
-            component = Component.translatable(key(), filtered.toArray());
+            component = Component.translatable(this.key(), filtered.toArray());
         }
         
         if (!formatting.isEmpty()) {

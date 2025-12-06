@@ -29,11 +29,11 @@ public abstract class BlockStateModelLoaderMixin {
     
     @Unique
     private static Set<ResourceLocation> crystalix$getDeprecated() {
-        if (crystalix$deprecated == null) {
-            crystalix$deprecated = CSRegistry.OLD_ENTRIES.values().stream()
+        if (BlockStateModelLoaderMixin.crystalix$deprecated == null) {
+            BlockStateModelLoaderMixin.crystalix$deprecated = CSRegistry.OLD_ENTRIES.values().stream()
                     .filter(Objects::nonNull).map(DeferredHolder::getId).collect(Collectors.toSet());
         }
-        return crystalix$deprecated;
+        return BlockStateModelLoaderMixin.crystalix$deprecated;
     }
     
     @Inject(
@@ -42,7 +42,7 @@ public abstract class BlockStateModelLoaderMixin {
             cancellable = true
     )
     private void crystalix$skip(ResourceLocation id, StateDefinition<Block, BlockState> def, CallbackInfo ci) {
-        if (crystalix$getDeprecated().contains(id)) {
+        if (BlockStateModelLoaderMixin.crystalix$getDeprecated().contains(id)) {
             ci.cancel();
         }
     }

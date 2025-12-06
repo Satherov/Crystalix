@@ -44,7 +44,7 @@ public class RadialMenuScreen extends Screen {
     }
     
     public void addMenuItem(IProperty<?> property, Consumer<Boolean> action) {
-        menuItems.add(new RadialMenuItem(property, action));
+        this.menuItems.add(new RadialMenuItem(property, action));
     }
     
     @Override
@@ -52,18 +52,18 @@ public class RadialMenuScreen extends Screen {
         int centerX = this.width / 2;
         int centerY = this.height / 2;
         
-        drawRadialOverlay(graphics, centerX, centerY);
+        this.drawRadialOverlay(graphics, centerX, centerY);
         
         super.render(graphics, mouseX, mouseY, partialTick);
         
-        hoveredIndex = getHoveredSection(mouseX, mouseY, centerX, centerY);
+        this.hoveredIndex = this.getHoveredSection(mouseX, mouseY, centerX, centerY);
         
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         
-        for (int i = 0; i < menuItems.size(); i++) {
-            boolean isHovered = i == hoveredIndex;
-            renderSection(graphics, mouseX, mouseY, centerX, centerY, i, menuItems.size(), isHovered, menuItems.get(i).property());
+        for (int i = 0; i < this.menuItems.size(); i++) {
+            boolean isHovered = i == this.hoveredIndex;
+            this.renderSection(graphics, mouseX, mouseY, centerX, centerY, i, this.menuItems.size(), isHovered, this.menuItems.get(i).property());
         }
         
         RenderSystem.disableBlend();
@@ -99,11 +99,11 @@ public class RadialMenuScreen extends Screen {
         
         float midRad = (float) Math.toRadians(start + anglePerSection / 2);
         
-        drawLines(graphics, centerX, centerY, start);
+        this.drawLines(graphics, centerX, centerY, start);
         
-        int outerRadius = isHovered ? OUTER_RADIUS + HOVER_EXTEND : OUTER_RADIUS;
+        int outerRadius = isHovered ? RadialMenuScreen.OUTER_RADIUS + RadialMenuScreen.HOVER_EXTEND : RadialMenuScreen.OUTER_RADIUS;
         
-        float labelRadius = INNER_RADIUS + (outerRadius - INNER_RADIUS) * 0.6f;
+        float labelRadius = RadialMenuScreen.INNER_RADIUS + (outerRadius - RadialMenuScreen.INNER_RADIUS) * 0.6f;
         
         float labelCenterX = centerX + (float) (Math.cos(midRad) * labelRadius);
         float labelCenterY = centerY + (float) (Math.sin(midRad) * labelRadius);
@@ -113,19 +113,20 @@ public class RadialMenuScreen extends Screen {
         int labelWidth = this.font.width(property.name());
         int valueWidth = this.font.width(property.display());
         
-        int totalTextHeight = font.lineHeight * 2;
+        int totalTextHeight = this.font.lineHeight * 2;
         
         int textX1 = (int) (labelCenterX - labelWidth / 2.0f);
         int textX2 = (int) (labelCenterX - valueWidth / 2.0f);
         int textY = (int) (labelCenterY - totalTextHeight / 2.0f);
         
         graphics.drawString(this.font, property.name(), textX1, textY, textColor);
-        graphics.drawString(this.font, property.display(), textX2, textY + font.lineHeight, 0xFFFFFFFF);
+        graphics.drawString(this.font, property.display(), textX2, textY + this.font.lineHeight, 0xFFFFFFFF);
         
         if (!isHovered) return;
         
         List<Component> lines = new ArrayList<>();
         lines.add(property.name().withStyle(ChatFormatting.DARK_GRAY));
+        lines.add(property.tooltip().withStyle(ChatFormatting.DARK_GRAY));
         
         if (property.location().equals(CSProperties.COLOR)) {
             lines.add(CSLanguage.TOOLTIP_MMB.text(
@@ -146,7 +147,7 @@ public class RadialMenuScreen extends Screen {
         }
         
         graphics.renderComponentTooltip(
-                font,
+                this.font,
                 lines,
                 mouseX,
                 mouseY
@@ -161,10 +162,10 @@ public class RadialMenuScreen extends Screen {
         BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
         
         float rad = (float) Math.toRadians(angle);
-        float x1 = centerX + (float) (Math.cos(rad) * INNER_RADIUS);
-        float y1 = centerY + (float) (Math.sin(rad) * INNER_RADIUS);
-        float x2 = centerX + (float) (Math.cos(rad) * OUTER_RADIUS);
-        float y2 = centerY + (float) (Math.sin(rad) * OUTER_RADIUS);
+        float x1 = centerX + (float) (Math.cos(rad) * RadialMenuScreen.INNER_RADIUS);
+        float y1 = centerY + (float) (Math.sin(rad) * RadialMenuScreen.INNER_RADIUS);
+        float x2 = centerX + (float) (Math.cos(rad) * RadialMenuScreen.OUTER_RADIUS);
+        float y2 = centerY + (float) (Math.sin(rad) * RadialMenuScreen.OUTER_RADIUS);
         
         buffer.addVertex(matrix, x1, y1, 0).setColor(argb);
         buffer.addVertex(matrix, x2, y2, 0).setColor(argb);
@@ -180,28 +181,28 @@ public class RadialMenuScreen extends Screen {
         float dy = mouseY - centerY;
         float distance = (float) Math.sqrt(dx * dx + dy * dy);
         
-        if (distance < CENTER_DEAD_ZONE || distance > OUTER_RADIUS + HOVER_EXTEND) {
+        if (distance < RadialMenuScreen.CENTER_DEAD_ZONE || distance > RadialMenuScreen.OUTER_RADIUS + RadialMenuScreen.HOVER_EXTEND) {
             return -1;
         }
         
         float angle = (float) Math.toDegrees(Math.atan2(dy, dx)) + 90;
         if (angle < 0) angle += 360;
         
-        float anglePerSection = 360.0f / menuItems.size();
+        float anglePerSection = 360.0f / this.menuItems.size();
         int section = (int) (angle / anglePerSection);
         
-        return section % menuItems.size();
+        return section % this.menuItems.size();
     }
     
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (hoveredIndex < 0 || hoveredIndex > menuItems.size()) return super.mouseClicked(mouseX, mouseY, button);
+        if (this.hoveredIndex < 0 || this.hoveredIndex > this.menuItems.size()) return super.mouseClicked(mouseX, mouseY, button);
         if (button == 0 || button == 1) {
-            RadialMenuItem item = menuItems.get(hoveredIndex);
+            RadialMenuItem item = this.menuItems.get(this.hoveredIndex);
             item.action().accept(button == 0);
             item.property().next(button == 0);
             return true;
-        } else if (button == 2 && menuItems.get(hoveredIndex).property().location().equals(CSProperties.COLOR)) {
+        } else if (button == 2 && this.menuItems.get(this.hoveredIndex).property().location().equals(CSProperties.COLOR)) {
             Minecraft.getInstance().setScreen(new ColorPickerScreen());
             return true;
         }
@@ -210,8 +211,8 @@ public class RadialMenuScreen extends Screen {
     
     @Override
     public boolean mouseScrolled(double mx, double my, double dx, double dy) {
-        if (hoveredIndex >= 0 && hoveredIndex < menuItems.size()) {
-            RadialMenuItem item = menuItems.get(hoveredIndex);
+        if (this.hoveredIndex >= 0 && this.hoveredIndex < this.menuItems.size()) {
+            RadialMenuItem item = this.menuItems.get(this.hoveredIndex);
             item.action().accept(dy < 0);
             item.property().next(dy < 0);
             return true;
@@ -232,8 +233,8 @@ public class RadialMenuScreen extends Screen {
         return false;
     }
     
-//    @Override
-//    protected void renderBlurredBackground(float partialTick) { }
+    //    @Override
+    //    protected void renderBlurredBackground(float partialTick) { }
     
     private record RadialMenuItem(IProperty<?> property, Consumer<Boolean> action) { }
 }

@@ -75,67 +75,79 @@ public final class CSRegistry {
     @Deprecated(forRemoval = true)
     public static final Table<Types, Colors, DeferredHolder<Block, CrystalixGlass>> OLD_ENTRIES = CSRegistry.old();
     
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = TABS.register("creative_tab", () -> CreativeModeTab.builder()
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CSRegistry.TABS.register("creative_tab", () -> CreativeModeTab.builder()
             .title(CSLanguage.CREATIVE_TAB_DEFAULT.text())
-            .icon(() -> Objects.requireNonNull(ENTRIES.get(Types.GLASS)).get().asItem().getDefaultInstance())
-            .displayItems((param, out) -> ITEMS.getEntries().stream().map(DeferredHolder::get).map(Item::getDefaultInstance).forEach(out::accept))
+            .icon(() -> Objects.requireNonNull(CSRegistry.ENTRIES.get(Types.GLASS)).get().asItem().getDefaultInstance())
+            .displayItems((param, out) -> CSRegistry.ITEMS.getEntries().stream().map(DeferredHolder::get).map(Item::getDefaultInstance).forEach(out::accept))
             .build()
     );
-    public static final Supplier<DataComponentType<Boolean>> WATERLOGGABLE = COMPONENTS.register("waterlogged", () ->
+    public static final Supplier<DataComponentType<Boolean>> FLUIDLOGGABLE = CSRegistry.COMPONENTS.register("fluidloggable", () ->
             DataComponentType.<Boolean>builder()
                     .persistent(Codec.BOOL)
                     .networkSynchronized(ByteBufCodecs.BOOL)
                     .build()
     );
-    public static final Supplier<DataComponentType<Boolean>> INVISIBLE = COMPONENTS.register("invisible", () ->
+    public static final Supplier<DataComponentType<Boolean>> INVISIBLE = CSRegistry.COMPONENTS.register("invisible", () ->
             DataComponentType.<Boolean>builder()
                     .persistent(Codec.BOOL)
                     .networkSynchronized(ByteBufCodecs.BOOL)
                     .build()
     );
-    public static final Supplier<DataComponentType<Boolean>> SHADELESS = COMPONENTS.register("shadeless", () ->
+    public static final Supplier<DataComponentType<Boolean>> SHADELESS = CSRegistry.COMPONENTS.register("shadeless", () ->
             DataComponentType.<Boolean>builder()
                     .persistent(Codec.BOOL)
                     .networkSynchronized(ByteBufCodecs.BOOL)
                     .build()
     );
-    public static final Supplier<DataComponentType<Boolean>> REINFORCED = COMPONENTS.register("reinforced", () ->
+    public static final Supplier<DataComponentType<Boolean>> REINFORCED = CSRegistry.COMPONENTS.register("reinforced", () ->
             DataComponentType.<Boolean>builder()
                     .persistent(Codec.BOOL)
                     .networkSynchronized(ByteBufCodecs.BOOL)
                     .build()
     );
-    public static final Supplier<DataComponentType<Boolean>> CLEAR = COMPONENTS.register("clear", () ->
+    public static final Supplier<DataComponentType<Boolean>> TRANSPARENT = CSRegistry.COMPONENTS.register("transparent", () ->
             DataComponentType.<Boolean>builder()
                     .persistent(Codec.BOOL)
                     .networkSynchronized(ByteBufCodecs.BOOL)
                     .build()
     );
-    public static final Supplier<DataComponentType<CSProperties.Ghost>> GHOST = COMPONENTS.register("ghost", () ->
+    public static final Supplier<DataComponentType<Boolean>> REDSTONE = CSRegistry.COMPONENTS.register("redstone", () ->
+            DataComponentType.<Boolean>builder()
+                    .persistent(Codec.BOOL)
+                    .networkSynchronized(ByteBufCodecs.BOOL)
+                    .build()
+    );
+    public static final Supplier<DataComponentType<Boolean>> CONDUCTOR = CSRegistry.COMPONENTS.register("conductor", () ->
+            DataComponentType.<Boolean>builder()
+                    .persistent(Codec.BOOL)
+                    .networkSynchronized(ByteBufCodecs.BOOL)
+                    .build()
+    );
+    public static final Supplier<DataComponentType<CSProperties.Ghost>> GHOST = CSRegistry.COMPONENTS.register("ghost", () ->
             DataComponentType.<CSProperties.Ghost>builder()
                     .persistent(CSProperties.Ghost.CODEC)
                     .networkSynchronized(CSProperties.Ghost.STREAM_CODEC)
                     .build()
     );
-    public static final Supplier<DataComponentType<CSProperties.Light>> LIGHT = COMPONENTS.register("light", () ->
+    public static final Supplier<DataComponentType<CSProperties.Light>> LIGHT = CSRegistry.COMPONENTS.register("light", () ->
             DataComponentType.<CSProperties.Light>builder()
                     .persistent(CSProperties.Light.CODEC)
                     .networkSynchronized(CSProperties.Light.STREAM_CODEC)
                     .build()
     );
-    public static final Supplier<DataComponentType<Integer>> COLOR = COMPONENTS.register("color", () ->
+    public static final Supplier<DataComponentType<Integer>> COLOR = CSRegistry.COMPONENTS.register("color", () ->
             DataComponentType.<Integer>builder()
                     .persistent(Codec.INT)
                     .networkSynchronized(ByteBufCodecs.INT)
                     .build()
     );
-    public static final Supplier<DataComponentType<Boolean>> APPLY_COLORLESS = COMPONENTS.register("apply_colorless", () ->
+    public static final Supplier<DataComponentType<Boolean>> APPLY_COLORLESS = CSRegistry.COMPONENTS.register("apply_colorless", () ->
             DataComponentType.<Boolean>builder()
                     .persistent(Codec.BOOL)
                     .networkSynchronized(ByteBufCodecs.BOOL)
                     .build()
     );
-    public static final Supplier<AttachmentType<Boolean>> MIGRATED = ATTACHMENTS.register("migrated", () ->
+    public static final Supplier<AttachmentType<Boolean>> MIGRATED = CSRegistry.ATTACHMENTS.register("migrated", () ->
             AttachmentType.builder(() -> Boolean.FALSE)
                     .serialize(Codec.BOOL)
                     .sync(ByteBufCodecs.BOOL)
@@ -158,10 +170,10 @@ public final class CSRegistry {
                     () -> new EnumMap<>(Types.class)
             ));
     
-    public static final DeferredHolder<Item, CrystalixWand> WAND = ITEMS.register("crystalix_wand", () -> new CrystalixWand(new Item.Properties()));
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CrystalixGlassTile>> GLASS_TILE = BLOCK_ENTITIES.register("glass_tile", () ->
+    public static final DeferredHolder<Item, CrystalixWand> WAND = CSRegistry.ITEMS.register("crystalix_wand", () -> new CrystalixWand(new Item.Properties()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CrystalixGlassTile>> GLASS_TILE = CSRegistry.BLOCK_ENTITIES.register("glass_tile", () ->
             BlockEntityType.Builder.of(CrystalixGlassTile::new,
-                    Stream.concat(ENTRIES.values().stream(), OLD_ENTRIES.cellSet().stream().map(Table.Cell::getValue))
+                    Stream.concat(CSRegistry.ENTRIES.values().stream(), CSRegistry.OLD_ENTRIES.cellSet().stream().map(Table.Cell::getValue))
                             .filter(Objects::nonNull)
                             .map(DeferredHolder::get)
                             .toArray(Block[]::new)
@@ -171,8 +183,8 @@ public final class CSRegistry {
         Map<Types, DeferredHolder<Block, CrystalixGlass>> map = new HashMap<>();
         for (Types type : Types.values()) {
             String name = type.format();
-            DeferredHolder<Block, CrystalixGlass> holder = BLOCKS.register(name, () -> new CrystalixGlass(type, null));
-            ITEMS.register(name, () -> new BlockItem(holder.get(), new Item.Properties()));
+            DeferredHolder<Block, CrystalixGlass> holder = CSRegistry.BLOCKS.register(name, () -> new CrystalixGlass(type, null));
+            CSRegistry.ITEMS.register(name, () -> new BlockItem(holder.get(), new Item.Properties()));
             map.put(type, holder);
         }
         return map;
@@ -185,7 +197,7 @@ public final class CSRegistry {
             for (Types type : Types.values()) {
                 String name = color.format(type);
                 if (name.equalsIgnoreCase(type.format())) continue;
-                DeferredHolder<Block, CrystalixGlass> holder = BLOCKS.register(name, () -> new CrystalixGlass(type, color));
+                DeferredHolder<Block, CrystalixGlass> holder = CSRegistry.BLOCKS.register(name, () -> new CrystalixGlass(type, color));
                 table.put(type, color, holder);
             }
         }
@@ -193,12 +205,12 @@ public final class CSRegistry {
     }
     
     public static void register(IEventBus bus) {
-        BLOCKS.register(bus);
-        ITEMS.register(bus);
-        TABS.register(bus);
-        COMPONENTS.register(bus);
-        ATTACHMENTS.register(bus);
-        BLOCK_ENTITIES.register(bus);
+        CSRegistry.BLOCKS.register(bus);
+        CSRegistry.ITEMS.register(bus);
+        CSRegistry.TABS.register(bus);
+        CSRegistry.COMPONENTS.register(bus);
+        CSRegistry.ATTACHMENTS.register(bus);
+        CSRegistry.BLOCK_ENTITIES.register(bus);
     }
     
     @RequiredArgsConstructor
@@ -212,11 +224,11 @@ public final class CSRegistry {
         
         @Override
         public @NotNull String getSerializedName() {
-            return name().toLowerCase(Locale.ROOT);
+            return this.name().toLowerCase(Locale.ROOT);
         }
         
         public String format() {
-            return (this.equals(GLASS) ? "" : this.getSerializedName() + "_") + "crystalix_glass";
+            return (this.equals(Types.GLASS) ? "" : this.getSerializedName() + "_") + "crystalix_glass";
         }
     }
     
@@ -309,8 +321,8 @@ public final class CSRegistry {
         public static @Nullable Colors fromState(BlockState state) {
             String path = BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath();
             
-            if (!path.endsWith(BASE)) return null;
-            path = path.substring(0, path.length() - BASE.length());
+            if (!path.endsWith(Colors.BASE)) return null;
+            path = path.substring(0, path.length() - Colors.BASE.length());
             
             if (path.endsWith("clear_")) {
                 path = path.substring(0, path.length() - "clear_".length());
@@ -321,7 +333,7 @@ public final class CSRegistry {
                 path = path.substring(0, path.length() - "_".length());
             }
             
-            if (path.isEmpty()) return CLEAR;
+            if (path.isEmpty()) return Colors.CLEAR;
             
             for (Colors color : Colors.values()) {
                 if (color.getSerializedName().equals(path)) {
@@ -329,23 +341,23 @@ public final class CSRegistry {
                 }
             }
             
-            log.warn("Unknown color: {}", path);
+            CSRegistry.log.warn("Unknown color: {}", path);
             return null;
         }
         
         public @NotNull String format(Types type) {
-            String prefix = this.equals(CLEAR) ? "" : getSerializedName() + "_";
+            String prefix = this.equals(Colors.CLEAR) ? "" : this.getSerializedName() + "_";
             String suffix = switch (type) {
                 case GLASS -> "";
                 case CLEAR -> "clear_";
                 case BORDERED -> "bordered_";
             };
-            return prefix + suffix + BASE;
+            return prefix + suffix + Colors.BASE;
         }
         
         @Override
         public @NotNull String getSerializedName() {
-            return name().toLowerCase(Locale.ROOT);
+            return this.name().toLowerCase(Locale.ROOT);
         }
         
         @Override
