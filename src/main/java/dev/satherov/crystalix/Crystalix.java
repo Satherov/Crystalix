@@ -88,7 +88,8 @@ public class Crystalix {
         
         ChunkAccess chunk = event.getChunk();
         if (chunk.getData(CSRegistry.MIGRATED)) return;
-        Level level = event.getChunk().getLevel();
+        Level world = event.getChunk().getLevel();
+        if (!(world instanceof ServerLevel level)) return;
         
         chunk.setData(CSRegistry.MIGRATED, Boolean.TRUE);
         List<LevelChunkSection> sections = Arrays.stream(chunk.getSections())
@@ -124,7 +125,7 @@ public class Crystalix {
                 tile.setReinforced(state.getValue(CrystalixGlass.REINFORCED));
                 
                 chunk.setBlockEntity(tile);
-                if (level != null) level.updateNeighborsAt(pos, migrated.getBlock());
+                level.updateNeighborsAt(pos, migrated.getBlock());
             });
         }));
     }
