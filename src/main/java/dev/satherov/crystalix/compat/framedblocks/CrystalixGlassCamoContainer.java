@@ -5,6 +5,7 @@ import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 
 import xfacthd.framedblocks.api.camo.block.AbstractBlockCamoContainer;
@@ -26,6 +27,11 @@ final class CrystalixGlassCamoContainer extends AbstractBlockCamoContainer<Cryst
 
     @Override
     public int getTintColor(ItemStack stack, int tintIdx) {
+        return tintColor;
+    }
+
+    @Override
+    public Integer getBeaconColorMultiplier(LevelReader level, BlockPos pos, BlockPos beaconPos) {
         return tintColor;
     }
 
