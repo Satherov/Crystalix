@@ -8,9 +8,6 @@ import dev.satherov.crystalix.common.properties.CSProperties;
 import dev.satherov.crystalix.core.CSRegistry;
 import dev.satherov.crystalix.core.annotations.NothingNull;
 
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.loading.FMLLoader;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -38,6 +35,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -74,7 +72,10 @@ public class CrystalixGlass extends SLBlock implements EntityBlock, SimpleWaterl
     private final @Getter @Nullable CSRegistry.Colors color;
     
     public CrystalixGlass(CSRegistry.Types type, @Nullable CSRegistry.Colors color) {
-        super(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_STAINED_GLASS).isRedstoneConductor(CrystalixGlassTile.isRedstoneConductor()));
+        super(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_STAINED_GLASS)
+                .isRedstoneConductor(CrystalixGlassTile.isRedstoneConductor())
+                .lightLevel(state -> state.getValue(CrystalixGlass.LIGHT).equals(CSProperties.Light.LIGHT) ? 15 : 0)
+        );
         this.type = type;
         this.color = color;
     }
@@ -217,16 +218,14 @@ public class CrystalixGlass extends SLBlock implements EntityBlock, SimpleWaterl
     }
     
     @Override
-    public int getLightEmission(BlockState state, BlockGetter blockGetter, BlockPos pos) {
-        var light = state.getValue(CrystalixGlass.LIGHT);
-        
-        if (light == CSProperties.Light.FAKE_LIGHT)
-            return FMLLoader.getDist() == Dist.CLIENT ? 15 : 0;
-        
-        if (light == CSProperties.Light.LIGHT)
-            return 15;
-        
-        return 0;
+    public int getLightEmission(BlockState state, BlockGetter getter, BlockPos pos) {
+        if (state.getValue(CrystalixGlass.LIGHT).equals(CSProperties.Light.FAKE_LIGHT)) {
+            return switch (getter) { // Are we on the server?
+                case ChunkAccess chunk -> chunk.getLevel() instanceof ServerLevel;
+                case Level level -> level instanceof ServerLevel;
+                default -> true;
+            } ? 0 : 15;
+        } else return super.getLightEmission(state, getter, pos);
     }
     
     @Override
