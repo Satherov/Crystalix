@@ -1,0 +1,102 @@
+name: Issue auto-label
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply labels from issue form selections
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issueNumber = context.payload.issue.number;
+
+            const bodyRaw = context.payload.issue.body || "";
+            const body = bodyRaw.replace(/\r\n/g, "\n");
+
+            const existingLabels = (context.payload.issue.labels || []).map(labelEntry => labelEntry.name);
+
+            const sideLabels = new Set(["side/client", "side/server", "side/both"]);
+            const requestKindLabels = new Set(["type/enhancement", "type/request"]);
+            const statusLabels = new Set(["status/unconfirmed", "status/confirmed", "status/in-progress"]);
+
+            const extractValue = (headerText) => {
+              // Match:
+              // ### Header
+              //
+              // value
+              const pattern = new RegExp(
+                `^###\\s+${headerText}\\s*\\n+(?:\\s*\\n)*([^\\n#][^\\n]*)`,
+                "m"
+              );
+
+              const match = body.match(pattern);
+              if (match === null) {
+                return null;
+              }
+
+              return match[1].replaceAll("**", "").trim();
+            };
+
+            const selectedSide = extractValue("Side");
+            const selectedRequestKind = extractValue("Request type");
+
+            const labelsToAdd = new Set();
+            const labelsToRemove = new Set();
+
+            const ensureSingleFromSet = (selected, allowedSet) => {
+              if (selected === null) {
+                return;
+              }
+              if (!allowedSet.has(selected)) {
+                return;
+              }
+
+              for (const labelName of allowedSet) {
+                if (labelName !== selected && existingLabels.includes(labelName)) {
+                  labelsToRemove.add(labelName);
+                }
+              }
+
+              if (!existingLabels.includes(selected)) {
+                labelsToAdd.add(selected);
+              }
+            };
+
+            ensureSingleFromSet(selectedSide, sideLabels);
+            ensureSingleFromSet(selectedRequestKind, requestKindLabels);
+
+            // Ensure at least one status/* label (default to unconfirmed)
+            const hasStatus = existingLabels.some(labelName => statusLabels.has(labelName));
+            if (!hasStatus) {
+              labelsToAdd.add("status/unconfirmed");
+            }
+
+            // Apply removals
+            for (const labelName of labelsToRemove) {
+              await github.rest.issues.removeLabel({
+                owner,
+                repo,
+                issue_number: issueNumber,
+                name: labelName
+              }).catch(() => {});
+            }
+
+            // Apply additions
+            if (labelsToAdd.size > 0) {
+              await github.rest.issues.addLabels({
+                owner,
+                repo,
+                issue_number: issueNumber,
+                labels: Array.from(labelsToAdd)
+              });
+            }
