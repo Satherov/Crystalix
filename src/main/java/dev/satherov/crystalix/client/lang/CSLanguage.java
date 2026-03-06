@@ -66,6 +66,7 @@ public enum CSLanguage implements CSTranslatable {
     PROPERTY_GHOST_PLAYER("property", "ghost.player", "Player"),
     PROPERTY_GHOST_ANIMAL("property", "ghost.animal", "Animal"),
     PROPERTY_GHOST_MONSTER("property", "ghost.monster", "Monster"),
+    PROPERTY_GHOST_ADULT("property", "ghost.adult", "Adult"),
     
     PROPERTY_LIGHT_NONE("property", "light.none", "None"),
     PROPERTY_LIGHT_LIGHT("property", "light.light", "Light"),

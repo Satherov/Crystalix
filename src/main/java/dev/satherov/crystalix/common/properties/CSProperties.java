@@ -14,7 +14,11 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.frog.Tadpole;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -101,7 +105,10 @@ public final class CSProperties {
         BLOCK_MONSTER(CSLanguage.PROPERTY_GHOST_MONSTER, ChatFormatting.RED, false, context -> !(context.getEntity() instanceof Monster)),
         ALLOW_MONSTER(CSLanguage.PROPERTY_GHOST_MONSTER, ChatFormatting.RED, true, context -> context.getEntity() instanceof Monster),
         BLOCK_ANIMAL(CSLanguage.PROPERTY_GHOST_ANIMAL, ChatFormatting.GREEN, false, context -> !(context.getEntity() instanceof Animal)),
-        ALLOW_ANIMAL(CSLanguage.PROPERTY_GHOST_ANIMAL, ChatFormatting.GREEN, true, context -> context.getEntity() instanceof Animal);
+        ALLOW_ANIMAL(CSLanguage.PROPERTY_GHOST_ANIMAL, ChatFormatting.GREEN, true, context -> context.getEntity() instanceof Animal),
+        BLOCK_ADULT(CSLanguage.PROPERTY_GHOST_ADULT, ChatFormatting.LIGHT_PURPLE, false, context -> context.getEntity() instanceof LivingEntity mob && mob.isBaby() || context.getEntity() instanceof Tadpole),
+        ALLOW_ADULT(CSLanguage.PROPERTY_GHOST_ADULT, ChatFormatting.LIGHT_PURPLE, true, context -> context.getEntity() instanceof LivingEntity mob && !mob.isBaby()),
+        ;
         
         public static final Codec<Ghost> CODEC = EnumCodecs.makeCodec(Ghost.class);
         public static final StreamCodec<ByteBuf, Ghost> STREAM_CODEC = EnumCodecs.makeStreamCodec(Ghost.class);
