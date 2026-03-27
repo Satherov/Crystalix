@@ -186,7 +186,7 @@
   "property.crystalix.invisible": "Невидимый",
   "property.crystalix.light": "Свет",
   "property.crystalix.light.dark": "Тьма",
-  "property.crystalix.light.fake": "Фальшивый свет",
+  "property.crystalix.light.fake_light": "Фальшивый свет",
   "property.crystalix.light.light": "Свет",
   "property.crystalix.light.none": "Нет",
   "property.crystalix.reinforced": "Усиленный",

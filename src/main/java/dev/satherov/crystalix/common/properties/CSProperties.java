@@ -148,8 +148,9 @@ public final class CSProperties {
     public enum Light implements StringRepresentable, CSTranslatable {
         NONE(CSLanguage.PROPERTY_LIGHT_NONE, ChatFormatting.GRAY),
         LIGHT(CSLanguage.PROPERTY_LIGHT_LIGHT, ChatFormatting.GOLD),
+        FAKE_LIGHT(CSLanguage.PROPERTY_LIGHT_FAKE_LIGHT, ChatFormatting.LIGHT_PURPLE),
         DARK(CSLanguage.PROPERTY_LIGHT_DARK, ChatFormatting.DARK_GRAY),
-        FAKE_LIGHT(CSLanguage.PROPERTY_LIGHT_FAKE, ChatFormatting.LIGHT_PURPLE),
+        FAKE_DARK(CSLanguage.PROPERTY_LIGHT_FAKE_DARK, ChatFormatting.BLUE),
         ;
         
         public static final Codec<Light> CODEC = EnumCodecs.makeCodec(Light.class);

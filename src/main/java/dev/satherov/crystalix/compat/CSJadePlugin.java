@@ -22,6 +22,8 @@ import snownee.jade.api.IWailaPlugin;
 import snownee.jade.api.WailaPlugin;
 import snownee.jade.api.config.IPluginConfig;
 
+import java.util.Locale;
+
 @NothingNull
 @WailaPlugin
 public class CSJadePlugin implements IWailaPlugin {
@@ -43,16 +45,16 @@ public class CSJadePlugin implements IWailaPlugin {
     private static Component getTranslation(CSLanguage language, int color) {
         return language.text(ChatFormatting.GRAY)
                 .append(Component.literal(": "))
-                .append(Component.literal(String.format("#%06X", (0xFFFFFF & color)).toUpperCase()).withColor(color));
+                .append(Component.literal(String.format("#%06X", (0xFFFFFF & color)).toUpperCase(Locale.ROOT)).withColor(color));
     }
     
     private static void showTooltips(ITooltip tooltip, BlockAccessor accessor) {
         tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_INVISIBLE, accessor.getBlockState().getValue(CrystalixGlass.INVISIBLE)));
         tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_SHADELESS, accessor.getBlockState().getValue(CrystalixGlass.SHADELESS)));
         tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_REINFORCED, accessor.getBlockEntity() instanceof CrystalixGlassTile tile && tile.isReinforced()));
-        tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_WATERLOGGABLE, accessor.getBlockState().getValue(CrystalixGlass.WATERLOGGABLE)));
+        tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_WATERLOGGABLE, accessor.getBlockEntity() instanceof CrystalixGlassTile tile && tile.isWaterloggable()));
         tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_TRANSPARENT, accessor.getBlockState().getValue(CrystalixGlass.TRANSPARENT)));
-        tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_REDSTONE, accessor.getBlockState().getValue(CrystalixGlass.REDSTONE)));
+        tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_REDSTONE, accessor.getBlockEntity() instanceof CrystalixGlassTile tile && tile.isRedstone()));
         tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_CONDUCTOR, accessor.getBlockEntity() instanceof CrystalixGlassTile tile && tile.isConductor()));
         tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_LIGHT, accessor.getBlockState().getValue(CrystalixGlass.LIGHT)));
         tooltip.add(CSJadePlugin.getTranslation(CSLanguage.PROPERTY_GHOST, accessor.getBlockState().getValue(CrystalixGlass.GHOST)));

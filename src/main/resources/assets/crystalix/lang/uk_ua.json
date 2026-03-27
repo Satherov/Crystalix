@@ -70,7 +70,7 @@
   "property.crystalix.invisible": "Режим невидимості",
   "property.crystalix.light": "Режим освітлення",
   "property.crystalix.light.dark": "Темний",
-  "property.crystalix.light.fake": "Фальшиве світло",
+  "property.crystalix.light.fake_light": "Фальшиве світло",
   "property.crystalix.light.light": "Світло",
   "property.crystalix.light.none": "Немає",
   "property.crystalix.reinforce": "Посилений режим",

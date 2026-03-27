@@ -186,7 +186,7 @@
   "property.crystalix.invisible": "透明",
   "property.crystalix.light": "発光",
   "property.crystalix.light.dark": "暗い",
-  "property.crystalix.light.fake": "偽の光",
+  "property.crystalix.light.fake_light": "偽の光",
   "property.crystalix.light.light": "明るい",
   "property.crystalix.light.none": "なし",
   "property.crystalix.reinforced": "強化",

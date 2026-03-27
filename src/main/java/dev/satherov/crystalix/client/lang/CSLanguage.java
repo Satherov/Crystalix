@@ -71,7 +71,8 @@ public enum CSLanguage implements CSTranslatable {
     PROPERTY_LIGHT_NONE("property", "light.none", "None"),
     PROPERTY_LIGHT_LIGHT("property", "light.light", "Light"),
     PROPERTY_LIGHT_DARK("property", "light.dark", "Dark"),
-    PROPERTY_LIGHT_FAKE("property", "light.fake", "Fake Light"),
+    PROPERTY_LIGHT_FAKE_LIGHT("property", "light.fake_light", "Fake Light"),
+    PROPERTY_LIGHT_FAKE_DARK("property", "light.dark_dark", "Fake Dark"),
     
     KEY_CATEGORY("key", "category", "Crystalix"),
     KEY_WAND_CONFIG("key", "wand_config", "Open Wand Config"),

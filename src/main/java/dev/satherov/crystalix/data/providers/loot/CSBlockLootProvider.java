@@ -4,7 +4,7 @@ import dev.satherov.crystalix.core.CSRegistry;
 
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
 import net.minecraft.world.level.block.Block;
 
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class CSBlockLootProvider extends VanillaBlockLoot {
     
-    public CSBlockLootProvider(Provider provider) {
+    public CSBlockLootProvider(HolderLookup.Provider provider) {
         super(provider);
     }
     

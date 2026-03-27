@@ -61,17 +61,17 @@ public record SwapPropertiesPayload(BlockPos pos) implements CustomPacketPayload
                 BlockEntity entity = level.getBlockEntity(pos);
                 CSProperties properties = CSProperties.of(wand);
                 
-                ((CSBooleanProperty) properties.properties().get(CSProperties.WATERLOGGABLE)).set(state.getValue(CrystalixGlass.WATERLOGGABLE));
                 ((CSBooleanProperty) properties.properties().get(CSProperties.SHADELESS)).set(state.getValue(CrystalixGlass.SHADELESS));
                 ((CSBooleanProperty) properties.properties().get(CSProperties.INVISIBLE)).set(state.getValue(CrystalixGlass.INVISIBLE));
                 ((CSBooleanProperty) properties.properties().get(CSProperties.CLEAR)).set(state.getValue(CrystalixGlass.TRANSPARENT));
-                ((CSBooleanProperty) properties.properties().get(CSProperties.REDSTONE)).set(state.getValue(CrystalixGlass.REDSTONE));
                 ((CSEnumProperty<CSProperties.Light>) properties.properties().get(CSProperties.LIGHT)).set(state.getValue(CrystalixGlass.LIGHT));
                 ((CSEnumProperty<CSProperties.Ghost>) properties.properties().get(CSProperties.GHOST)).set(state.getValue(CrystalixGlass.GHOST));
                 
                 if (entity instanceof CrystalixGlassTile tile) {
                     ((CSBooleanProperty) properties.properties().get(CSProperties.CONDUCTOR)).set(tile.isConductor());
+                    ((CSBooleanProperty) properties.properties().get(CSProperties.REDSTONE)).set(tile.isRedstone());
                     ((CSBooleanProperty) properties.properties().get(CSProperties.REINFORCED)).set(tile.isReinforced());
+                    ((CSBooleanProperty) properties.properties().get(CSProperties.WATERLOGGABLE)).set(tile.isWaterloggable());
                     ((CSIntegerProperty) properties.properties().get(CSProperties.COLOR)).set(tile.getColor());
                 }
                 

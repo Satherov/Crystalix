@@ -103,9 +103,9 @@ dependencies {
     implementation "curse.maven:fusion-connected-textures-854949:${fusion_version}"
     implementation "curse.maven:framedblocks-441647:${framedblocks_version}"
 
-    runtimeOnly "curse.maven:euphoria-patches-915902:7236770"
-    runtimeOnly "curse.maven:sodium-394468:6382651"
-    runtimeOnly "curse.maven:irisshaders-455508:6661598"
+    // runtimeOnly "curse.maven:euphoria-patches-915902:7236770"
+    // runtimeOnly "curse.maven:sodium-394468:6382651"
+    // runtimeOnly "curse.maven:irisshaders-455508:6661598"
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {

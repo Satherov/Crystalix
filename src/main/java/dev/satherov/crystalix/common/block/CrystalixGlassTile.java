@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -22,6 +23,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+
+import com.mojang.serialization.Codec;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -34,6 +37,8 @@ public class CrystalixGlassTile extends BlockEntity {
     private @Getter int color = 0xFFFFFF;
     private @Getter boolean reinforced = false;
     private @Getter boolean conductor = false;
+    private @Getter boolean redstone = false;
+    private @Getter boolean waterloggable = false;
     
     public CrystalixGlassTile(BlockPos pos, BlockState blockState) {
         super(CSRegistry.GLASS_TILE.get(), pos, blockState);
@@ -41,29 +46,37 @@ public class CrystalixGlassTile extends BlockEntity {
     
     public void setColor(BlockState state, int color) {
         if (this.color == color) return;
-        
         this.color = color;
-        this.setAndUpdate(state);
+        this.update(state);
     }
     
     public void setReinforced(boolean reinforced) {
         if (this.reinforced == reinforced) return;
-        
         this.reinforced = reinforced;
-        this.setAndUpdate(this.getBlockState());
+        this.update(this.getBlockState());
     }
     
     public void setConductor(boolean conductor) {
         if (this.conductor == conductor) return;
-        
         this.conductor = conductor;
-        this.setAndUpdate(this.getBlockState());
+        this.update(this.getBlockState());
     }
     
-    private void setAndUpdate(BlockState state) {
+    public void setRedstone(boolean redstone) {
+        if (this.redstone == redstone) return;
+        this.redstone = redstone;
+        this.update(this.getBlockState());
+    }
+    
+    public void setWaterloggable(boolean waterloggable) {
+        if (this.waterloggable == waterloggable) return;
+        this.waterloggable = waterloggable;
+        this.update(this.getBlockState());
+    }
+    
+    private void update(BlockState state) {
         this.setChanged();
         if (this.level == null) return;
-        this.level.setBlock(this.worldPosition, state, Block.UPDATE_ALL_IMMEDIATE);
         this.level.sendBlockUpdated(this.worldPosition, state, state, Block.UPDATE_ALL);
     }
     
@@ -73,6 +86,8 @@ public class CrystalixGlassTile extends BlockEntity {
         tag.putInt("color", this.color);
         tag.putBoolean("reinforced", this.reinforced);
         tag.putBoolean("conductor", this.conductor);
+        tag.putBoolean("redstone", this.redstone);
+        tag.putBoolean("waterloggable", this.waterloggable);
     }
     
     @Override
@@ -81,6 +96,8 @@ public class CrystalixGlassTile extends BlockEntity {
         if (tag.contains("color")) this.color = tag.getInt("color");
         if (tag.contains("reinforced")) this.reinforced = tag.getBoolean("reinforced");
         if (tag.contains("conductor")) this.conductor = tag.getBoolean("conductor");
+        if (tag.contains("redstone")) this.redstone = tag.getBoolean("redstone");
+        if (tag.contains("waterloggable")) this.waterloggable = tag.getBoolean("waterloggable");
     }
     
     @Override
@@ -96,9 +113,7 @@ public class CrystalixGlassTile extends BlockEntity {
     @Override
     public void onDataPacket(Connection connection, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider registries) {
         super.onDataPacket(connection, packet, registries);
-        if (this.level != null && this.level.isClientSide()) {
-            Minecraft.getInstance().levelRenderer.blockChanged(this.level, this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_IMMEDIATE);
-        }
+        if (this.level != null && this.level.isClientSide()) this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_IMMEDIATE);
     }
     
     @Override
@@ -112,5 +127,13 @@ public class CrystalixGlassTile extends BlockEntity {
     
     public static boolean isReinforced(BlockGetter getter, BlockPos pos) {
         return getter.getBlockEntity(pos) instanceof CrystalixGlassTile tile && tile.isReinforced();
+    }
+    
+    public static boolean isRedstone(BlockGetter getter, BlockPos pos) {
+        return getter.getBlockEntity(pos) instanceof CrystalixGlassTile tile && tile.isRedstone();
+    }
+    
+    public static boolean isWaterLoggable(BlockGetter getter, BlockPos pos) {
+        return getter.getBlockEntity(pos) instanceof CrystalixGlassTile tile && tile.isWaterloggable();
     }
 }

@@ -196,7 +196,7 @@
   "property.crystalix.invisible.tooltip": "Não será renderizado de forma alguma",
   "property.crystalix.light": "Modo de Luz",
   "property.crystalix.light.dark": "Escuro",
-  "property.crystalix.light.fake": "Luz Falsa",
+  "property.crystalix.light.fake_light": "Luz Falsa",
   "property.crystalix.light.light": "Luz",
   "property.crystalix.light.none": "Nenhum",
   "property.crystalix.light.tooltip": "O bloco emitirá ou bloqueará luz",

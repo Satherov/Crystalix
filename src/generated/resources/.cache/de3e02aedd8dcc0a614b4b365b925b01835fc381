@@ -1,8 +1,8 @@
-// 1.21.1	2026-03-05T02:14:33.91735395	Crystalix Data Provider
+// 1.21.1	2026-03-27T17:24:55.789919858	Crystalix Data Provider
 f8cfe2b5a30dc192878ee9a5ef29ee083a1246da assets/crystalix/blockstates/bordered_crystalix_glass.json
 8f706c9c505b4b11306dcda0e843ebc3b992e163 assets/crystalix/blockstates/clear_crystalix_glass.json
 281254a93baaaec0dc0eb9441c2a2e9adad0e053 assets/crystalix/blockstates/crystalix_glass.json
-760a4b257793c5a6e953bf766ef10ea9c5b5308a assets/crystalix/lang/en_us.json
+1ff79a801362f91519a8421c5e9eb4c6db9e82ab assets/crystalix/lang/en_us.json
 24b66e8aa76ece6e8e1cb20912e139e31d082026 assets/crystalix/models/block/bordered_crystalix_glass.json
 cb02da0ecfc861b6bf0d70d27475a54b40e866ce assets/crystalix/models/block/bordered_crystalix_glass_colored.json
 02013dcce5555a3d19315fe6f9d68dce2dda828e assets/crystalix/models/block/bordered_crystalix_glass_no_shade.json

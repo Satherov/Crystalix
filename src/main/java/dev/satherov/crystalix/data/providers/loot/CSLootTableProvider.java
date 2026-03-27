@@ -20,15 +20,15 @@ public class CSLootTableProvider extends LootTableProvider {
     }
     
     public static class ProviderList {
-        private final List<SubProviderEntry> providers = new ArrayList<>();
+        private final List<LootTableProvider.SubProviderEntry> providers = new ArrayList<>();
         
         public ProviderList add(Function<HolderLookup.Provider, LootTableSubProvider> provider, LootContextParamSet paramSet) {
-            SubProviderEntry entry = new SubProviderEntry(provider, paramSet);
+            LootTableProvider.SubProviderEntry entry = new LootTableProvider.SubProviderEntry(provider, paramSet);
             this.providers.add(entry);
             return this;
         }
         
-        public List<SubProviderEntry> entries() {
+        public List<LootTableProvider.SubProviderEntry> entries() {
             return this.providers;
         }
     }
