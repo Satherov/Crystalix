@@ -1,7 +1,10 @@
+import me.modmuss50.mpp.ReleaseType
+
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.115'
+    id 'me.modmuss50.mod-publish-plugin' version "1.1.0"
+    id 'net.neoforged.moddev' version '2.0.141'
     id 'idea'
 }
 
@@ -9,29 +12,30 @@ tasks.named('wrapper', Wrapper).configure {
     distributionType = Wrapper.DistributionType.BIN
 }
 
-version = mod_version
+version = mod_version + "-" + minecraft_version
 group = mod_group_id
+
+sourceSets.main.resources {
+    srcDir('src/generated/resources')
+
+    exclude("**/*.bbmodel")
+    exclude("src/generated/**/.cache")
+}
 
 base {
     archivesName = mod_id
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 neoForge {
     version = project.neo_version
-
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
-    }
 
     // accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
         client {
             client()
-
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
@@ -47,10 +51,10 @@ neoForge {
         }
 
         data {
-            data()
+            clientData()
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
-
+        
         configureEach {
             systemProperty 'forge.logging.markers', 'REGISTRIES'
             logLevel = org.slf4j.event.Level.DEBUG
@@ -64,63 +68,54 @@ neoForge {
     }
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+publishMods {
+    file = tasks.jar.archiveFile
+    displayName = "${mod_name} ${mod_version}-${minecraft_version}"
+    changelog = providers.fileContents(layout.projectDirectory.file("changelog.md")).asText
+    type = ReleaseType.STABLE
+    modLoaders.add("neoforge")
+    
+    curseforge {
+        projectId = mod_curseforge_id
+        projectSlug = mod_id
+        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        minecraftVersions.add("26.1")
+        optional("fusion-connected-textures")
+    }
+
+    modrinth {
+        projectId = mod_modrinth_id
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        minecraftVersions.add("26.1")
+        optional("fusion-connected-textures")
+    }
+}
 
 configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
-    maven {
-        url "https://www.cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
-    }
-    maven {
-        name "TerraformersMC Maven"
-        url "https://maven.terraformersmc.com/"
-    }
-    maven {
-        // location of the maven that hosts JEI files since January 2023
-        name = "Jared's maven"
-        url = "https://maven.blamejared.com/"
-    }
 }
 
 dependencies {
     compileOnly "org.projectlombok:lombok:1.18.42"
     annotationProcessor "org.projectlombok:lombok:1.18.42"
 
-    implementation "dev.emi:emi-neoforge:${emi}+1.21.1:api"
-    implementation "dev.emi:emi-neoforge:${emi}+1.21.1"
-
-    compileOnly("mezz.jei:jei-1.21.1-neoforge-api:${jei}")
-    runtimeOnly("mezz.jei:jei-1.21.1-neoforge:${jei}")
-
-    implementation "curse.maven:jade-324717:${jade_version}"
-    implementation "curse.maven:fusion-connected-textures-854949:${fusion_version}"
-    implementation "curse.maven:framedblocks-441647:${framedblocks_version}"
-
-    // runtimeOnly "curse.maven:euphoria-patches-915902:7236770"
-    // runtimeOnly "curse.maven:sodium-394468:6382651"
-    // runtimeOnly "curse.maven:irisshaders-455508:6661598"
+    jarJar(implementation "dev.satherov.sathlib:sathlib:1.0.0")
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
     var replaceProperties = [
-            minecraft_version         : minecraft_version,
-            minecraft_version_range   : minecraft_version_range,
-            neo_version               : neo_version,
-            loader_version_range      : loader_version_range,
-            mod_id                    : mod_id,
-            mod_name                  : mod_name,
-            mod_license               : mod_license,
-            mod_version               : mod_version,
-            mod_authors               : mod_authors,
-            mod_description           : mod_description,
-            framedblocks_version_range: framedblocks_version_range
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
     ]
     inputs.properties replaceProperties
     expand replaceProperties

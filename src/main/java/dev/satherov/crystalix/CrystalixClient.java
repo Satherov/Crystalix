@@ -1,139 +1,15 @@
 package dev.satherov.crystalix;
 
-import dev.satherov.crystalix.client.KeybindManager;
-import dev.satherov.crystalix.client.lang.CSLanguage;
-import dev.satherov.crystalix.common.block.CrystalixGlassTile;
-import dev.satherov.crystalix.common.item.CrystalixWand;
-import dev.satherov.crystalix.common.properties.CSProperties;
-import dev.satherov.crystalix.common.properties.IProperty;
-import dev.satherov.crystalix.config.CSClientConfig;
-import dev.satherov.crystalix.core.CSRegistry;
-
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.javafmlmod.FMLModContainer;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
-
 @Mod(value = Crystalix.MOD_ID, dist = Dist.CLIENT)
-@EventBusSubscriber(modid = Crystalix.MOD_ID, value = Dist.CLIENT)
 public class CrystalixClient {
     
-    public CrystalixClient(FMLModContainer container) {
+    public CrystalixClient(ModContainer container) {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-    }
-    
-    @SubscribeEvent
-    public static void registerKeys(final RegisterKeyMappingsEvent event) {
-        event.register(KeybindManager.SCREEN_OPENER);
-        event.register(KeybindManager.COPY_PROPERTIES);
-        event.register(KeybindManager.APPLY_COLORLESS);
-    }
-    
-    @SubscribeEvent
-    public static void onRenderGuiOverlay(final RenderGuiEvent.Post event) {
-        if (CSClientConfig.getWandInfo() == CSClientConfig.AnchorPosition.NONE) return;
-        
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null) return;
-        ItemStack wand = CrystalixWand.find(mc.player);
-        if (wand.isEmpty()) return;
-        
-        GuiGraphics guiGraphics = event.getGuiGraphics();
-        int screenWidth = mc.getWindow().getGuiScaledWidth();
-        
-        CSProperties properties = CSProperties.of(wand);
-        
-        List<Component> lines = new ArrayList<>(properties.properties().values().stream().map(IProperty::text).toList());
-        lines.add(CSLanguage.PROPERTY_APPLY_COLORLESS.text(ChatFormatting.GRAY, wand.get(CSRegistry.APPLY_COLORLESS) ? CSLanguage.PROPERTY_ENABLED.text(ChatFormatting.DARK_GREEN) : CSLanguage.PROPERTY_DISABLED.text(ChatFormatting.DARK_RED)));
-        
-        int maxTextWidth = 0;
-        for (Component text : lines) {
-            int textWidth = mc.font.width(text);
-            if (textWidth > maxTextWidth) {
-                maxTextWidth = textWidth;
-            }
-        }
-        
-        int boxWidth = maxTextWidth + 20;
-        int boxHeight = (lines.size()) * (mc.font.lineHeight + 1) + 20;
-        
-        int boxX;
-        if (CSClientConfig.getWandInfo() == CSClientConfig.AnchorPosition.TOP_LEFT) {
-            boxX = 10;
-        } else {
-            boxX = screenWidth - boxWidth - 10;
-        }
-        int boxY = 10;
-        
-        guiGraphics.fill(
-                boxX,
-                boxY,
-                boxX + boxWidth,
-                boxY + boxHeight,
-                0x88111111
-        );
-        
-        guiGraphics.renderOutline(
-                boxX,
-                boxY,
-                boxWidth,
-                boxHeight,
-                0xBB333333
-        );
-        
-        int textX = boxX + 10;
-        int textY = boxY + 10;
-        
-        for (int i = 0; i < lines.size(); i++) {
-            Component line = lines.get(i);
-            guiGraphics.drawString(
-                    mc.font,
-                    line,
-                    textX,
-                    textY,
-                    0xFF0F0F0F
-            );
-            if (i < lines.size() - 1) textY += mc.font.lineHeight + 1;
-        }
-    }
-    
-    @SubscribeEvent
-    @SuppressWarnings("deprecation")
-    public static void renderTypeSetup(final EntityRenderersEvent.RegisterRenderers event) {
-        CSRegistry.ENTRIES.forEach((types, holder) -> {
-            ItemBlockRenderTypes.setRenderLayer(holder.get(), RenderType.translucent());
-        });
-    }
-    
-    @SubscribeEvent
-    public static void onBlockColors(final RegisterColorHandlersEvent.Block event) {
-        CSRegistry.ENTRIES.forEach((type, holder) -> {
-            event.register((state, getter, pos, idx) -> {
-                if (getter != null && pos != null) {
-                    if (getter.getBlockEntity(pos) instanceof CrystalixGlassTile tile) {
-                        return tile.getColor();
-                    }
-                }
-                return 0xFFFFFF;
-            }, holder.get());
-        });
     }
 }
