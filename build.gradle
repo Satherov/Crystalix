@@ -124,11 +124,28 @@ publishing {
     publications {
         register('mavenJava', MavenPublication) {
             from components.java
+            groupId = project.mod_group_id
+            artifactId = project.mod_id
+            version = project.version
         }
     }
     repositories {
         maven {
-            url "file://${project.projectDir}/repo"
+            name = 'reposilite'
+
+            def isSnapshot = project.version.toString().endsWith('-SNAPSHOT')
+            def repoUrl = isSnapshot ? 'https://maven.satherov.dev/snapshots' : 'https://maven.satherov.dev/releases'
+
+            url = uri(repoUrl)
+
+            credentials {
+                username = System.getenv('REPOSILITE_USERNAME')
+                password = System.getenv('REPOSILITE_TOKEN')
+            }
+
+            authentication {
+                basic(BasicAuthentication)
+            }
         }
     }
 }
