@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "d": "#c:gems/diamond",
+    "g": "#crystalix:blocks",
+    "s": "minecraft:stick"
+  },
+  "pattern": [
+    " gd",
+    " sg",
+    "s  "
+  ],
+  "result": {
+    "id": "crystalix:crystalix_wand"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "crystalix:block/template/glass_tinted_shadeless",
+  "textures": {
+    "all": "crystalix:block/bordered"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "crystalix:block/template/glass_tinted",
+  "textures": {
+    "all": "crystalix:block/clear"
+  }
+}

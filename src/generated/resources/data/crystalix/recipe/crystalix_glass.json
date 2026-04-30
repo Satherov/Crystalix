@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": "#c:gems/amethyst",
+    "g": "#c:glass_blocks"
+  },
+  "pattern": [
+    "gag",
+    "a a",
+    "gag"
+  ],
+  "result": {
+    "count": 4,
+    "id": "crystalix:crystalix_glass"
+  }
+}
