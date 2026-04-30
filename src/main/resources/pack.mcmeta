@@ -1,9 +1,0 @@
-{
-  "pack": {
-    "description": "Crystalix assets",
-    "pack_format": 15
-  },
-  "fusion": {
-    "overrides_folder": "crystalix-fusion-overrides"
-  }
-}

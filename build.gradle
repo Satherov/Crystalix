@@ -1,10 +1,8 @@
-import me.modmuss50.mpp.ReleaseType
-
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'me.modmuss50.mod-publish-plugin' version "1.1.0"
     id 'net.neoforged.moddev' version '2.0.141'
+    id 'io.freefair.lombok' version '9.2.0'
     id 'idea'
 }
 
@@ -12,7 +10,7 @@ tasks.named('wrapper', Wrapper).configure {
     distributionType = Wrapper.DistributionType.BIN
 }
 
-version = mod_version + "-" + minecraft_version
+version = mod_version + "+" + minecraft_version
 group = mod_group_id
 
 sourceSets.main.resources {
@@ -68,29 +66,6 @@ neoForge {
     }
 }
 
-publishMods {
-    file = tasks.jar.archiveFile
-    displayName = "${mod_name} ${mod_version}-${minecraft_version}"
-    changelog = providers.fileContents(layout.projectDirectory.file("changelog.md")).asText
-    type = ReleaseType.STABLE
-    modLoaders.add("neoforge")
-    
-    curseforge {
-        projectId = mod_curseforge_id
-        projectSlug = mod_id
-        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
-        minecraftVersions.add("26.1")
-        optional("fusion-connected-textures")
-    }
-
-    modrinth {
-        projectId = mod_modrinth_id
-        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-        minecraftVersions.add("26.1")
-        optional("fusion-connected-textures")
-    }
-}
-
 configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
@@ -98,13 +73,32 @@ configurations {
 repositories {
     mavenLocal()
     mavenCentral()
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    maven { // JEI
+        url "https://maven.blamejared.com/"
+    }
+    maven {
+        url "https://api.modrinth.com/maven" 
+    }
+    maven { // Sathlib
+        url 'https://maven.satherov.dev/releases'
+    }
 }
 
 dependencies {
-    compileOnly "org.projectlombok:lombok:1.18.42"
-    annotationProcessor "org.projectlombok:lombok:1.18.42"
+    jarJar(implementation "dev.satherov.sathlib:sathlib:${sathlib_version}+26.1.2")
 
-    jarJar(implementation "dev.satherov.sathlib:sathlib:1.0.0")
+    compileOnly("mezz.jei:jei-26.1.2-neoforge-api:${jei_version}")
+    runtimeOnly("mezz.jei:jei-26.1.2-neoforge:${jei_version}")
+
+    implementation "maven.modrinth:jade:${jade_version}"
+
+    implementation "curse.maven:framedblocks-441647:7927695"
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
