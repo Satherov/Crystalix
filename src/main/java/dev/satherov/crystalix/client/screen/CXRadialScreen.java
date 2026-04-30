@@ -1,0 +1,197 @@
+package dev.satherov.crystalix.client.screen;
+
+import dev.satherov.crystalix.CrystalixClient;
+import dev.satherov.crystalix.client.lang.CXLanguage;
+import dev.satherov.crystalix.common.block.CrystalixGlassBlockEntity;
+import dev.satherov.crystalix.core.registry.CXRegistry;
+import dev.satherov.crystalix.network.CyclePropertyPayload;
+import dev.satherov.sathlib.client.lang.InputLang;
+import dev.satherov.sathlib.client.screen.RadialScreen;
+import dev.satherov.sathlib.common.properties.SLProperty;
+import dev.satherov.sathlib.core.annotations.NothingNull;
+import dev.satherov.sathlib.network.chat.SLComponent;
+
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+
+import com.mojang.blaze3d.platform.InputConstants;
+
+import org.lwjgl.glfw.GLFW;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.StreamSupport;
+
+@NothingNull
+public class CXRadialScreen extends RadialScreen<CXRadialScreen, CXRadialScreen.PropertySlice> {
+    
+    private static final float START_ANGLE_DEGREES = -90.0F;
+    private static final float SLICE_INNER_RADIUS = 35.0F;
+    private static final float SLICE_OUTER_RADIUS = 145.0F;
+    private static final float HOVER_EXPAND_DISTANCE = 12.0F;
+    private static final float HOVER_OUTWARD_OFFSET = 8.0F;
+    private static final float SLICE_SPACING_DEGREES = 0.25F;
+    private static final float DISPLAY_POSITION = 0.65F;
+    private static final int TITLE_COLOR = 0xFFEAF0F7;
+    private static final int HOVER_TITLE_COLOR = 0xFFFFFFFF;
+    private static final int VALUE_COLOR = 0xFFC6D2DE;
+    private static final int HOVER_VALUE_COLOR = 0xFFE5EEF7;
+    
+    private final ItemStack stack;
+    
+    public CXRadialScreen(ItemStack stack) {
+        this.stack = stack;
+        List<SLProperty<?, CrystalixGlassBlockEntity>> properties = StreamSupport.stream(CXRegistry.CONTAINER.spliterator(), false).toList();
+        
+        this.setStartAngleDegrees(CXRadialScreen.START_ANGLE_DEGREES);
+        this.setSliceInnerRadius(CXRadialScreen.SLICE_INNER_RADIUS);
+        this.setSliceOuterRadius(CXRadialScreen.SLICE_OUTER_RADIUS);
+        this.setHoverExpandDistance(CXRadialScreen.HOVER_EXPAND_DISTANCE);
+        this.setHoverOutwardOffset(CXRadialScreen.HOVER_OUTWARD_OFFSET);
+        this.setSliceSpacingDegrees(CXRadialScreen.SLICE_SPACING_DEGREES);
+        
+        for (SLProperty<?, CrystalixGlassBlockEntity> property : properties) {
+            this.addSlice(new PropertySlice(property));
+        }
+    }
+    
+    @Override
+    public boolean keyReleased(KeyEvent event) {
+        if (CrystalixClient.OPEN_WAND_EDITOR.matches(event)) {
+            this.onClose();
+            return true;
+        }
+        return super.keyReleased(event);
+    }
+    
+    @Override
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        
+        PropertySlice hovered = this.getHovered();
+        if (hovered == null) return;
+        
+        graphics.setTooltipForNextFrame(
+                this.font,
+                this.tooltipLines(hovered.property),
+                Optional.empty(),
+                mouseX,
+                mouseY
+        );
+    }
+    
+    private boolean openEditor(SLProperty<?, CrystalixGlassBlockEntity> property) {
+        if (property == CXRegistry.COLOR_PROPERTY) {
+            Minecraft.getInstance().setScreen(new CXColorScreen(this, this.stack));
+            return true;
+        }
+        return false;
+    }
+    
+    private boolean cycle(SLProperty<?, CrystalixGlassBlockEntity> property, boolean dir) {
+        property.cycle(dir, this.stack);
+        ClientPacketDistributor.sendToServer(new CyclePropertyPayload(property.identifier(), dir));
+        return true;
+    }
+    
+    private List<Component> tooltipLines(SLProperty<?, CrystalixGlassBlockEntity> property) {
+        List<Component> lines = new ArrayList<>();
+        lines.add(property.name().translate(ChatFormatting.DARK_GRAY));
+        lines.add(property.tooltip(this.stack).style(ChatFormatting.DARK_GRAY));
+        
+        if (property == CXRegistry.COLOR_PROPERTY) {
+            lines.add(CXLanguage.TOOLTIP_OPEN_COLORS.translate(
+                    ChatFormatting.DARK_GRAY,
+                    CXRadialScreen.mouseKey(GLFW.GLFW_MOUSE_BUTTON_MIDDLE)
+            ));
+        } else {
+            lines.add(CXLanguage.TOOLTIP_LMB.translate(
+                    ChatFormatting.DARK_GRAY,
+                    CXRadialScreen.mouseKey(GLFW.GLFW_MOUSE_BUTTON_LEFT),
+                    CXRadialScreen.wheelKey(InputLang.WHEEL_UP)
+            ));
+            lines.add(CXLanguage.TOOLTIP_RMB.translate(
+                    ChatFormatting.DARK_GRAY,
+                    CXRadialScreen.mouseKey(GLFW.GLFW_MOUSE_BUTTON_RIGHT),
+                    CXRadialScreen.wheelKey(InputLang.WHEEL_DOWN)
+            ));
+        }
+        
+        return lines;
+    }
+    
+    private static Component mouseKey(int button) {
+        return SLComponent.squareBrackets(SLComponent.key(InputConstants.Type.MOUSE.getOrCreate(button)).style(ChatFormatting.GOLD));
+    }
+    
+    private static Component wheelKey(InputLang direction) {
+        return SLComponent.squareBrackets(direction.translate(ChatFormatting.GOLD));
+    }
+    
+    final class PropertySlice extends RadialScreen.RadialSlice<CXRadialScreen, PropertySlice> {
+        
+        private final SLProperty<?, CrystalixGlassBlockEntity> property;
+        
+        private PropertySlice(SLProperty<?, CrystalixGlassBlockEntity> property) {
+            this.property = property;
+            this.setLabelColor(CXRadialScreen.TITLE_COLOR);
+        }
+        
+        @Override
+        protected void renderContents(GuiGraphicsExtractor graphics, RadialScreen.SliceRenderContext<CXRadialScreen, PropertySlice> context) {
+            Component title = this.property.name().translate();
+            Component value = this.property.value(CXRadialScreen.this.stack);
+            
+            int halfLineHeight = CXRadialScreen.this.font.lineHeight / 2;
+            int displayX = Math.round(context.xAlongMiddle(CXRadialScreen.DISPLAY_POSITION));
+            int displayY = Math.round(context.yAlongMiddle(CXRadialScreen.DISPLAY_POSITION)) - halfLineHeight;
+            
+            graphics.centeredText(
+                    CXRadialScreen.this.font,
+                    title,
+                    displayX,
+                    displayY - CXRadialScreen.this.font.lineHeight,
+                    context.hovered() ? CXRadialScreen.HOVER_TITLE_COLOR : this.getLabelColor()
+            );
+            graphics.centeredText(
+                    CXRadialScreen.this.font,
+                    value,
+                    displayX,
+                    displayY + CXRadialScreen.this.font.lineHeight,
+                    context.hovered() ? CXRadialScreen.HOVER_VALUE_COLOR : CXRadialScreen.VALUE_COLOR
+            );
+        }
+        
+        @Override
+        public boolean mousePressed(CXRadialScreen screen, MouseButtonEvent event, boolean doubleClick) {
+            return switch (event.button()) {
+                case GLFW.GLFW_MOUSE_BUTTON_LEFT -> screen.cycle(this.property, true);
+                case GLFW.GLFW_MOUSE_BUTTON_RIGHT -> screen.cycle(this.property, false);
+                case GLFW.GLFW_MOUSE_BUTTON_MIDDLE -> screen.openEditor(this.property);
+                default -> false;
+            };
+        }
+        
+        @Override
+        public boolean mouseReleased(CXRadialScreen screen, MouseButtonEvent event) {
+            return switch (event.button()) {
+                case GLFW.GLFW_MOUSE_BUTTON_LEFT, GLFW.GLFW_MOUSE_BUTTON_RIGHT, GLFW.GLFW_MOUSE_BUTTON_MIDDLE -> true;
+                default -> false;
+            };
+        }
+        
+        @Override
+        public boolean mouseScrolled(CXRadialScreen screen, double mouseX, double mouseY, double scrollX, double scrollY) {
+            if (scrollY == 0.0D) return false;
+            return screen.cycle(this.property, scrollY > 0.0D);
+        }
+    }
+}
