@@ -12,6 +12,8 @@ Crystalix is a mod centered around glass with a bunch of properties that can be 
 - Adds the `Crystalix Wand`, which is used to apply properties to the Crystalix Glass.
 - Any property can be mixed with any other property, so you can decide yourself which combination works best.
 
+![Recipe](https://github.com/SathLabs/Crystalix/blob/26.1/.github/assets/recipe.png?raw=true)
+
 ## The Crystalix Wand
 
 - Using the wand on a Crystalix Glass block applies the stored properties to that block.
@@ -20,6 +22,8 @@ Crystalix is a mod centered around glass with a bunch of properties that can be 
 - Pressing `V` opens the radial editor, which allows you to customize the settings of the wand, including a color picker screen.
 - Pressing `X` while looking at a Crystalix Glass block will copy its properties to the wand.
 - Pressing `Left Control` toggles whether the wand should apply color as well or the properties only.
+
+![Radial Menu](https://github.com/SathLabs/Crystalix/blob/26.1/.github/assets/radial-menu.png?raw=true)
 
 ## Properties
 
@@ -45,6 +49,8 @@ Crystalix is a mod centered around glass with a bunch of properties that can be 
 
 - Allows you to select any color via the color picker.
 - You can use any RGB or HEX color freely.
+
+![](https://github.com/SathLabs/Crystalix/blob/26.1/.github/assets/color-picker.png?raw=true)
 
 ### Waterloggable
 
@@ -107,6 +113,8 @@ Crystalix is a mod centered around glass with a bunch of properties that can be 
     - `ALWAYS` : Always show the tooltip.
     - `WAND` : Show the tooltip only while holding a wand. (Default)
     - `NEVER` : Never show the tooltip.
+
+![Jade](https://github.com/SathLabs/Crystalix/blob/26.1/.github/assets/jade.png?raw=true)
 
 ## Framed Blocks
 
