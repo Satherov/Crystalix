@@ -8,7 +8,6 @@ import dev.satherov.crystalix.common.block.CrystalixGlassBlockEntity;
 import dev.satherov.crystalix.common.item.CrystalixWandItem;
 import dev.satherov.crystalix.common.properties.CrystalixModelState;
 import dev.satherov.crystalix.core.registry.CXProperties;
-import dev.satherov.crystalix.core.registry.CXRegistry;
 import dev.satherov.sathlib.client.lang.GenericLang;
 import dev.satherov.sathlib.common.properties.BlockItemProperty;
 import dev.satherov.sathlib.core.annotations.NothingNull;
@@ -18,10 +17,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.jspecify.annotations.Nullable;
@@ -55,21 +52,18 @@ public class CrystalixGlassCamoContainer extends AbstractBlockCamoContainer<Crys
     
     @Override
     public void appendJadeTooltip(Level level, BlockPos pos, Player player, Consumer<Component> appender) {
-        final BlockState state = level.getBlockState(pos);
-        final BlockEntity entity = level.getBlockEntity(pos);
-        final ItemStack stack = CXRegistry.CRYSTALIX_WAND.get().getDefaultInstance();
         switch (CXConfig.Client.getJadeMode()) {
-            case ALWAYS -> this.appendTooltip(appender, stack, state, entity);
+            case ALWAYS -> this.appendTooltip(appender);
             case WAND -> {
-                if (!CrystalixWandItem.find(player).isEmpty()) this.appendTooltip(appender, stack, state, entity);
+                if (!CrystalixWandItem.find(player).isEmpty()) this.appendTooltip(appender);
             }
             case NEVER -> { }
         }
     }
     
-    private void appendTooltip(Consumer<Component> appender, ItemStack stack, BlockState state, @Nullable BlockEntity entity) {
+    private void appendTooltip(Consumer<Component> appender) {
         CXProperties.CONTAINER.forEach(property -> {
-            final Component value = this.getValueComponent(property, stack, state, entity);
+            final Component value = this.getValueComponent(property);
             appender.accept(SLComponent.empty()
                     .append(property.getName().translate(ChatFormatting.GRAY))
                     .append(Component.literal(": ").withStyle(ChatFormatting.GRAY))
@@ -77,20 +71,17 @@ public class CrystalixGlassCamoContainer extends AbstractBlockCamoContainer<Crys
         });
     }
     
-    private Component getValueComponent(BlockItemProperty<?> property, ItemStack stack, BlockState state, @Nullable BlockEntity entity) {
-        if (property == CXProperties.COLOR || property == CXProperties.MATERIAL || property == CXProperties.SHADELESS || property == CXProperties.TINTED) {
-            return property.displayBlockValue(stack, state, entity);
-        }
-        
-        if (property == CXProperties.LIGHT) { ;
-            return this.light ? CXLanguage.PROPERTY_LIGHT_LIGHT.translate(ChatFormatting.GOLD) : GenericLang.NONE.translate(ChatFormatting.GRAY);
-        }
-        
+    private Component getValueComponent(BlockItemProperty<?> property) {
+        if (property == CXProperties.COLOR) return CXProperties.COLOR.displayValue(this.tintColor);
+        if (property == CXProperties.MATERIAL) return CXProperties.MATERIAL.displayValue(this.modelState.getMaterial());
+        if (property == CXProperties.SHADELESS) return CXProperties.SHADELESS.displayValue(this.modelState.isShadeless());
+        if (property == CXProperties.TINTED) return CXProperties.TINTED.displayValue(this.modelState.isTinted());
+        if (property == CXProperties.LIGHT) return this.light ? CXLanguage.PROPERTY_LIGHT_LIGHT.translate(ChatFormatting.GOLD) : GenericLang.NONE.translate(ChatFormatting.GRAY);
         return GenericLang.UNSUPPORTED.translate(ChatFormatting.RED);
     }
     
     @Override
-    public @Nullable ModelDataEntry<CrystalixModelState> computeQueryData(Level level, BlockPos pos) {
+    public ModelDataEntry<CrystalixModelState> computeQueryData(Level level, BlockPos pos) {
         return new ModelDataEntry<>(CrystalixGlassBlockEntity.MODEL_STATE.property(), this.modelState);
     }
     
@@ -111,7 +102,7 @@ public class CrystalixGlassCamoContainer extends AbstractBlockCamoContainer<Crys
     
     @Override
     public String toString() {
-        return "CrystalixGlassCamoContainer{content=" + this.content + ", tintColor=" + Integer.toHexString(0xFF000000 | this.tintColor) + ", modelState=" + this.modelState + "}";
+        return "CrystalixGlassCamoContainer{content=" + this.content + ", tintColor=" + Integer.toHexString(0xFF000000 | this.tintColor) + ", light=" + this.light + ", modelState=" + this.modelState + "}";
     }
     
     @Override
