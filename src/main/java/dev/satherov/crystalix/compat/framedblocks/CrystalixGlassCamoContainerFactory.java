@@ -2,8 +2,11 @@ package dev.satherov.crystalix.compat.framedblocks;
 
 import dev.satherov.crystalix.common.block.CrystalixGlassBlock;
 import dev.satherov.crystalix.common.item.CrystalixWandItem;
+import dev.satherov.crystalix.common.properties.CrystalixModelState;
 import dev.satherov.crystalix.common.properties.GhostState;
+import dev.satherov.crystalix.common.properties.GlassMaterial;
 import dev.satherov.crystalix.common.properties.LightState;
+import dev.satherov.crystalix.core.registry.CXProperties;
 import dev.satherov.crystalix.core.registry.CXRegistry;
 import dev.satherov.sathlib.core.annotations.NothingNull;
 
@@ -42,12 +45,16 @@ public class CrystalixGlassCamoContainerFactory extends AbstractBlockCamoContain
     
     private static final MapCodec<CrystalixGlassCamoContainer> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockState.CODEC.fieldOf("state").forGetter(CrystalixGlassCamoContainer::getState),
-            Codec.INT.fieldOf("color").forGetter(CrystalixGlassCamoContainer::getTintColor)
+            Codec.INT.fieldOf("color").forGetter(CrystalixGlassCamoContainer::getTintColor),
+            Codec.BOOL.fieldOf("light").forGetter(CrystalixGlassCamoContainer::isLight),
+            CrystalixModelState.CODEC.fieldOf("model_state").forGetter(CrystalixGlassCamoContainer::getModelState)
     ).apply(instance, CrystalixGlassCamoContainer::new));
     
     private static final StreamCodec<RegistryFriendlyByteBuf, CrystalixGlassCamoContainer> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.idMapper(Block.BLOCK_STATE_REGISTRY), CrystalixGlassCamoContainer::getState,
             ByteBufCodecs.INT, CrystalixGlassCamoContainer::getTintColor,
+            ByteBufCodecs.BOOL, CrystalixGlassCamoContainer::isLight,
+            CrystalixModelState.STREAM_CODEC, CrystalixGlassCamoContainer::getModelState,
             CrystalixGlassCamoContainer::new
     );
     
@@ -62,7 +69,13 @@ public class CrystalixGlassCamoContainerFactory extends AbstractBlockCamoContain
         if (!wandStack.getOrDefault(CXRegistry.APPLY_COLORLESS, false)) {
             tintColor = wandStack.getOrDefault(CXRegistry.COLOR, CrystalixGlassCamoContainerFactory.DEFAULT_TINT);
         }
-        return new CrystalixGlassCamoContainer(camoState, tintColor);
+        boolean light = wandStack.getOrDefault(CXRegistry.LIGHT, false) == LightState.LIGHT;
+        CrystalixModelState modelState = new CrystalixModelState(
+                wandStack.getOrDefault(CXRegistry.SHADELESS, false),
+                wandStack.getOrDefault(CXRegistry.TINTED, false),
+                wandStack.getOrDefault(CXRegistry.MATERIAL, GlassMaterial.defaultMaterial())
+        );
+        return new CrystalixGlassCamoContainer(camoState, tintColor, light, modelState);
     }
     
     @Override
@@ -76,7 +89,8 @@ public class CrystalixGlassCamoContainerFactory extends AbstractBlockCamoContain
     private static BlockState applyWandModifiers(BlockState state, ItemStack wand) {
         if (!(state.getBlock() instanceof CrystalixGlassBlock)) return state;
         
-        BlockState newState = CXRegistry.CONTAINER.updateFromStack(wand, state)
+        BlockState newState = CXProperties.CONTAINER.applyToBlock(wand, state).state()
+                .setValue(CrystalixGlassBlock.INVISIBLE, false)
                 .setValue(CrystalixGlassBlock.GHOST, GhostState.BLOCK_ALL);
         
         LightState light = newState.getValue(CrystalixGlassBlock.LIGHT);
@@ -89,7 +103,7 @@ public class CrystalixGlassCamoContainerFactory extends AbstractBlockCamoContain
     
     @Override
     protected CrystalixGlassCamoContainer copyContainerWithState(CrystalixGlassCamoContainer container, BlockState newCamoState) {
-        return new CrystalixGlassCamoContainer(newCamoState, container.getTintColor());
+        return new CrystalixGlassCamoContainer(newCamoState, container.getTintColor(), container.isLight(), container.getModelState());
     }
     
     @Override
@@ -127,13 +141,17 @@ public class CrystalixGlassCamoContainerFactory extends AbstractBlockCamoContain
     protected void writeToNetwork(ValueOutput output, CrystalixGlassCamoContainer container) {
         output.putInt("state", Block.getId(container.getState()));
         output.putInt("tint", container.getTintColor());
+        output.putBoolean("light", container.isLight());
+        output.store("model_state", CrystalixModelState.CODEC, container.getModelState());
     }
     
     @Override
     protected CrystalixGlassCamoContainer readFromNetwork(ValueInput input) {
         final BlockState state = Block.stateById(input.getInt("state").orElseGet(() -> Block.getId(Blocks.AIR.defaultBlockState())));
         final int tint = input.getInt("tint").orElse(CrystalixGlassCamoContainerFactory.DEFAULT_TINT);
-        return new CrystalixGlassCamoContainer(state, tint);
+        final boolean light = input.getBooleanOr("light", false);
+        final CrystalixModelState modelState = input.read("model_state", CrystalixModelState.CODEC).orElse(CrystalixModelState.empty());
+        return new CrystalixGlassCamoContainer(state, tint, light, modelState);
     }
     
     @Override

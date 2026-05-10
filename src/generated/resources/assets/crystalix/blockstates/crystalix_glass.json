@@ -1,295 +1,437 @@
 {
   "variants": {
-    "material=bordered,shadeless=false,tinted=false": {
-      "type": "sathlib:connected_texture",
-      "connections": [
+    "": {
+      "type": "sathlib:conditional",
+      "cases": [
         {
-          "rule": {
-            "type": "sathlib:all",
-            "rules": [
+          "model": {
+            "type": "sathlib:connected_texture",
+            "connections": [
               {
-                "type": "sathlib:same_block"
-              },
-              {
-                "type": "sathlib:not",
                 "rule": {
-                  "type": "sathlib:neighbor_state",
-                  "property": "invisible",
-                  "value": "true"
-                }
-              },
-              {
-                "type": "sathlib:same_state",
-                "property": "material"
-              },
-              {
-                "type": "sathlib:same_state",
-                "property": "tinted"
+                  "type": "sathlib:all",
+                  "rules": [
+                    {
+                      "type": "sathlib:same_block"
+                    },
+                    {
+                      "type": "sathlib:not",
+                      "rule": {
+                        "type": "sathlib:neighbor_state_property",
+                        "property": "invisible",
+                        "value": "true"
+                      }
+                    },
+                    {
+                      "type": "sathlib:same_model_property",
+                      "field": "material",
+                      "property": "crystalix:model_state"
+                    },
+                    {
+                      "type": "sathlib:same_model_property",
+                      "field": "tinted",
+                      "property": "crystalix:model_state"
+                    }
+                  ]
+                },
+                "texture": "crystalix:block/normal_colored"
               }
-            ]
+            ],
+            "model": {
+              "model": "crystalix:block/crystalix_glass_normal_colored"
+            }
           },
-          "texture": "crystalix:block/bordered"
+          "predicate": {
+            "type": "sathlib:model_property",
+            "property": "crystalix:model_state",
+            "values": {
+              "material": "\"normal\"",
+              "shadeless": "false",
+              "tinted": "true"
+            }
+          }
+        },
+        {
+          "model": {
+            "type": "sathlib:connected_texture",
+            "connections": [
+              {
+                "rule": {
+                  "type": "sathlib:all",
+                  "rules": [
+                    {
+                      "type": "sathlib:same_block"
+                    },
+                    {
+                      "type": "sathlib:not",
+                      "rule": {
+                        "type": "sathlib:neighbor_state_property",
+                        "property": "invisible",
+                        "value": "true"
+                      }
+                    },
+                    {
+                      "type": "sathlib:same_model_property",
+                      "field": "material",
+                      "property": "crystalix:model_state"
+                    },
+                    {
+                      "type": "sathlib:same_model_property",
+                      "field": "tinted",
+                      "property": "crystalix:model_state"
+                    }
+                  ]
+                },
+                "texture": "crystalix:block/normal"
+              }
+            ],
+            "model": {
+              "model": "crystalix:block/crystalix_glass_normal_shadeless"
+            }
+          },
+          "predicate": {
+            "type": "sathlib:model_property",
+            "property": "crystalix:model_state",
+            "values": {
+              "material": "\"normal\"",
+              "shadeless": "true",
+              "tinted": "false"
+            }
+          }
+        },
+        {
+          "model": {
+            "type": "sathlib:connected_texture",
+            "connections": [
+              {
+                "rule": {
+                  "type": "sathlib:all",
+                  "rules": [
+                    {
+                      "type": "sathlib:same_block"
+                    },
+                    {
+                      "type": "sathlib:not",
+                      "rule": {
+                        "type": "sathlib:neighbor_state_property",
+                        "property": "invisible",
+                        "value": "true"
+                      }
+                    },
+                    {
+                      "type": "sathlib:same_model_property",
+                      "field": "material",
+                      "property": "crystalix:model_state"
+                    },
+                    {
+                      "type": "sathlib:same_model_property",
+                      "field": "tinted",
+                      "property": "crystalix:model_state"
+                    }
+                  ]
+                },
+                "texture": "crystalix:block/normal_colored"
+              }
+            ],
+            "model": {
+              "model": "crystalix:block/crystalix_glass_normal_colored_shadeless"
+            }
+          },
+          "predicate": {
+            "type": "sathlib:model_property",
+            "property": "crystalix:model_state",
+            "values": {
+              "material": "\"normal\"",
+              "shadeless": "true",
+              "tinted": "true"
+            }
+          }
+        },
+        {
+          "model": {
+            "model": "crystalix:block/crystalix_glass_clear"
+          },
+          "predicate": {
+            "type": "sathlib:model_property",
+            "property": "crystalix:model_state",
+            "values": {
+              "material": "\"clear\"",
+              "shadeless": "false",
+              "tinted": "false"
+            }
+          }
+        },
+        {
+          "model": {
+            "model": "crystalix:block/crystalix_glass_clear_colored"
+          },
+          "predicate": {
+            "type": "sathlib:model_property",
+            "property": "crystalix:model_state",
+            "values": {
+              "material": "\"clear\"",
+              "shadeless": "false",
+              "tinted": "true"
+            }
+          }
+        },
+        {
+          "model": {
+            "model": "crystalix:block/crystalix_glass_clear_shadeless"
+          },
+          "predicate": {
+            "type": "sathlib:model_property",
+            "property": "crystalix:model_state",
+            "values": {
+              "material": "\"clear\"",
+              "shadeless": "true",
+              "tinted": "false"
+            }
+          }
+        },
+        {
+          "model": {
+            "model": "crystalix:block/crystalix_glass_clear_colored_shadeless"
+          },
+          "predicate": {
+            "type": "sathlib:model_property",
+            "property": "crystalix:model_state",
+            "values": {
+              "material": "\"clear\"",
+              "shadeless": "true",
+              "tinted": "true"
+            }
+          }
+        },
+        {
+          "model": {
+            "type": "sathlib:connected_texture",
+            "connections": [
+              {
+                "rule": {
+                  "type": "sathlib:all",
+                  "rules": [
+                    {
+                      "type": "sathlib:same_block"
+                    },
+                    {
+                      "type": "sathlib:not",
+                      "rule": {
+                        "type": "sathlib:neighbor_state_property",
+                        "property": "invisible",
+                        "value": "true"
+                      }
+                    },
+                    {
+                      "type": "sathlib:same_model_property",
+                      "field": "material",
+                      "property": "crystalix:model_state"
+                    },
+                    {
+                      "type": "sathlib:same_model_property",
+                      "field": "tinted",
+                      "property": "crystalix:model_state"
+                    }
+                  ]
+                },
+                "texture": "crystalix:block/bordered"
+              }
+            ],
+            "model": {
+              "model": "crystalix:block/crystalix_glass_bordered"
+            }
+          },
+          "predicate": {
+            "type": "sathlib:model_property",
+            "property": "crystalix:model_state",
+            "values": {
+              "material": "\"bordered\"",
+              "shadeless": "false",
+              "tinted": "false"
+            }
+          }
+        },
+        {
+          "model": {
+            "type": "sathlib:connected_texture",
+            "connections": [
+              {
+                "rule": {
+                  "type": "sathlib:all",
+                  "rules": [
+                    {
+                      "type": "sathlib:same_block"
+                    },
+                    {
+                      "type": "sathlib:not",
+                      "rule": {
+                        "type": "sathlib:neighbor_state_property",
+                        "property": "invisible",
+                        "value": "true"
+                      }
+                    },
+                    {
+                      "type": "sathlib:same_model_property",
+                      "field": "material",
+                      "property": "crystalix:model_state"
+                    },
+                    {
+                      "type": "sathlib:same_model_property",
+                      "field": "tinted",
+                      "property": "crystalix:model_state"
+                    }
+                  ]
+                },
+                "texture": "crystalix:block/bordered_colored"
+              }
+            ],
+            "model": {
+              "model": "crystalix:block/crystalix_glass_bordered_colored"
+            }
+          },
+          "predicate": {
+            "type": "sathlib:model_property",
+            "property": "crystalix:model_state",
+            "values": {
+              "material": "\"bordered\"",
+              "shadeless": "false",
+              "tinted": "true"
+            }
+          }
+        },
+        {
+          "model": {
+            "type": "sathlib:connected_texture",
+            "connections": [
+              {
+                "rule": {
+                  "type": "sathlib:all",
+                  "rules": [
+                    {
+                      "type": "sathlib:same_block"
+                    },
+                    {
+                      "type": "sathlib:not",
+                      "rule": {
+                        "type": "sathlib:neighbor_state_property",
+                        "property": "invisible",
+                        "value": "true"
+                      }
+                    },
+                    {
+                      "type": "sathlib:same_model_property",
+                      "field": "material",
+                      "property": "crystalix:model_state"
+                    },
+                    {
+                      "type": "sathlib:same_model_property",
+                      "field": "tinted",
+                      "property": "crystalix:model_state"
+                    }
+                  ]
+                },
+                "texture": "crystalix:block/bordered"
+              }
+            ],
+            "model": {
+              "model": "crystalix:block/crystalix_glass_bordered_shadeless"
+            }
+          },
+          "predicate": {
+            "type": "sathlib:model_property",
+            "property": "crystalix:model_state",
+            "values": {
+              "material": "\"bordered\"",
+              "shadeless": "true",
+              "tinted": "false"
+            }
+          }
+        },
+        {
+          "model": {
+            "type": "sathlib:connected_texture",
+            "connections": [
+              {
+                "rule": {
+                  "type": "sathlib:all",
+                  "rules": [
+                    {
+                      "type": "sathlib:same_block"
+                    },
+                    {
+                      "type": "sathlib:not",
+                      "rule": {
+                        "type": "sathlib:neighbor_state_property",
+                        "property": "invisible",
+                        "value": "true"
+                      }
+                    },
+                    {
+                      "type": "sathlib:same_model_property",
+                      "field": "material",
+                      "property": "crystalix:model_state"
+                    },
+                    {
+                      "type": "sathlib:same_model_property",
+                      "field": "tinted",
+                      "property": "crystalix:model_state"
+                    }
+                  ]
+                },
+                "texture": "crystalix:block/bordered_colored"
+              }
+            ],
+            "model": {
+              "model": "crystalix:block/crystalix_glass_bordered_colored_shadeless"
+            }
+          },
+          "predicate": {
+            "type": "sathlib:model_property",
+            "property": "crystalix:model_state",
+            "values": {
+              "material": "\"bordered\"",
+              "shadeless": "true",
+              "tinted": "true"
+            }
+          }
         }
       ],
-      "model": {
-        "model": "crystalix:block/crystalix_glass_bordered"
-      }
-    },
-    "material=bordered,shadeless=false,tinted=true": {
-      "type": "sathlib:connected_texture",
-      "connections": [
-        {
-          "rule": {
-            "type": "sathlib:all",
-            "rules": [
-              {
-                "type": "sathlib:same_block"
-              },
-              {
-                "type": "sathlib:not",
-                "rule": {
-                  "type": "sathlib:neighbor_state",
-                  "property": "invisible",
-                  "value": "true"
+      "fallback": {
+        "type": "sathlib:connected_texture",
+        "connections": [
+          {
+            "rule": {
+              "type": "sathlib:all",
+              "rules": [
+                {
+                  "type": "sathlib:same_block"
+                },
+                {
+                  "type": "sathlib:not",
+                  "rule": {
+                    "type": "sathlib:neighbor_state_property",
+                    "property": "invisible",
+                    "value": "true"
+                  }
+                },
+                {
+                  "type": "sathlib:same_model_property",
+                  "field": "material",
+                  "property": "crystalix:model_state"
+                },
+                {
+                  "type": "sathlib:same_model_property",
+                  "field": "tinted",
+                  "property": "crystalix:model_state"
                 }
-              },
-              {
-                "type": "sathlib:same_state",
-                "property": "material"
-              },
-              {
-                "type": "sathlib:same_state",
-                "property": "tinted"
-              }
-            ]
-          },
-          "texture": "crystalix:block/bordered_colored"
+              ]
+            },
+            "texture": "crystalix:block/normal"
+          }
+        ],
+        "model": {
+          "model": "crystalix:block/crystalix_glass_normal"
         }
-      ],
-      "model": {
-        "model": "crystalix:block/crystalix_glass_bordered_colored"
-      }
-    },
-    "material=bordered,shadeless=true,tinted=false": {
-      "type": "sathlib:connected_texture",
-      "connections": [
-        {
-          "rule": {
-            "type": "sathlib:all",
-            "rules": [
-              {
-                "type": "sathlib:same_block"
-              },
-              {
-                "type": "sathlib:not",
-                "rule": {
-                  "type": "sathlib:neighbor_state",
-                  "property": "invisible",
-                  "value": "true"
-                }
-              },
-              {
-                "type": "sathlib:same_state",
-                "property": "material"
-              },
-              {
-                "type": "sathlib:same_state",
-                "property": "tinted"
-              }
-            ]
-          },
-          "texture": "crystalix:block/bordered"
-        }
-      ],
-      "model": {
-        "model": "crystalix:block/crystalix_glass_bordered_shadeless"
-      }
-    },
-    "material=bordered,shadeless=true,tinted=true": {
-      "type": "sathlib:connected_texture",
-      "connections": [
-        {
-          "rule": {
-            "type": "sathlib:all",
-            "rules": [
-              {
-                "type": "sathlib:same_block"
-              },
-              {
-                "type": "sathlib:not",
-                "rule": {
-                  "type": "sathlib:neighbor_state",
-                  "property": "invisible",
-                  "value": "true"
-                }
-              },
-              {
-                "type": "sathlib:same_state",
-                "property": "material"
-              },
-              {
-                "type": "sathlib:same_state",
-                "property": "tinted"
-              }
-            ]
-          },
-          "texture": "crystalix:block/bordered_colored"
-        }
-      ],
-      "model": {
-        "model": "crystalix:block/crystalix_glass_bordered_colored_shadeless"
-      }
-    },
-    "material=clear,shadeless=false,tinted=false": {
-      "model": "crystalix:block/crystalix_glass_clear"
-    },
-    "material=clear,shadeless=false,tinted=true": {
-      "model": "crystalix:block/crystalix_glass_clear_colored"
-    },
-    "material=clear,shadeless=true,tinted=false": {
-      "model": "crystalix:block/crystalix_glass_clear_shadeless"
-    },
-    "material=clear,shadeless=true,tinted=true": {
-      "model": "crystalix:block/crystalix_glass_clear_colored_shadeless"
-    },
-    "material=normal,shadeless=false,tinted=false": {
-      "type": "sathlib:connected_texture",
-      "connections": [
-        {
-          "rule": {
-            "type": "sathlib:all",
-            "rules": [
-              {
-                "type": "sathlib:same_block"
-              },
-              {
-                "type": "sathlib:not",
-                "rule": {
-                  "type": "sathlib:neighbor_state",
-                  "property": "invisible",
-                  "value": "true"
-                }
-              },
-              {
-                "type": "sathlib:same_state",
-                "property": "material"
-              },
-              {
-                "type": "sathlib:same_state",
-                "property": "tinted"
-              }
-            ]
-          },
-          "texture": "crystalix:block/normal"
-        }
-      ],
-      "model": {
-        "model": "crystalix:block/crystalix_glass_normal"
-      }
-    },
-    "material=normal,shadeless=false,tinted=true": {
-      "type": "sathlib:connected_texture",
-      "connections": [
-        {
-          "rule": {
-            "type": "sathlib:all",
-            "rules": [
-              {
-                "type": "sathlib:same_block"
-              },
-              {
-                "type": "sathlib:not",
-                "rule": {
-                  "type": "sathlib:neighbor_state",
-                  "property": "invisible",
-                  "value": "true"
-                }
-              },
-              {
-                "type": "sathlib:same_state",
-                "property": "material"
-              },
-              {
-                "type": "sathlib:same_state",
-                "property": "tinted"
-              }
-            ]
-          },
-          "texture": "crystalix:block/normal_colored"
-        }
-      ],
-      "model": {
-        "model": "crystalix:block/crystalix_glass_normal_colored"
-      }
-    },
-    "material=normal,shadeless=true,tinted=false": {
-      "type": "sathlib:connected_texture",
-      "connections": [
-        {
-          "rule": {
-            "type": "sathlib:all",
-            "rules": [
-              {
-                "type": "sathlib:same_block"
-              },
-              {
-                "type": "sathlib:not",
-                "rule": {
-                  "type": "sathlib:neighbor_state",
-                  "property": "invisible",
-                  "value": "true"
-                }
-              },
-              {
-                "type": "sathlib:same_state",
-                "property": "material"
-              },
-              {
-                "type": "sathlib:same_state",
-                "property": "tinted"
-              }
-            ]
-          },
-          "texture": "crystalix:block/normal"
-        }
-      ],
-      "model": {
-        "model": "crystalix:block/crystalix_glass_normal_shadeless"
-      }
-    },
-    "material=normal,shadeless=true,tinted=true": {
-      "type": "sathlib:connected_texture",
-      "connections": [
-        {
-          "rule": {
-            "type": "sathlib:all",
-            "rules": [
-              {
-                "type": "sathlib:same_block"
-              },
-              {
-                "type": "sathlib:not",
-                "rule": {
-                  "type": "sathlib:neighbor_state",
-                  "property": "invisible",
-                  "value": "true"
-                }
-              },
-              {
-                "type": "sathlib:same_state",
-                "property": "material"
-              },
-              {
-                "type": "sathlib:same_state",
-                "property": "tinted"
-              }
-            ]
-          },
-          "texture": "crystalix:block/normal_colored"
-        }
-      ],
-      "model": {
-        "model": "crystalix:block/crystalix_glass_normal_colored_shadeless"
       }
     }
   }
