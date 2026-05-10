@@ -5,6 +5,7 @@ import dev.satherov.crystalix.client.screen.CXRadialScreen;
 import dev.satherov.crystalix.common.block.CrystalixGlassBlock;
 import dev.satherov.crystalix.common.block.CrystalixGlassBlockEntity;
 import dev.satherov.crystalix.common.item.CrystalixWandItem;
+import dev.satherov.crystalix.core.registry.CXProperties;
 import dev.satherov.crystalix.core.registry.CXRegistry;
 import dev.satherov.crystalix.network.SwapPropertiesPayload;
 import dev.satherov.crystalix.network.ToggleColorless;
@@ -80,7 +81,7 @@ public class CrystalixClient {
         if (stack.isEmpty()) return;
         
         if (event.getAction() == GLFW.GLFW_PRESS) {
-            boolean enabled = !stack.getOrDefault(CXRegistry.TINTED, false);
+            boolean enabled = !stack.getOrDefault(CXRegistry.APPLY_COLORLESS, false);
             stack.set(CXRegistry.APPLY_COLORLESS, enabled);
             ClientPacketDistributor.sendToServer(new ToggleColorless(enabled));
         }
@@ -103,8 +104,12 @@ public class CrystalixClient {
             final CrystalixGlassBlockEntity entity = CXRegistry.GLASS_BLOCK_ENTITY.get().getBlockEntity(level, pos);
             if (!(state.getBlock() instanceof CrystalixGlassBlock) || entity == null) return;
             
-            CXRegistry.CONTAINER.updateFromState(state, stack);
-            CXRegistry.CONTAINER.updateFromBlockEntity(entity, stack);
+            if (CXProperties.CONTAINER.matches(stack, state, entity)) {
+                player.sendOverlayMessage(CXLanguage.MESSAGE_PROPERTY_MATCH.translate(ChatFormatting.GRAY));
+                return;
+            }
+            
+            CXProperties.CONTAINER.applyToItem(stack, state, entity);
             ClientPacketDistributor.sendToServer(new SwapPropertiesPayload(pos));
             player.sendOverlayMessage(CXLanguage.MESSAGE_PROPERTY_PICK.translate(ChatFormatting.GRAY));
         }

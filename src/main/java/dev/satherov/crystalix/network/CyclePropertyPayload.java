@@ -1,10 +1,10 @@
 package dev.satherov.crystalix.network;
 
 import dev.satherov.crystalix.Crystalix;
-import dev.satherov.crystalix.common.block.CrystalixGlassBlockEntity;
 import dev.satherov.crystalix.common.item.CrystalixWandItem;
+import dev.satherov.crystalix.core.registry.CXProperties;
 import dev.satherov.crystalix.core.registry.CXRegistry;
-import dev.satherov.sathlib.common.properties.SLProperty;
+import dev.satherov.sathlib.common.properties.BlockItemProperty;
 import dev.satherov.sathlib.core.annotations.NothingNull;
 import dev.satherov.sathlib.network.handling.SLPayload;
 import dev.satherov.sathlib.network.handling.ServerPayloadProvider;
@@ -47,12 +47,11 @@ public record CyclePropertyPayload(Identifier identifier, boolean dir) implement
             final ItemStack stack = CrystalixWandItem.find(player);
             if (stack.isEmpty()) return;
             
-            SLProperty<?, CrystalixGlassBlockEntity> property = CXRegistry.CONTAINER.get(payload.identifier());
+            BlockItemProperty<?> property = CXProperties.CONTAINER.getProperty(payload.identifier());
             if (property == null) return;
             
-            if (CyclePropertyPayload.cycleStackProperty(stack, property, payload.dir())) {
-                player.getInventory().setChanged();
-            }
+            property.cycleItem(payload.dir(), stack, CXRegistry.CRYSTALIX_BLOCK.get().defaultBlockState());
+            player.getInventory().setChanged();
         }
         
         @Override
@@ -64,15 +63,5 @@ public record CyclePropertyPayload(Identifier identifier, boolean dir) implement
         public StreamCodec<? super RegistryFriendlyByteBuf, CyclePropertyPayload> codec() {
             return CyclePropertyPayload.STREAM_CODEC;
         }
-    }
-    
-    @SuppressWarnings("unchecked")
-    private static <T> boolean cycleStackProperty(ItemStack stack, SLProperty<?, CrystalixGlassBlockEntity> property, boolean dir) {
-        SLProperty<T, CrystalixGlassBlockEntity> typedProperty = (SLProperty<T, CrystalixGlassBlockEntity>) property;
-        T current = typedProperty.extract(stack);
-        if (current == null) return false;
-        
-        typedProperty.update(stack, typedProperty.cycle(dir, current));
-        return true;
     }
 }

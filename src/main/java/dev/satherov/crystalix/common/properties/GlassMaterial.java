@@ -29,8 +29,8 @@ import io.netty.buffer.ByteBuf;
 @RequiredArgsConstructor
 public enum GlassMaterial implements StringRepresentable, PropertyEnum {
     // @formatter:off
-    NORMAL(  true,  CXLanguage.MATERIAL_NORMAL,   CXLanguage.TOOLTIP_MATERIAL_NORMAL,   ChatFormatting.AQUA),
-    CLEAR(   false, CXLanguage.MATERIAL_CLEAR,    CXLanguage.TOOLTIP_MATERIAL_CLEAR,    ChatFormatting.WHITE),
+    NORMAL  (true,  CXLanguage.MATERIAL_NORMAL,   CXLanguage.TOOLTIP_MATERIAL_NORMAL,   ChatFormatting.AQUA),
+    CLEAR   (false, CXLanguage.MATERIAL_CLEAR,    CXLanguage.TOOLTIP_MATERIAL_CLEAR,    ChatFormatting.WHITE),
     BORDERED(true,  CXLanguage.MATERIAL_BORDERED, CXLanguage.TOOLTIP_MATERIAL_BORDERED, ChatFormatting.GOLD),
     // @formatter:off
     ;

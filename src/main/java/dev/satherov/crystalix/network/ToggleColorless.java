@@ -47,11 +47,13 @@ public record ToggleColorless(boolean enabled) implements SLPayload<ToggleColorl
             final ItemStack stack = CrystalixWandItem.find(player);
             if (stack.isEmpty()) return;
             
-            stack.set(CXRegistry.TINTED, payload.enabled());
-            player.sendSystemMessage(Component.empty()
-                    .append(CXLanguage.PROPERTY_TINTED.translate(ChatFormatting.GRAY))
-                    .append(": ")
-                    .append(SLComponent.enabledDisabled(payload.enabled()))
+            stack.set(CXRegistry.APPLY_COLORLESS, payload.enabled());
+            player.sendSystemMessage(
+                    Component.empty()
+                            .append(CXLanguage.PROPERTY_APPLY_COLORLESS.translate(ChatFormatting.GRAY))
+                            .append(": ")
+                            .append(SLComponent.enabledDisabled(payload.enabled())),
+                    true
             );
             
             player.getInventory().setChanged();

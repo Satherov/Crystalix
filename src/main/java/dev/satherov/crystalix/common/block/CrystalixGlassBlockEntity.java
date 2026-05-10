@@ -2,7 +2,11 @@ package dev.satherov.crystalix.common.block;
 
 import lombok.Getter;
 
+import dev.satherov.crystalix.Crystalix;
+import dev.satherov.crystalix.common.properties.CrystalixModelState;
+import dev.satherov.crystalix.common.properties.GlassMaterial;
 import dev.satherov.crystalix.core.registry.CXRegistry;
+import dev.satherov.sathlib.client.model.data.SLModelProperty;
 import dev.satherov.sathlib.core.annotations.NothingNull;
 
 import net.neoforged.neoforge.model.data.ModelData;
@@ -23,40 +27,59 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
-import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
-import it.unimi.dsi.fastutil.ints.IntConsumer;
+import java.util.function.Consumer;
 
-@Getter
 @NothingNull
 public class CrystalixGlassBlockEntity extends BlockEntity {
     
     public static final ModelProperty<Integer> COLOR = new ModelProperty<>();
+    public static final SLModelProperty<CrystalixModelState> MODEL_STATE = SLModelProperty.register(Crystalix.id("model_state"));
     
-    private int color = 0xFFFFFF;
+    private @Getter int color = 0xFFFFFF;
+    private @Getter CrystalixModelState modelState = CrystalixModelState.empty();
     
-    private boolean reinforced = false;
-    private boolean waterloggable = false;
-    private boolean conductor = false;
-    private int redstone = 0;
+    private @Getter boolean reinforced = false;
+    private @Getter boolean waterloggable = false;
+    private @Getter boolean conductor = false;
+    private @Getter int redstone = 0;
     
     public CrystalixGlassBlockEntity(BlockPos pos, BlockState state) {
         super(CXRegistry.GLASS_BLOCK_ENTITY.get(), pos, state);
     }
     
-    public void setColor(int color) {
-        this.setVisualInt(this.color, color, value -> this.color = value);
+    public void setMaterial(GlassMaterial material) {
+        this.setter(this.modelState.getMaterial(), material, value -> this.modelState.setMaterial(value));
     }
     
-    public int getColor() {
-        return this.color;
+    public GlassMaterial getMaterial() {
+        return this.modelState.getMaterial();
+    }
+    
+    public void setShadeless(boolean shadeless) {
+        this.setter(this.modelState.isShadeless(), shadeless, value -> this.modelState.setShadeless(value));
+    }
+    
+    public boolean isShadeless() {
+        return this.modelState.isShadeless();
+    }
+    
+    public void setTinted(boolean tinted) {
+        this.setter(this.modelState.isTinted(), tinted, value -> this.modelState.setTinted(value));
+    }
+    
+    public boolean isTinted() {
+        return this.modelState.isTinted();
+    }
+    
+    public void setColor(int color) {
+        this.setter(this.color, color, value -> {
+            this.color = value;
+            this.updateVisual();
+        });
     }
     
     public void setReinforced(boolean reinforced) {
-        this.setStateBoolean(this.reinforced, reinforced, value -> this.reinforced = value);
-    }
-    
-    public boolean isReinforced() {
-        return this.reinforced;
+        this.setter(this.reinforced, reinforced, value -> this.reinforced = value);
     }
     
     public static boolean isReinforced(BlockGetter getter, BlockPos pos) {
@@ -64,11 +87,7 @@ public class CrystalixGlassBlockEntity extends BlockEntity {
     }
     
     public void setConductor(boolean conductor) {
-        this.setStateBoolean(this.conductor, conductor, value -> this.conductor = value);
-    }
-    
-    public boolean isConductor() {
-        return this.conductor;
+        this.setter(this.conductor, conductor, value -> this.conductor = value);
     }
     
     public static BlockBehaviour.StatePredicate isRedstoneConductor() {
@@ -76,11 +95,7 @@ public class CrystalixGlassBlockEntity extends BlockEntity {
     }
     
     public void setWaterloggable(boolean waterloggable) {
-        this.setStateBoolean(this.waterloggable, waterloggable, value -> this.waterloggable = value);
-    }
-    
-    public boolean isWaterloggable() {
-        return this.waterloggable;
+        this.setter(this.waterloggable, waterloggable, value -> this.waterloggable = value);
     }
     
     public static boolean isWaterloggable(BlockGetter getter, BlockPos pos) {
@@ -89,11 +104,7 @@ public class CrystalixGlassBlockEntity extends BlockEntity {
     
     public void setRedstone(int redstone) {
         int clamped = Math.clamp(redstone, 0, 15);
-        this.setStateInt(this.redstone, clamped, value -> this.redstone = value);
-    }
-    
-    public int getRedstone() {
-        return this.redstone;
+        this.setter(this.redstone, clamped, value -> this.redstone = value);
     }
     
     public static int getRedstone(BlockGetter getter, BlockPos pos) {
@@ -101,19 +112,7 @@ public class CrystalixGlassBlockEntity extends BlockEntity {
         return 0;
     }
     
-    private void setStateBoolean(boolean current, boolean next, BooleanConsumer setter) {
-        if (current == next) return;
-        setter.accept(next);
-        this.update();
-    }
-    
-    private void setVisualInt(int current, int next, IntConsumer setter) {
-        if (current == next) return;
-        setter.accept(next);
-        this.updateVisual();
-    }
-    
-    private void setStateInt(int current, int next, IntConsumer setter) {
+    private <T> void setter(T current, T next, Consumer<T> setter) {
         if (current == next) return;
         setter.accept(next);
         this.update();
@@ -156,6 +155,7 @@ public class CrystalixGlassBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(ValueOutput output) {
         output.putInt("color", this.color);
+        output.store("model_state", CrystalixModelState.CODEC, this.modelState);
         
         output.putBoolean("reinforced", this.reinforced);
         output.putBoolean("waterloggable", this.waterloggable);
@@ -166,6 +166,7 @@ public class CrystalixGlassBlockEntity extends BlockEntity {
     @Override
     protected void loadAdditional(ValueInput input) {
         this.color = input.getIntOr("color", 0xFFFFFF);
+        this.modelState = input.read("model_state", CrystalixModelState.CODEC).orElse(CrystalixModelState.empty());
         
         this.reinforced = input.getBooleanOr("reinforced", false);
         this.waterloggable = input.getBooleanOr("waterloggable", false);
@@ -192,6 +193,7 @@ public class CrystalixGlassBlockEntity extends BlockEntity {
     @Override
     public ModelData getModelData() {
         return ModelData.builder()
+                .with(CrystalixGlassBlockEntity.MODEL_STATE.property(), this.modelState)
                 .with(CrystalixGlassBlockEntity.COLOR, this.color)
                 .build();
     }

@@ -7,6 +7,7 @@ import dev.satherov.crystalix.common.block.CrystalixGlassBlockEntity;
 import dev.satherov.crystalix.common.properties.GhostState;
 import dev.satherov.crystalix.common.properties.GlassMaterial;
 import dev.satherov.crystalix.common.properties.LightState;
+import dev.satherov.crystalix.core.registry.CXProperties;
 import dev.satherov.crystalix.core.registry.CXRegistry;
 import dev.satherov.sathlib.common.item.SLItem;
 import dev.satherov.sathlib.common.item.SLItemProperties;
@@ -73,7 +74,11 @@ public class CrystalixWandItem extends SLItem {
                 ChatFormatting.DARK_GRAY,
                 SLComponent.squareBrackets(SLComponent.key(CrystalixClient.TOGGLE_COLORLESS.getKey()).style(ChatFormatting.GOLD)))
         );
-        CXRegistry.CONTAINER.forEach(prop -> builder.accept(prop.display(stack)));
+        CXProperties.CONTAINER.forEach(property -> builder.accept(SLComponent.empty()
+                .append(property.getName().translate(ChatFormatting.GRAY))
+                .append(Component.literal(": ").withStyle(ChatFormatting.GRAY))
+                .append(property.displayItemValue(stack, CXRegistry.CRYSTALIX_BLOCK.get().defaultBlockState())))
+        );
     }
     
     @Override
@@ -91,7 +96,12 @@ public class CrystalixWandItem extends SLItem {
             final ItemStack copy = stack.copy();
             SLDeferredTasks.register(
                     SLBlockCrawler.builder(level, blockPos)
-                            .predicate((_, state) -> state.is(CXRegistry.CRYSTALIX_BLOCK_TAG))
+                            .predicate((pos, state) -> {
+                                if (!state.is(CXRegistry.CRYSTALIX_BLOCK_TAG)) return false;
+                                final CrystalixGlassBlockEntity entity = CXRegistry.GLASS_BLOCK_ENTITY.get().getBlockEntity(level, pos);
+                                if (entity == null) return false;
+                                return !CXProperties.CONTAINER.matches(copy, state, entity);
+                            })
                             .consumer((pos, state) -> CrystalixWandItem.updateBlock(level, copy, pos, state))
                             .iterations(CXConfig.Common.getMaxBlockEditsPerTick())
                             .stopCondition(c -> c.visitedCount() > CXConfig.Common.getMaxBlockEdits())
@@ -106,9 +116,8 @@ public class CrystalixWandItem extends SLItem {
         final CrystalixGlassBlockEntity entity = CXRegistry.GLASS_BLOCK_ENTITY.get().getBlockEntity(level, pos);
         if (!state.is(CXRegistry.CRYSTALIX_BLOCK_TAG) || entity == null) return false;
         
-        BlockState updated = CXRegistry.CONTAINER.updateFromStack(stack, state);
+        BlockState updated = CXProperties.CONTAINER.applyToBlock(stack, state, entity).state();
         level.setBlockAndUpdate(pos, updated);
-        CXRegistry.CONTAINER.updateFromStack(stack, entity);
         return true;
     }
 }

@@ -2,12 +2,12 @@ package dev.satherov.crystalix.client.screen;
 
 import dev.satherov.crystalix.CrystalixClient;
 import dev.satherov.crystalix.client.lang.CXLanguage;
-import dev.satherov.crystalix.common.block.CrystalixGlassBlockEntity;
+import dev.satherov.crystalix.core.registry.CXProperties;
 import dev.satherov.crystalix.core.registry.CXRegistry;
 import dev.satherov.crystalix.network.CyclePropertyPayload;
 import dev.satherov.sathlib.client.lang.InputLang;
 import dev.satherov.sathlib.client.screen.RadialScreen;
-import dev.satherov.sathlib.common.properties.SLProperty;
+import dev.satherov.sathlib.common.properties.BlockItemProperty;
 import dev.satherov.sathlib.core.annotations.NothingNull;
 import dev.satherov.sathlib.network.chat.SLComponent;
 
@@ -28,7 +28,6 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 @NothingNull
 public class CXRadialScreen extends RadialScreen<CXRadialScreen, CXRadialScreen.PropertySlice> {
@@ -38,7 +37,7 @@ public class CXRadialScreen extends RadialScreen<CXRadialScreen, CXRadialScreen.
     private static final float SLICE_OUTER_RADIUS = 145.0F;
     private static final float HOVER_EXPAND_DISTANCE = 12.0F;
     private static final float HOVER_OUTWARD_OFFSET = 8.0F;
-    private static final float SLICE_SPACING_DEGREES = 0.25F;
+    private static final float SLICE_SPACING_DEGREES = 0.5F;
     private static final float DISPLAY_POSITION = 0.65F;
     private static final int TITLE_COLOR = 0xFFEAF0F7;
     private static final int HOVER_TITLE_COLOR = 0xFFFFFFFF;
@@ -49,7 +48,7 @@ public class CXRadialScreen extends RadialScreen<CXRadialScreen, CXRadialScreen.
     
     public CXRadialScreen(ItemStack stack) {
         this.stack = stack;
-        List<SLProperty<?, CrystalixGlassBlockEntity>> properties = StreamSupport.stream(CXRegistry.CONTAINER.spliterator(), false).toList();
+        List<BlockItemProperty<?>> properties = CXProperties.CONTAINER.getProperties();
         
         this.setStartAngleDegrees(CXRadialScreen.START_ANGLE_DEGREES);
         this.setSliceInnerRadius(CXRadialScreen.SLICE_INNER_RADIUS);
@@ -58,7 +57,7 @@ public class CXRadialScreen extends RadialScreen<CXRadialScreen, CXRadialScreen.
         this.setHoverOutwardOffset(CXRadialScreen.HOVER_OUTWARD_OFFSET);
         this.setSliceSpacingDegrees(CXRadialScreen.SLICE_SPACING_DEGREES);
         
-        for (SLProperty<?, CrystalixGlassBlockEntity> property : properties) {
+        for (BlockItemProperty<?> property : properties) {
             this.addSlice(new PropertySlice(property));
         }
     }
@@ -88,26 +87,26 @@ public class CXRadialScreen extends RadialScreen<CXRadialScreen, CXRadialScreen.
         );
     }
     
-    private boolean openEditor(SLProperty<?, CrystalixGlassBlockEntity> property) {
-        if (property == CXRegistry.COLOR_PROPERTY) {
+    private boolean openEditor(BlockItemProperty<?> property) {
+        if (property == CXProperties.COLOR) {
             Minecraft.getInstance().setScreen(new CXColorScreen(this, this.stack));
             return true;
         }
         return false;
     }
     
-    private boolean cycle(SLProperty<?, CrystalixGlassBlockEntity> property, boolean dir) {
-        property.cycle(dir, this.stack);
-        ClientPacketDistributor.sendToServer(new CyclePropertyPayload(property.identifier(), dir));
+    private boolean cycle(BlockItemProperty<?> property, boolean dir) {
+        property.cycleItem(dir, this.stack, CXRegistry.CRYSTALIX_BLOCK.get().defaultBlockState());
+        ClientPacketDistributor.sendToServer(new CyclePropertyPayload(property.getIdentifier(), dir));
         return true;
     }
     
-    private List<Component> tooltipLines(SLProperty<?, CrystalixGlassBlockEntity> property) {
+    private List<Component> tooltipLines(BlockItemProperty<?> property) {
         List<Component> lines = new ArrayList<>();
-        lines.add(property.name().translate(ChatFormatting.DARK_GRAY));
-        lines.add(property.tooltip(this.stack).style(ChatFormatting.DARK_GRAY));
+        lines.add(property.getName().translate(ChatFormatting.DARK_GRAY));
+        lines.add(property.displayItemTooltip(this.stack, CXRegistry.CRYSTALIX_BLOCK.get().defaultBlockState()).style(ChatFormatting.DARK_GRAY));
         
-        if (property == CXRegistry.COLOR_PROPERTY) {
+        if (property == CXProperties.COLOR) {
             lines.add(CXLanguage.TOOLTIP_OPEN_COLORS.translate(
                     ChatFormatting.DARK_GRAY,
                     CXRadialScreen.mouseKey(GLFW.GLFW_MOUSE_BUTTON_MIDDLE)
@@ -138,17 +137,17 @@ public class CXRadialScreen extends RadialScreen<CXRadialScreen, CXRadialScreen.
     
     final class PropertySlice extends RadialScreen.RadialSlice<CXRadialScreen, PropertySlice> {
         
-        private final SLProperty<?, CrystalixGlassBlockEntity> property;
+        private final BlockItemProperty<?> property;
         
-        private PropertySlice(SLProperty<?, CrystalixGlassBlockEntity> property) {
+        private PropertySlice(BlockItemProperty<?> property) {
             this.property = property;
             this.setLabelColor(CXRadialScreen.TITLE_COLOR);
         }
         
         @Override
         protected void renderContents(GuiGraphicsExtractor graphics, RadialScreen.SliceRenderContext<CXRadialScreen, PropertySlice> context) {
-            Component title = this.property.name().translate();
-            Component value = this.property.value(CXRadialScreen.this.stack);
+            Component title = this.property.getName().translate();
+            Component value = this.property.displayItemValue(CXRadialScreen.this.stack, CXRegistry.CRYSTALIX_BLOCK.get().defaultBlockState());
             
             int halfLineHeight = CXRadialScreen.this.font.lineHeight / 2;
             int displayX = Math.round(context.xAlongMiddle(CXRadialScreen.DISPLAY_POSITION));

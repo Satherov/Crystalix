@@ -3,6 +3,7 @@ package dev.satherov.crystalix.network;
 import dev.satherov.crystalix.Crystalix;
 import dev.satherov.crystalix.common.block.CrystalixGlassBlockEntity;
 import dev.satherov.crystalix.common.item.CrystalixWandItem;
+import dev.satherov.crystalix.core.registry.CXProperties;
 import dev.satherov.crystalix.core.registry.CXRegistry;
 import dev.satherov.sathlib.core.annotations.NothingNull;
 import dev.satherov.sathlib.network.handling.SLPayload;
@@ -53,8 +54,7 @@ public record SwapPropertiesPayload(BlockPos pos) implements SLPayload<SwapPrope
             final CrystalixGlassBlockEntity entity = CXRegistry.GLASS_BLOCK_ENTITY.get().getBlockEntity(level, pos);
             if (!state.is(CXRegistry.CRYSTALIX_BLOCK_TAG) || entity == null) return;
             
-            CXRegistry.CONTAINER.updateFromState(state, stack);
-            CXRegistry.CONTAINER.updateFromBlockEntity(entity, stack);
+            CXProperties.CONTAINER.applyToItem(stack, state, entity);
             player.getInventory().setChanged();
         }
         

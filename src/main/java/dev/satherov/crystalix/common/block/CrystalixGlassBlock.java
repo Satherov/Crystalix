@@ -7,6 +7,7 @@ import dev.satherov.crystalix.common.item.CrystalixWandItem;
 import dev.satherov.crystalix.common.properties.GhostState;
 import dev.satherov.crystalix.common.properties.GlassMaterial;
 import dev.satherov.crystalix.common.properties.LightState;
+import dev.satherov.crystalix.core.registry.CXProperties;
 import dev.satherov.crystalix.core.registry.CXRegistry;
 import dev.satherov.sathlib.common.block.SLBlock;
 import dev.satherov.sathlib.common.block.SLBlockProperties;
@@ -65,9 +66,6 @@ public class CrystalixGlassBlock extends SLBlock implements SLEntityBlock<Crysta
     public static final BooleanProperty INVISIBLE = BooleanProperty.create("invisible");
     public static final EnumProperty<LightState> LIGHT = EnumProperty.create("light", LightState.class);
     public static final EnumProperty<GhostState> GHOST = EnumProperty.create("ghost", GhostState.class);
-    public static final EnumProperty<GlassMaterial> MATERIAL = EnumProperty.create("material", GlassMaterial.class);
-    public static final BooleanProperty SHADELESS = BooleanProperty.create("shadeless");
-    public static final BooleanProperty TINTED = BooleanProperty.create("tinted");
     
     public CrystalixGlassBlock(SLBlockProperties properties) {
         super(properties
@@ -90,9 +88,6 @@ public class CrystalixGlassBlock extends SLBlock implements SLEntityBlock<Crysta
         builder.addValue(CrystalixGlassBlock.INVISIBLE, false);
         builder.addValue(CrystalixGlassBlock.LIGHT, LightState.NONE);
         builder.addValue(CrystalixGlassBlock.GHOST, GhostState.BLOCK_ALL);
-        builder.addValue(CrystalixGlassBlock.MATERIAL, GlassMaterial.defaultMaterial());
-        builder.addValue(CrystalixGlassBlock.SHADELESS, false);
-        builder.addValue(CrystalixGlassBlock.TINTED, false);
     }
     
     @Override
@@ -108,7 +103,7 @@ public class CrystalixGlassBlock extends SLBlock implements SLEntityBlock<Crysta
         
         ItemStack stack = player.getItemInHand(InteractionHand.OFF_HAND);
         if (stack.getItem() instanceof CrystalixWandItem) {
-            state = CXRegistry.CONTAINER.updateFromStack(stack, state);
+            state = CXProperties.CONTAINER.applyToBlock(stack, state).state();
         }
         return state;
     }
@@ -119,7 +114,7 @@ public class CrystalixGlassBlock extends SLBlock implements SLEntityBlock<Crysta
         if (!(placer instanceof ServerPlayer player)) return;
         ItemStack stack = player.getItemInHand(InteractionHand.OFF_HAND);
         CrystalixGlassBlockEntity entity = CXRegistry.GLASS_BLOCK_ENTITY.get().getBlockEntity(level, pos);
-        if (stack.getItem() instanceof CrystalixWandItem && entity != null) CXRegistry.CONTAINER.updateFromStack(stack, entity);
+        if (stack.getItem() instanceof CrystalixWandItem && entity != null) state = CXProperties.CONTAINER.applyToBlock(stack, state, entity).state();
         
         FluidState fluid = level.getFluidState(pos);
         BlockState updated = state.setValue(CrystalixGlassBlock.WATERLOGGED, CrystalixGlassBlockEntity.isWaterloggable(level, pos) && fluid.getType() == Fluids.WATER);
@@ -175,10 +170,7 @@ public class CrystalixGlassBlock extends SLBlock implements SLEntityBlock<Crysta
     
     @Override
     protected boolean skipRendering(BlockState state, BlockState adjacent, Direction side) {
-        return adjacent.is(this)
-                && !adjacent.getValue(CrystalixGlassBlock.INVISIBLE)
-                && state.getValue(CrystalixGlassBlock.MATERIAL) == adjacent.getValue(CrystalixGlassBlock.MATERIAL)
-                && state.getValue(CrystalixGlassBlock.TINTED) == adjacent.getValue(CrystalixGlassBlock.TINTED);
+        return adjacent.is(this) && !adjacent.getValue(CrystalixGlassBlock.INVISIBLE);
     }
     
     @Override

@@ -2,6 +2,7 @@ package dev.satherov.crystalix.network;
 
 import dev.satherov.crystalix.Crystalix;
 import dev.satherov.crystalix.common.item.CrystalixWandItem;
+import dev.satherov.crystalix.core.registry.CXProperties;
 import dev.satherov.crystalix.core.registry.CXRegistry;
 import dev.satherov.sathlib.core.annotations.NothingNull;
 import dev.satherov.sathlib.network.handling.SLPayload;
@@ -43,7 +44,7 @@ public record SetColorPayload(int color) implements SLPayload<SetColorPayload> {
             final ItemStack stack = CrystalixWandItem.find(player);
             if (stack.isEmpty()) return;
             
-            CXRegistry.COLOR_PROPERTY.update(stack, payload.color());
+            CXProperties.COLOR.applyValueItem(payload.color(), stack, CXRegistry.CRYSTALIX_BLOCK.get().defaultBlockState());
             player.getInventory().setChanged();
         }
         
