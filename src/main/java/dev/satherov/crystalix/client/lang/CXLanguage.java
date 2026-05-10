@@ -24,6 +24,7 @@ public enum CXLanguage implements SLTranslatable {
     KEY_PICK_BLOCK             ("key",          "pick_block",            "Pick properties from block"),
     
     MESSAGE_PROPERTY_PICK      ("message",      "property_pick",         "Picked properties from block"),
+    MESSAGE_PROPERTY_MATCH     ("message",      "property_match",        "Properties already match"),
                                                                          
     TOOLTIP_BULK               ("tooltip",      "bulk",                  "Crouch to bulk edit"),
     TOOLTIP_PICK_PROPERTY      ("tooltip",      "property_pick",         "%s to pick properties from a block"),

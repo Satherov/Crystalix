@@ -2,13 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "a": "#c:gems/amethyst",
-    "g": "#c:glass_blocks"
+    "g": "#c:glass_blocks",
+    "q": "#c:gems/quartz"
   },
   "pattern": [
-    "gag",
-    "a a",
-    "gag"
+    "gqg",
+    "q q",
+    "gqg"
   ],
   "result": {
     "count": 4,

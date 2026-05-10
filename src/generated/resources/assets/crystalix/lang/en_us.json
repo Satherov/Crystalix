@@ -16,6 +16,7 @@
   "material.crystalix.bordered": "Bordered",
   "material.crystalix.clear": "Clear",
   "material.crystalix.normal": "Normal",
+  "message.crystalix.property_match": "Properties already match",
   "message.crystalix.property_pick": "Picked properties from block",
   "property.crystalix.apply_colorless": "Apply Colorless",
   "property.crystalix.color": "Color",

@@ -33,12 +33,12 @@ public class CXRecipeProvider extends RecipeProvider {
     @Override
     protected void buildRecipes() {
         ShapedRecipeBuilder.shaped(this.items, RecipeCategory.MISC, CXRegistry.CRYSTALIX_BLOCK.get(), 4)
-                .pattern("gag")
-                .pattern("a a")
-                .pattern("gag")
+                .pattern("gqg")
+                .pattern("q q")
+                .pattern("gqg")
                 .define('g', Tags.Items.GLASS_BLOCKS)
-                .define('a', Tags.Items.GEMS_AMETHYST)
-                .unlockedBy("has_amethyst", this.has(Tags.Items.GEMS_AMETHYST))
+                .define('q', Tags.Items.GEMS_QUARTZ)
+                .unlockedBy("has_quartz", this.has(Tags.Items.GEMS_QUARTZ))
                 .save(this.output);
         
         ShapedRecipeBuilder.shaped(this.items, RecipeCategory.MISC, CXRegistry.CRYSTALIX_WAND.get().asItem())
