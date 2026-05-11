@@ -89,6 +89,7 @@ public class CrystalixGlassCamoContainer extends AbstractBlockCamoContainer<Crys
     public int hashCode() {
         int result = this.content.hashCode();
         result = 31 * result + Integer.hashCode(this.tintColor);
+        result = 31 * result + Boolean.hashCode(this.light);
         result = 31 * result + this.modelState.hashCode();
         return result;
     }
@@ -97,7 +98,7 @@ public class CrystalixGlassCamoContainer extends AbstractBlockCamoContainer<Crys
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (!(obj instanceof CrystalixGlassCamoContainer other)) return false;
-        return this.content.equals(other.content) && this.tintColor == other.tintColor && this.modelState.equals(other.modelState);
+        return this.content.equals(other.content) && this.tintColor == other.tintColor && this.light == other.light && this.modelState.equals(other.modelState);
     }
     
     @Override
