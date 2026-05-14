@@ -1,8 +1,8 @@
 # Crystalix
 
 [![Maven](https://img.shields.io/maven-metadata/v?metadataUrl=https://maven.satherov.dev/releases/dev/satherov/crystalix/crystalix/maven-metadata.xml&style=for-the-badge&label=Maven&logo=apachemaven&color=C71A36)](https://maven.satherov.dev/#/releases/dev/satherov/crystalix/crystalix)
-[![CurseForge](https://img.shields.io/curseforge/v/1187033?style=for-the-badge&label=CurseForge&logo=curseforge&color=F16436)](https://www.curseforge.com/minecraft/mc-mods/crystalix)
-[![Downloads](https://img.shields.io/curseforge/dt/1187033?style=for-the-badge&label=Downloads&logo=curseforge&color=F16436)](https://www.curseforge.com/minecraft/mc-mods/crystalix)
+[![Curseforge](https://img.shields.io/curseforge/dt/1187033?style=for-the-badge&label=Downloads&logo=curseforge&color=F16436)](https://www.curseforge.com/minecraft/mc-mods/crystalix)
+[![GitHub](https://img.shields.io/badge/GitHub-Crystalix-181717?style=for-the-badge&logo=github)](https://github.com/SathLabs/Crystalix)
 
 Crystalix is a mod centered around glass with a bunch of properties that can be applied to it.
 
