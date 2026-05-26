@@ -48,7 +48,7 @@ public class CXConfig {
             ALWAYS("Always show Jade"),
             WAND  ("Only show Jade while holding a wand"),
             NEVER ("Never show Jade"),
-            // @formatter:off
+            // @formatter:on
             ;
             
             private final @Getter String description;
