@@ -42,6 +42,10 @@ public class CXConfig {
         private static boolean showWandTooltips = true;
         
         @Getter
+        @ConfigEntry(comment = "The radius in chunks around the player that should be highlighted")
+        private static int highlightChunkRadius = 6;
+        
+        @Getter
         @ConfigEntry(comment = "Decides when Jade should be displayed")
         private static Jade JadeMode = Jade.WAND;
         

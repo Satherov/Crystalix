@@ -78,5 +78,7 @@ public class CXKeybinds {
         final Player player = mc.player;
         final Level level = mc.level;
         if (level == null || player == null || mc.screen != null) return;
+        
+        if (event.getAction() == GLFW.GLFW_PRESS) CXBlockHighlighter.highlight();
     });
 }
