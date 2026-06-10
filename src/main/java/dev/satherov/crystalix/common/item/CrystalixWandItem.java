@@ -66,6 +66,7 @@ public class CrystalixWandItem extends SLItem {
     
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
+        builder.accept(CXLanguage.TOOLTIP_BULK.translate(ChatFormatting.DARK_GRAY));
         builder.accept(CXLanguage.TOOLTIP_PICK_PROPERTY.translate(
                 ChatFormatting.DARK_GRAY,
                 SLComponent.squareBrackets(SLComponent.key(CrystalixClient.PICK_BLOCK.getKey()).style(ChatFormatting.GOLD)))

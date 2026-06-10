@@ -96,7 +96,6 @@ public enum CXLanguage implements SLTranslatable {
     PROPERTY_LIGHT_FAKE_LIGHT  ("property",     "light.fake_light",      "Fake Light"),
     PROPERTY_LIGHT_FAKE_DARK   ("property",     "light.fake_dark",       "Fake Dark"),
                                                                          
-    PROPERTY_GHOST_ALL         ("property",     "ghost.all",             "All"),
     PROPERTY_GHOST_PLAYER      ("property",     "ghost.player",          "Player"),
     PROPERTY_GHOST_ANIMAL      ("property",     "ghost.animal",          "Animal"),
     PROPERTY_GHOST_MONSTER     ("property",     "ghost.monster",         "Monster"),
