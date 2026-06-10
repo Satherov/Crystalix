@@ -7,6 +7,7 @@ import dev.satherov.crystalix.client.lang.CXLanguage;
 import dev.satherov.crystalix.common.block.CrystalixGlassBlock;
 import dev.satherov.crystalix.common.block.CrystalixGlassBlockEntity;
 import dev.satherov.crystalix.common.item.CrystalixWandItem;
+import dev.satherov.crystalix.common.properties.ApplyMode;
 import dev.satherov.crystalix.common.properties.GhostState;
 import dev.satherov.crystalix.common.properties.GlassMaterial;
 import dev.satherov.crystalix.common.properties.LightState;
@@ -23,6 +24,14 @@ import net.minecraft.network.chat.Component;
 
 @UtilityClass
 public class CXProperties {
+    
+    // DO NOT ADD TO THE CONTAINER!
+    public static final BlockItemProperty<ApplyMode> APPLY_MODE = BlockItemProperty.builder(Crystalix.id("apply_mode"), ApplyMode.class, CXLanguage.PROPERTY_APPLY_MODE)
+            .tooltipDisplayer(ApplyMode::tooltip)
+            .valueDisplayer(ApplyMode::display)
+            .cycler(PropertyCycler.enumCycler(ApplyMode.class))
+            .item(PropertyExtractor.item(CXRegistry.APPLY_MODE, ApplyMode.DEFAULT), PropertyApplicator.item(CXRegistry.APPLY_MODE))
+            .build();
     
     public static final BlockItemProperty<Boolean> INVISIBLE = BlockItemProperty.builder(Crystalix.id("invisible"), Boolean.class, CXLanguage.PROPERTY_INVISIBLE)
             .tooltipDisplayer(PropertyDisplayer.boolDisplayer(CXLanguage.TOOLTIP_INVISIBLE_ON, CXLanguage.TOOLTIP_INVISIBLE_OFF))
@@ -54,14 +63,14 @@ public class CXProperties {
             .cycler(PropertyCycler.numberCycler(0x00000, 0xFFFFFF))
             .item(PropertyExtractor.item(CXRegistry.COLOR, 0xFFFFFF), PropertyApplicator.item(CXRegistry.COLOR))
             .block(PropertyExtractor.blockEntity(CrystalixGlassBlockEntity.class, CrystalixGlassBlockEntity::getColor, 0xFFFFFF), (block, item, val) -> {
-                if (item.stack().getOrDefault(CXRegistry.APPLY_COLORLESS, false)) return block;
+                if (item.stack().getOrDefault(CXRegistry.APPLY_MODE, ApplyMode.DEFAULT).equals(ApplyMode.COLORLESS)) return block;
                 if (block.blockEntity() instanceof CrystalixGlassBlockEntity entity) entity.setColor(val);
                 return block;
             })
             .build();
     
     public static final BlockItemProperty<GlassMaterial> MATERIAL = BlockItemProperty.builder(Crystalix.id("material"), GlassMaterial.class, CXLanguage.PROPERTY_MATERIAL)
-            .tooltipDisplayer(val -> SLComponent.of(val.tooltip().copy()))
+            .tooltipDisplayer(GlassMaterial::tooltip)
             .valueDisplayer(GlassMaterial::display)
             .cycler(PropertyCycler.enumCycler(GlassMaterial.class))
             .item(PropertyExtractor.item(CXRegistry.MATERIAL, GlassMaterial.defaultMaterial()), PropertyApplicator.item(CXRegistry.MATERIAL))

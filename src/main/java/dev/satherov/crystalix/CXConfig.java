@@ -38,6 +38,10 @@ public class CXConfig {
     public static final class Client {
         
         @Getter
+        @ConfigEntry(comment = "Show property tooltips on the wand")
+        private static boolean showWandTooltips = true;
+        
+        @Getter
         @ConfigEntry(comment = "Decides when Jade should be displayed")
         private static Jade JadeMode = Jade.WAND;
         

@@ -2,6 +2,7 @@ package dev.satherov.crystalix.compat.framedblocks;
 
 import dev.satherov.crystalix.common.block.CrystalixGlassBlock;
 import dev.satherov.crystalix.common.item.CrystalixWandItem;
+import dev.satherov.crystalix.common.properties.ApplyMode;
 import dev.satherov.crystalix.common.properties.CrystalixModelState;
 import dev.satherov.crystalix.common.properties.GhostState;
 import dev.satherov.crystalix.common.properties.GlassMaterial;
@@ -66,7 +67,7 @@ public class CrystalixGlassCamoContainerFactory extends AbstractBlockCamoContain
     }
     
     private static CrystalixGlassCamoContainer createContainer(BlockState camoState, ItemStack wandStack, int tintColor) {
-        if (!wandStack.getOrDefault(CXRegistry.APPLY_COLORLESS, false)) {
+        if (!wandStack.getOrDefault(CXRegistry.APPLY_MODE, ApplyMode.DEFAULT).equals(ApplyMode.COLORLESS)) {
             tintColor = wandStack.getOrDefault(CXRegistry.COLOR, CrystalixGlassCamoContainerFactory.DEFAULT_TINT);
         }
         boolean light = wandStack.getOrDefault(CXRegistry.LIGHT, false) == LightState.LIGHT;

@@ -18,6 +18,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
+import org.jspecify.annotations.Nullable;
+
 @NothingNull
 public record CyclePropertyPayload(Identifier identifier, boolean dir) implements SLPayload<CyclePropertyPayload> {
     
@@ -47,7 +49,7 @@ public record CyclePropertyPayload(Identifier identifier, boolean dir) implement
             final ItemStack stack = CrystalixWandItem.find(player);
             if (stack.isEmpty()) return;
             
-            BlockItemProperty<?> property = CXProperties.CONTAINER.getProperty(payload.identifier());
+            BlockItemProperty<?> property = Provider.getProperty(payload.identifier());
             if (property == null) return;
             
             property.cycleItem(payload.dir(), stack, CXRegistry.CRYSTALIX_BLOCK.get().defaultBlockState());
@@ -62,6 +64,11 @@ public record CyclePropertyPayload(Identifier identifier, boolean dir) implement
         @Override
         public StreamCodec<? super RegistryFriendlyByteBuf, CyclePropertyPayload> codec() {
             return CyclePropertyPayload.STREAM_CODEC;
+        }
+        
+        private static @Nullable BlockItemProperty<?> getProperty(Identifier id) {
+            if (CXProperties.APPLY_MODE.getIdentifier().equals(id)) return CXProperties.APPLY_MODE;
+            return CXProperties.CONTAINER.getProperty(id);
         }
     }
 }

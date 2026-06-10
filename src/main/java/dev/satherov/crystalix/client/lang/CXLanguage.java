@@ -22,14 +22,17 @@ public enum CXLanguage implements SLTranslatable {
     KEY_OPEN_WAND_EDITOR       ("key",          "open_wand_editor",      "Open Wand Editor"),
     KEY_TOGGLE_COLORLESS       ("key",          "toggle_colorless",      "Toggle Apply Colorless"),
     KEY_PICK_BLOCK             ("key",          "pick_block",            "Pick properties from block"),
-    
+    KEY_HIGHLIGHT_BLOCKS       ("key",          "highlight_blocks",      "Highlight Blocks"),
+                                                
     MESSAGE_PROPERTY_PICK      ("message",      "property_pick",         "Picked properties from block"),
     MESSAGE_PROPERTY_MATCH     ("message",      "property_match",        "Properties already match"),
                                                                          
     TOOLTIP_BULK               ("tooltip",      "bulk",                  "Crouch to bulk edit"),
     TOOLTIP_PICK_PROPERTY      ("tooltip",      "property_pick",         "%s to pick properties from a block"),
     TOOLTIP_COLORLESS          ("tooltip",      "colorless",             "%s to toggle applying properties with or without color"),
+    TOOLTIP_HIGHLIGHT          ("tooltip",      "highlight",             "%s to highlight all crystalix blocks in your surroundings"),
     TOOLTIP_USE_WAND           ("tooltip",      "use_wand",              "To modify block properties and access different texture or colors use the Crystalix Wand"),
+    TOOLTIP_SHOW_PROPERTIES    ("tooltip",      "show_properties",       "To show currently selected properties in the tooltip toggle the config"),
     TOOLTIP_LMB                ("tooltip",      "lmb",                   "%s or %s to cycle forward"),
     TOOLTIP_RMB                ("tooltip",      "rmb",                   "%s or %s to cycle backward"),
     TOOLTIP_OPEN_COLORS        ("tooltip",      "open_colors",           "%s to open color picker"),
@@ -78,7 +81,10 @@ public enum CXLanguage implements SLTranslatable {
     
     TOOLTIP_REDSTONE           ("tooltip",      "redstone",              "Emits a redstone signal at the given level"),
     
-    PROPERTY_APPLY_COLORLESS   ("property",     "apply_colorless",       "Apply Colorless"),
+    TOOLTIP_APPLY_DEFAULT      ("tooltip",      "apply_mode.default",    "Applies all properties as expected"),
+    TOOLTIP_APPLY_COLORLESS    ("tooltip",      "apply_mode.colorless",  "Applies all properties except for the color"),
+    TOOLTIP_APPLY_EXACT        ("tooltip",      "apply_mode.exact",      "When bulk applying properties, only exact matches to the initial block will be edited"),
+    
     PROPERTY_INVISIBLE         ("property",     "invisible",             "Invisible"),
     PROPERTY_LIGHT             ("property",     "light",                 "Light"),
     PROPERTY_GHOST             ("property",     "ghost",                 "Ghost"),
@@ -90,6 +96,7 @@ public enum CXLanguage implements SLTranslatable {
     PROPERTY_CONDUCTOR         ("property",     "conductor",             "Conductor"),
     PROPERTY_REDSTONE          ("property",     "redstone",              "Redstone"),
     PROPERTY_MATERIAL          ("property",     "material",              "Material"),
+    PROPERTY_APPLY_MODE        ("property",     "apply_mode",            "Apply Mode"),
                                                                          
     PROPERTY_LIGHT_LIGHT       ("property",     "light.light",           "Light"),
     PROPERTY_LIGHT_DARK        ("property",     "light.dark",            "Dark"),
@@ -101,6 +108,10 @@ public enum CXLanguage implements SLTranslatable {
     PROPERTY_GHOST_MONSTER     ("property",     "ghost.monster",         "Monster"),
     PROPERTY_GHOST_ADULT       ("property",     "ghost.adult",           "Adult"),
     
+    PROPERTY_APPLY_DEFAULT     ("apply_mode",   "default",               "Default"),
+    PROPERTY_APPLY_COLORLESS   ("apply_mode",   "colorless",             "Colorless"),
+    PROPERTY_APPLY_EXACT       ("apply_mode",   "exact",                 "Exact"),
+                                                
     MATERIAL_NORMAL            ("material",     "normal",                "Normal"),
     MATERIAL_CLEAR             ("material",     "clear",                 "Clear"),
     MATERIAL_BORDERED          ("material",     "bordered",              "Bordered"),

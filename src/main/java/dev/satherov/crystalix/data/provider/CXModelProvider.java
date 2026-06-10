@@ -38,8 +38,8 @@ public class CXModelProvider extends SLModelProvider {
         SLConditionalModelBuilder glassModel = SLConditionalModelBuilder.conditional(this.connectedGlassModel(GlassMaterial.NORMAL, false, false));
         
         for (GlassMaterial material : GlassMaterial.values()) {
-            for (boolean shadeless : new boolean[] { false, true }) {
-                for (boolean tinted : new boolean[] { false, true }) {
+            for (boolean shadeless : new boolean[]{ false, true }) {
+                for (boolean tinted : new boolean[]{ false, true }) {
                     if (material == GlassMaterial.NORMAL && !shadeless && !tinted) continue;
                     
                     CrystalixModelState state = new CrystalixModelState(shadeless, tinted, material);

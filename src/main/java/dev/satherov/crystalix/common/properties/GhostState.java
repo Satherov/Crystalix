@@ -22,7 +22,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.frog.Tadpole;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 
@@ -33,7 +32,6 @@ import org.jspecify.annotations.Nullable;
 import io.netty.buffer.ByteBuf;
 
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 
 @NothingNull
 @Accessors(fluent = true)

@@ -6,7 +6,6 @@ import dev.satherov.crystalix.network.CyclePropertyPayload;
 import dev.satherov.crystalix.network.SetColorPayload;
 import dev.satherov.crystalix.network.SetGlassMaterialPayload;
 import dev.satherov.crystalix.network.SwapPropertiesPayload;
-import dev.satherov.crystalix.network.ToggleColorless;
 import dev.satherov.sathlib.compat.Mods;
 import dev.satherov.sathlib.config.SLConfigLoader;
 import dev.satherov.sathlib.network.handling.SLNetworkManager;
@@ -31,7 +30,6 @@ public class Crystalix {
         Crystalix.NETWORK.add(new SetColorPayload.Provider());
         Crystalix.NETWORK.add(new SetGlassMaterialPayload.Provider());
         Crystalix.NETWORK.add(new SwapPropertiesPayload.Provider());
-        Crystalix.NETWORK.add(new ToggleColorless.Provider());
         Crystalix.NETWORK.register(bus);
         
         

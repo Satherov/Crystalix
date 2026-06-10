@@ -1,6 +1,6 @@
 package dev.satherov.crystalix.client.screen;
 
-import dev.satherov.crystalix.CrystalixClient;
+import dev.satherov.crystalix.client.CXKeybinds;
 import dev.satherov.crystalix.client.lang.CXLanguage;
 import dev.satherov.crystalix.core.registry.CXProperties;
 import dev.satherov.crystalix.core.registry.CXRegistry;
@@ -60,11 +60,12 @@ public class CXRadialScreen extends RadialScreen<CXRadialScreen, CXRadialScreen.
         for (BlockItemProperty<?> property : properties) {
             this.addSlice(new PropertySlice(property));
         }
+        this.addSlice(new PropertySlice(CXProperties.APPLY_MODE));
     }
     
     @Override
     public boolean keyReleased(KeyEvent event) {
-        if (CrystalixClient.OPEN_WAND_EDITOR.matches(event)) {
+        if (CXKeybinds.OPEN_WAND_EDITOR.matches(event)) {
             this.onClose();
             return true;
         }

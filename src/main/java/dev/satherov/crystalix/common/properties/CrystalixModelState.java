@@ -30,9 +30,9 @@ public class CrystalixModelState implements SLModelPropertyValue {
     }
     
     public static final Codec<CrystalixModelState> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-        Codec.BOOL.fieldOf("shadeless").forGetter(CrystalixModelState::isShadeless),
-        Codec.BOOL.fieldOf("tinted").forGetter(CrystalixModelState::isTinted),
-        GlassMaterial.CODEC.fieldOf("material").forGetter(CrystalixModelState::getMaterial)
+            Codec.BOOL.fieldOf("shadeless").forGetter(CrystalixModelState::isShadeless),
+            Codec.BOOL.fieldOf("tinted").forGetter(CrystalixModelState::isTinted),
+            GlassMaterial.CODEC.fieldOf("material").forGetter(CrystalixModelState::getMaterial)
     ).apply(instance, CrystalixModelState::new));
     
     public static final StreamCodec<FriendlyByteBuf, CrystalixModelState> STREAM_CODEC = StreamCodec.composite(

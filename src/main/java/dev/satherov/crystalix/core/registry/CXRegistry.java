@@ -7,12 +7,12 @@ import dev.satherov.crystalix.client.lang.CXLanguage;
 import dev.satherov.crystalix.common.block.CrystalixGlassBlock;
 import dev.satherov.crystalix.common.block.CrystalixGlassBlockEntity;
 import dev.satherov.crystalix.common.item.CrystalixWandItem;
+import dev.satherov.crystalix.common.properties.ApplyMode;
 import dev.satherov.crystalix.common.properties.GhostState;
 import dev.satherov.crystalix.common.properties.GlassMaterial;
 import dev.satherov.crystalix.common.properties.LightState;
 import dev.satherov.sathlib.common.block.SLBlockProperties;
 import dev.satherov.sathlib.common.item.SLItemProperties;
-import dev.satherov.sathlib.common.properties.BlockItemPropertyContainer;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -130,10 +130,10 @@ public class CXRegistry {
                     .build()
     );
     
-    public static final Supplier<DataComponentType<Boolean>> APPLY_COLORLESS = CXRegistry.COMPONENTS.register("apply_colorless", () ->
-            DataComponentType.<Boolean>builder()
-                    .persistent(Codec.BOOL)
-                    .networkSynchronized(ByteBufCodecs.BOOL)
+    public static final Supplier<DataComponentType<ApplyMode>> APPLY_MODE = CXRegistry.COMPONENTS.register("apply_mode", () ->
+            DataComponentType.<ApplyMode>builder()
+                    .persistent(ApplyMode.CODEC)
+                    .networkSynchronized(ApplyMode.STREAM_CODEC)
                     .build()
     );
     

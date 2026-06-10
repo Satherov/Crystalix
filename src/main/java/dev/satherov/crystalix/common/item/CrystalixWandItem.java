@@ -1,9 +1,10 @@
 package dev.satherov.crystalix.common.item;
 
 import dev.satherov.crystalix.CXConfig;
-import dev.satherov.crystalix.CrystalixClient;
+import dev.satherov.crystalix.client.CXKeybinds;
 import dev.satherov.crystalix.client.lang.CXLanguage;
 import dev.satherov.crystalix.common.block.CrystalixGlassBlockEntity;
+import dev.satherov.crystalix.common.properties.ApplyMode;
 import dev.satherov.crystalix.common.properties.GhostState;
 import dev.satherov.crystalix.common.properties.GlassMaterial;
 import dev.satherov.crystalix.common.properties.LightState;
@@ -11,6 +12,7 @@ import dev.satherov.crystalix.core.registry.CXProperties;
 import dev.satherov.crystalix.core.registry.CXRegistry;
 import dev.satherov.sathlib.common.item.SLItem;
 import dev.satherov.sathlib.common.item.SLItemProperties;
+import dev.satherov.sathlib.common.properties.BlockItemProperty;
 import dev.satherov.sathlib.core.annotations.NothingNull;
 import dev.satherov.sathlib.network.chat.SLComponent;
 import dev.satherov.sathlib.util.deferred.SLBlockCrawler;
@@ -52,7 +54,7 @@ public class CrystalixWandItem extends SLItem {
                 .component(CXRegistry.CONDUCTOR, false)
                 .component(CXRegistry.REDSTONE, 0)
                 // Other
-                .component(CXRegistry.APPLY_COLORLESS, false)
+                .component(CXRegistry.APPLY_MODE, ApplyMode.DEFAULT)
         );
     }
     
@@ -66,20 +68,27 @@ public class CrystalixWandItem extends SLItem {
     
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
-        builder.accept(CXLanguage.TOOLTIP_BULK.translate(ChatFormatting.DARK_GRAY));
+        builder.accept(CXLanguage.TOOLTIP_BULK.translate(ChatFormatting.GRAY));
+        builder.accept(CXLanguage.TOOLTIP_HIGHLIGHT.translate(
+                ChatFormatting.GRAY,
+                SLComponent.squareBrackets(SLComponent.key(CXKeybinds.HIGHLIGHT_BLOCKS.getKey()).style(ChatFormatting.GOLD))
+        ));
         builder.accept(CXLanguage.TOOLTIP_PICK_PROPERTY.translate(
-                ChatFormatting.DARK_GRAY,
-                SLComponent.squareBrackets(SLComponent.key(CrystalixClient.PICK_BLOCK.getKey()).style(ChatFormatting.GOLD)))
+                ChatFormatting.GRAY,
+                SLComponent.squareBrackets(SLComponent.key(CXKeybinds.PICK_BLOCK.getKey()).style(ChatFormatting.GOLD)))
         );
-        builder.accept(CXLanguage.TOOLTIP_COLORLESS.translate(
-                ChatFormatting.DARK_GRAY,
-                SLComponent.squareBrackets(SLComponent.key(CrystalixClient.TOGGLE_COLORLESS.getKey()).style(ChatFormatting.GOLD)))
-        );
-        CXProperties.CONTAINER.forEach(property -> builder.accept(SLComponent.empty()
+        
+        if (!CXConfig.Client.isShowWandTooltips()) {
+            builder.accept(CXLanguage.TOOLTIP_SHOW_PROPERTIES.translate(ChatFormatting.DARK_GRAY));
+            return;
+        }
+        
+        Consumer<BlockItemProperty<?>> tooltip = property -> builder.accept(SLComponent.empty()
                 .append(property.getName().translate(ChatFormatting.GRAY))
                 .append(Component.literal(": ").withStyle(ChatFormatting.GRAY))
-                .append(property.displayItemValue(stack, CXRegistry.CRYSTALIX_BLOCK.get().defaultBlockState())))
-        );
+                .append(property.displayItemValue(stack, CXRegistry.CRYSTALIX_BLOCK.get().defaultBlockState())));
+        tooltip.accept(CXProperties.APPLY_MODE);
+        CXProperties.CONTAINER.forEach(tooltip);
     }
     
     @Override
@@ -92,15 +101,28 @@ public class CrystalixWandItem extends SLItem {
         final BlockState blockState = level.getBlockState(blockPos);
         
         if (player.isShiftKeyDown()) {
-            // Make sure we use the stack at the time of the click and 
-            // don't reference the mutable object in the players inventory
+            
+            final CrystalixGlassBlockEntity blockEntity = CXRegistry.GLASS_BLOCK_ENTITY.get().getBlockEntity(level, blockPos);
+            if (blockEntity == null) return InteractionResult.FAIL;
+            
+            // Exists as a holder of the original properties... kinda jank, but it's late and idc :3
+            final ItemStack fakeStack = new ItemStack(CXRegistry.CRYSTALIX_WAND.get());
+            CXProperties.CONTAINER.applyToItem(fakeStack, blockState, blockEntity);
+            final CrystalixGlassBlockEntity fakeEntity = new CrystalixGlassBlockEntity(blockPos, blockState);
+            CXProperties.CONTAINER.applyToBlock(fakeStack, blockState, fakeEntity);
+            
+            // Make sure we use the stack at the time of the click and don't reference the mutable object in the player's inventory
             final ItemStack copy = stack.copy();
+            final boolean exact = copy.getOrDefault(CXRegistry.APPLY_MODE, ApplyMode.DEFAULT) == ApplyMode.EXACT;
+            
             SLDeferredTasks.register(
                     SLBlockCrawler.builder(level, blockPos)
                             .predicate((pos, state) -> {
                                 if (!state.is(CXRegistry.CRYSTALIX_BLOCK_TAG)) return false;
                                 final CrystalixGlassBlockEntity entity = CXRegistry.GLASS_BLOCK_ENTITY.get().getBlockEntity(level, pos);
                                 if (entity == null) return false;
+                                
+                                if (exact) return CXProperties.CONTAINER.matchBlocks(stack, blockState, fakeEntity, state, entity);
                                 return !CXProperties.CONTAINER.matches(copy, state, entity);
                             })
                             .consumer((pos, state) -> CrystalixWandItem.updateBlock(level, copy, pos, state))

@@ -5,7 +5,6 @@ import lombok.experimental.Accessors;
 import dev.satherov.crystalix.client.lang.CXLanguage;
 import dev.satherov.crystalix.common.item.CrystalixWandItem;
 import dev.satherov.crystalix.common.properties.GhostState;
-import dev.satherov.crystalix.common.properties.GlassMaterial;
 import dev.satherov.crystalix.common.properties.LightState;
 import dev.satherov.crystalix.core.registry.CXProperties;
 import dev.satherov.crystalix.core.registry.CXRegistry;

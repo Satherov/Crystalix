@@ -21,8 +21,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 
-import org.jspecify.annotations.Nullable;
-
 import io.github.xfacthd.framedblocks.api.camo.CamoContainerClientHandler;
 import io.github.xfacthd.framedblocks.api.camo.block.AbstractBlockCamoContainer;
 import io.github.xfacthd.framedblocks.api.camo.block.AbstractBlockCamoContainerFactory;
