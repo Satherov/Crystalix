@@ -77,7 +77,7 @@ public class CXKeybinds {
         final Minecraft mc = Minecraft.getInstance();
         final Player player = mc.player;
         final Level level = mc.level;
-        if (level == null || player == null || mc.screen != null) return;
+        if (level == null || player == null || mc.screen != null || CrystalixWandItem.find(player).isEmpty()) return;
         
         if (event.getAction() == GLFW.GLFW_PRESS) CXBlockHighlighter.highlight();
     });
