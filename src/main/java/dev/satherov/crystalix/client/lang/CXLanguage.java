@@ -28,6 +28,7 @@ public enum CXLanguage implements SLTranslatable {
     MESSAGE_PROPERTY_MATCH     ("message",      "property_match",        "Properties already match"),
                                                                          
     TOOLTIP_BULK               ("tooltip",      "bulk",                  "Crouch to bulk edit"),
+    TOOLTIP_EDITOR             ("tooltip",      "editor",                "%s to open property editor"),
     TOOLTIP_PICK_PROPERTY      ("tooltip",      "property_pick",         "%s to pick properties from a block"),
     TOOLTIP_COLORLESS          ("tooltip",      "colorless",             "%s to toggle applying properties with or without color"),
     TOOLTIP_HIGHLIGHT          ("tooltip",      "highlight",             "%s to highlight all crystalix blocks in your surroundings"),

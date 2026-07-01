@@ -68,6 +68,10 @@ public class CrystalixWandItem extends SLItem {
     
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
+        builder.accept(CXLanguage.TOOLTIP_EDITOR.translate(
+                ChatFormatting.GRAY,
+                SLComponent.squareBrackets(SLComponent.key(CXKeybinds.OPEN_WAND_EDITOR.getKey()).style(ChatFormatting.GOLD)))
+        );
         builder.accept(CXLanguage.TOOLTIP_BULK.translate(ChatFormatting.GRAY));
         builder.accept(CXLanguage.TOOLTIP_HIGHLIGHT.translate(
                 ChatFormatting.GRAY,
