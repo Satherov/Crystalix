@@ -1,0 +1,5 @@
+preserve_hierarchy: true
+
+files:
+  - source: /src/generated/resources/assets/crystalix/lang/en_us.json
+    translation: /src/main/resources/assets/crystalix/lang/%locale_with_underscore%.json
