@@ -3,3 +3,92 @@ preserve_hierarchy: true
 files:
   - source: /src/generated/resources/assets/crystalix/lang/en_us.json
     translation: /src/main/resources/assets/crystalix/lang/%locale_with_underscore%.json
+
+    languages_mapping:
+      locale_with_underscore:
+        en-AU: en_au
+        en-CA: en_ca
+        en-GB: en_gb
+        en-NZ: en_nz
+
+        af: af_za
+        ar: ar_sa
+        az: az_az
+        be: be_by
+        bg: bg_bg
+        bs: bs_ba
+        ca: ca_es
+        cs: cs_cz
+        cy: cy_gb
+        da: da_dk
+
+        de: de_de
+        de-AT: de_at
+        de-CH: de_ch
+
+        el: el_gr
+
+        es-AR: es_ar
+        es-CL: es_cl
+        es-EC: es_ec
+        es-ES: es_es
+        es-MX: es_mx
+        es-UY: es_uy
+        es-VE: es_ve
+
+        et: et_ee
+        eu: eu_es
+        fa: fa_ir
+        fi: fi_fi
+        fil: fil_ph
+
+        fr: fr_fr
+        fr-CA: fr_ca
+
+        ga: ga_ie
+        gd: gd_gb
+        gl: gl_es
+        he: he_il
+        hi: hi_in
+        hr: hr_hr
+        hu: hu_hu
+        hy: hy_am
+        id: id_id
+        is: is_is
+        it: it_it
+        ja: ja_jp
+        ka: ka_ge
+        kk: kk_kz
+        ko: ko_kr
+        lt: lt_lt
+        lv: lv_lv
+        mk: mk_mk
+        mn: mn_mn
+        ms: ms_my
+        mt: mt_mt
+
+        nl: nl_nl
+        nl-BE: nl_be
+
+        nb: no_no
+        nn: nn_no
+
+        pl: pl_pl
+        pt-BR: pt_br
+        pt-PT: pt_pt
+        ro: ro_ro
+        ru: ru_ru
+        sk: sk_sk
+        sl: sl_si
+        sq: sq_al
+        sr: sr_sp
+        sv-SE: sv_se
+        ta: ta_in
+        th: th_th
+        tr: tr_tr
+        uk: uk_ua
+        vi: vi_vn
+
+        zh-CN: zh_cn
+        zh-HK: zh_hk
+        zh-TW: zh_tw
