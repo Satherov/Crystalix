@@ -43,7 +43,7 @@ public class KeybindManager {
     @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || mc.player == null || mc.screen instanceof ChatScreen) return;
+        if (mc.level == null || mc.player == null || mc.screen != null) return;
         ItemStack wand = CrystalixWand.find(mc.player);
         if (wand.isEmpty()) return;
         
